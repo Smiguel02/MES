@@ -1,14 +1,4 @@
-package com.example.javafx_test.opc_ua;
-
-import org.eclipse.milo.opcua.sdk.client.AddressSpace;
-import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
-import org.eclipse.milo.opcua.sdk.client.nodes.UaNode;
-import org.eclipse.milo.opcua.stack.core.Identifiers;
-import org.eclipse.milo.opcua.stack.core.UaException;
-import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
-import org.eclipse.milo.opcua.stack.core.types.enumerated.NodeClass;
-
-import java.util.List;
+package com.example.javafx_test;
 
 public class BrowseNodes {/*
     //Browse al nodef my address space

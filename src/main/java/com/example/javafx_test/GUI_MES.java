@@ -4,10 +4,13 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.eclipse.milo.opcua.stack.core.UaException;
+
 
 import java.io.IOException;
 
 public class GUI_MES extends Application {
+
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(GUI_MES.class.getResource("hello-view.fxml"));
@@ -17,15 +20,19 @@ public class GUI_MES extends Application {
         stage.show();
     }
 
+
+
     public static void main(String[] args) {
 
         // 3 different threads
         Production prod = new Production();
 //        GUI_MES gui = new GUI_MES();
-//    Thread comms =  new OPC_UA();
+        main comms= new main();
+
 //        Stage stage = new Stage();
 
         prod.start();
+        comms.start();
 //        gui.start(stage);
         System.out.println("Is prod alive? " + prod.isAlive());
 

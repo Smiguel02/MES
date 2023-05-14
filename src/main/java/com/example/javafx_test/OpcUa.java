@@ -1,7 +1,6 @@
-package com.example.javafx_test.opc_ua;
+package com.example.javafx_test;
 
 
-import com.google.common.collect.ImmutableList;
 import org.apache.log4j.BasicConfigurator;
 import org.eclipse.milo.opcua.sdk.client.AddressSpace;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
@@ -13,42 +12,43 @@ import org.eclipse.milo.opcua.stack.core.security.SecurityPolicy;
 import org.eclipse.milo.opcua.stack.core.types.builtin.*;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UShort;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
-import org.eclipse.milo.opcua.stack.core.types.structured.*;
+import org.eclipse.milo.opcua.stack.core.types.structured.ReadResponse;
+import org.eclipse.milo.opcua.stack.core.types.structured.ReadValueId;
+import org.eclipse.milo.opcua.stack.core.types.structured.WriteResponse;
+import org.eclipse.milo.opcua.stack.core.types.structured.WriteValue;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-import static org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned.ushort;
-
-public class OpcUa {
-
-    public static void main(String[] args) {
+public class OpcUa extends Thread{
 
 
-        private static OpcUaClient client;
-        private static AddressSpace addressSpace;
-        private static OpcUa instance = null;
-        UaVariableNode Gvlprod1;
-        UaVariableNode Gvlprod2;
-        UaVariableNode GvlSaida;
-        UaVariableNode GvlAt1Warehouse;
-        UaVariableNode GvlAt1SensP;
-        UaVariableNode at1_Livre;
-        UaVariableNode maq1_Livre;
-        UaVariableNode maq2_Livre;
-        UaVariableNode fim_Maq1_Sinal;
-        UaVariableNode fim_Maq2_Sinal;
-        UaVariableNode pospec1_Sinal;
-        UaVariableNode pospec2_Sinal;
-        UaVariableNode Gvl_pedir_peca_Ware;
-        private Boolean first_Order = true;
+    private static OpcUaClient client;
+    private static AddressSpace addressSpace;
+    private static OpcUa instance = null;
+    UaVariableNode Gvlprod1;
+    UaVariableNode Gvlprod2;
+    UaVariableNode GvlSaida;
+    UaVariableNode GvlAt1Warehouse;
+    UaVariableNode GvlAt1SensP;
+    UaVariableNode at1_Livre;
+    UaVariableNode maq1_Livre;
+    UaVariableNode maq2_Livre;
+    UaVariableNode fim_Maq1_Sinal;
+    UaVariableNode fim_Maq2_Sinal;
+    UaVariableNode pospec1_Sinal;
+    UaVariableNode pospec2_Sinal;
+    UaVariableNode Gvl_pedir_peca_Ware;
+    private Boolean first_Order = true;
 
-        List<ReadValueId> Ids_mandarFazerPeca = new ArrayList<>();
+    List<ReadValueId> Ids_mandarFazerPeca = new ArrayList<>();
 
-    private OpcUa() throws UaException {
-        }
+    public OpcUa() throws UaException{
+    }
+
+
+
 
         // Static method to create instance of Singleton class
         public static OpcUa getInstance () throws Exception {
@@ -317,4 +317,4 @@ public class OpcUa {
 
     }*/
     }
-}
+

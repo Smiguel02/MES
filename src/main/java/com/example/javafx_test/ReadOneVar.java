@@ -1,4 +1,4 @@
-package com.example.javafx_test.opc_ua;
+package com.example.javafx_test;
 
 public class ReadOneVar { /*
         //READING
