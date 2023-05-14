@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="b2dfacfb-aa89-45c7-ab1d-d84f49d37991" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mvnw" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mvnw.cmd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/GUI_MES.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/HelloController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/MES_Schedule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/Machine.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/MainApplication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/Order.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/Piece.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/Piece_new.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/Plant_Monitoring.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/Production.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/Warehouse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/opc_ua/BrowseNodes.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/opc_ua/BrowseVar.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/opc_ua/Login_Controller.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/opc_ua/MyMainClass.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/opc_ua/OpcUa.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/opc_ua/ReadMultVarPlusName.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/opc_ua/ReadOneVar.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/opc_ua/UtcToTime.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/opc_ua/Write1Var.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/opc_ua/marioparty.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/com/example/javafx_test/hello-view.fxml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2Pl3KYqls8YZflI74LqWtyUfjkF" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "/home/smiguel/IdeaProjects/javafx_test/src/main/java/com/example/javafx_test/opc_ua",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "project.structure.last.edited": "Libraries",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.42643678"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/java/com/example/javafx_test/opc_ua" />
+      <recent name="$PROJECT_DIR$/src/main/java/com/example/javafx_test" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.OPC_UA">
+    <configuration name="GUI_MES" type="Application" factoryName="Application" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.javafx_test.GUI_MES" />
+      <module name="javafx_test" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="OPC_UA" type="Application" factoryName="Application">
+      <option name="ALTERNATIVE_JRE_PATH" value="openjdk-20" />
+      <option name="MAIN_CLASS_NAME" value="com.example.javafx_test.opc_ua.OpcUa" />
+      <module name="javafx_test" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Program" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="com.example.javafx_test.MainApplication" />
+      <module name="javafx_test" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.GUI_MES" />
+      <item itemvalue="Application.OPC_UA" />
+      <item itemvalue="Application.Program" />
+    </list>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b2dfacfb-aa89-45c7-ab1d-d84f49d37991" name="Changes" comment="" />
+      <created>1683471103763</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1683471103763</updated>
+      <workItem from="1683471105554" duration="2448000" />
+      <workItem from="1684017778603" duration="4271000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
