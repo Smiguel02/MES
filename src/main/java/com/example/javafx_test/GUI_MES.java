@@ -4,7 +4,6 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.eclipse.milo.opcua.stack.core.UaException;
 
 
 import java.io.IOException;
@@ -21,19 +20,21 @@ public class GUI_MES extends Application {
     }
 
 
-
     public static void main(String[] args) {
 
+        Object lock = new Object();
+
         // 3 different threads
-        Production prod = new Production();
-//        GUI_MES gui = new GUI_MES();
-        main comms= new main();
+        OPCUA_Controller comms= new OPCUA_Controller(lock);
+        Production prod = new Production(lock, comms);
 
-//        Stage stage = new Stage();
 
+
+        prod.setName("Thread - MES");
+        comms.setName("Thread - OPC_UA");
+        Thread.currentThread().setName("Thread - GUI");
         prod.start();
         comms.start();
-//        gui.start(stage);
         System.out.println("Is prod alive? " + prod.isAlive());
 
         launch();

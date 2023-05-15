@@ -2,7 +2,6 @@ package com.example.javafx_test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class Production extends Thread{
 
@@ -13,9 +12,20 @@ public class Production extends Thread{
 
     private float plant_time;
 
+    public Object lock;
+
+    OPCUA_Controller opcua;
+
     //Receives current time from PLS periodically
     float update_time(){
     return 0;
+    }
+
+
+    public Production(Object l, OPCUA_Controller opc){  //FIXME: acho que ficava melhor com a classe OpcUa
+
+        this.lock = l;
+        this.opcua = opc;
     }
 
 
@@ -58,7 +68,6 @@ public class Production extends Thread{
     @Override
     public void run(){
 
-        Production prod =new Production();
         Warehouse war = new Warehouse();
         Piece_new pieces = new Piece_new();
         ArrayList<Machine> Machines = new ArrayList<>();
@@ -81,6 +90,31 @@ public class Production extends Thread{
 
         while(true) {
 
+            /***********************
+             ***********************
+             ******CHECK COMMS******
+             ***********************
+             ***********************/
+
+            try {
+                if(opcua.update_values_verification()){
+                    // Call update values method that verifies and updates everything
+                    opcua.i_have_updated_my_values(true);// ends by saying the values have already been updated
+                    // In case OPC_UA is in lock waiting to udpate the values, this will allow it to continue
+                    synchronized (lock){
+                        lock.notify();
+                    }
+                }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+
+            /***********************
+             * *********************
+             * ALWAYS RUNNING CYCLE*
+             * *********************
+             ***********************/
 
             // Receive Piece from ERP
             for (int i = 0; i < p_amount; i++) {
@@ -141,54 +175,17 @@ public class Production extends Thread{
             }
 
             pieces.info_piece();
-            //Threading stuff, waits for call
+
             try {
-                wait();
+                Thread.sleep(1000);     //TODO: change this at is delaying our program
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-
+            /**
+             * Performs a whole Order!
+             */
         }
-        /**
-         * Performs a whole Order!
-         */
-
-        //If all pieces have been dispatched, should end
-
-
-
-//        int[] good_pieces= prod.pieces_good_to_order(system_total_pieces, Pieces, o_number_of_pieces, prod.last_no_order_piece);
-//
-//        if(good_pieces[Orders.get(o_ID).number_of_pieces-1] == -1){
-//            System.out.println("ERROR, Not enough pieces. KILLING PROGRAM");
-//            // Do something with ERP in case of too little pieces
-//        }
-//
-//        int aux=Orders.get(o_ID).add_pieces(Pieces.subList(prod.last_no_order_piece, system_total_pieces), good_pieces, system_total_pieces- prod.last_no_order_piece);
-//
-//        if(aux<0){
-//            System.out.println("ERROR, when giving pieces to order");
-//            // Do something with ERP in case of too little pieces
-//        }else{
-//            prod.last_no_order_piece=aux;
-//        }
-//
-//        Pieces.forEach(Piece::info_piece);
-//        Orders.forEach(Order::info_order);
-//
-//        /**
-//         * Successfully adds Piece to order
-//         */
-//
-//
-//        // Process Order
-//
-//        // Give Order to PLC
-//        // Monitor Piece/Order path
-//        // Receive Piece transformation and update
-//        // Finish Order
 
     }
-
 
 }
