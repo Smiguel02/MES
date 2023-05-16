@@ -8,6 +8,10 @@ public class OPCUA_Controller extends Thread{
 
     Object lock;
     private boolean values_updated = false;
+    public boolean piece_arrived = true;   // TODO: test implementation, change later
+    public boolean piece_warehouse = true;   // TODO: test implementation, change later
+
+
 
     // Flag is 1 if is MES, 0 if is OPC_UA
     //! OPCUA only calls it when it wants to write changes
@@ -32,6 +36,11 @@ public class OPCUA_Controller extends Thread{
     public void run(){
         System.out.println("Hey there baby");
         OpcUa n = null;
+        try {
+            n = OpcUa.getInstance();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         while(true){
 
@@ -39,7 +48,6 @@ public class OPCUA_Controller extends Thread{
 
             // At the end of the cycle updates values
             if(false){   //FIXME: change this as it depends on the values of OPC_UA
-
                 try {
                     if(update_values_verification()){
                         synchronized (lock){
@@ -48,7 +56,6 @@ public class OPCUA_Controller extends Thread{
                             System.out.println("Goshhh MES finally");
                         }
                     }
-
                     //Update values
                     i_have_updated_my_values(false);
 
@@ -56,18 +63,15 @@ public class OPCUA_Controller extends Thread{
                     throw new RuntimeException(e);
                 }
             }
+
+            try {
+                n.mandarFazerPeca(1,6,1);
+            } catch (UaException | ExecutionException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
         }
 
 
-//        try {
-//            n.mandarFazerPeca(1,6,1);
-//        } catch (UaException | ExecutionException | InterruptedException e) {
-//            throw new RuntimeException(e);
-//        }
-//        try {
-//            n = OpcUa.getInstance();
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
     }
 }

@@ -1,12 +1,12 @@
 package com.example.javafx_test;
 
+import org.eclipse.milo.opcua.stack.core.UaException;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class Production extends Thread{
-
-    //FIXME: bro start using UnitTeST Pleaseeee
-    //FIXME: Add the ability to send piece to machine for preprocessing and then do things faster when orders arrive
 
     int last_no_order_piece=0;          // refers to the index of the first piece that isn't in an order
 
@@ -16,6 +16,8 @@ public class Production extends Thread{
 
     OPCUA_Controller opcua;
 
+    public ArrayList<Machine> Machines = new ArrayList<>();
+
     //Receives current time from PLS periodically
     float update_time(){
     return 0;
@@ -23,7 +25,6 @@ public class Production extends Thread{
 
 
     public Production(Object l, OPCUA_Controller opc){  //FIXME: acho que ficava melhor com a classe OpcUa
-
         this.lock = l;
         this.opcua = opc;
     }
@@ -68,14 +69,23 @@ public class Production extends Thread{
     @Override
     public void run(){
 
-        Warehouse war = new Warehouse();
-        Piece_new pieces = new Piece_new();
-        ArrayList<Machine> Machines = new ArrayList<>();
+        OpcUa comms_opc = null;     //FIXME: iniciado assim mas nem sei bem se está correto ou nao
+        try {
+            comms_opc = OpcUa.getInstance();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
-        //Have 4 msachines
+        Warehouse war = new Warehouse();
+        ERP_API erp = new ERP_API();
+        Piece_new pieces = new Piece_new();
+//        ArrayList<Machine> Machines = new ArrayList<>();
+
+        //Have 4 machines
         for(int i=0;i<4;i++){
             Machines.add(new Machine(i+1, i+1,pieces));
         }
+
 
         System.out.println("Bonjour MES!");
 
@@ -95,6 +105,9 @@ public class Production extends Thread{
              ******CHECK COMMS******
              ***********************
              ***********************/
+
+            // TODO: use this to also receive ERP stuff
+
 
             try {
                 if(opcua.update_values_verification()){
@@ -116,33 +129,42 @@ public class Production extends Thread{
              * *********************
              ***********************/
 
+            // Check ERP Comms
             // Receive Piece from ERP
-            for (int i = 0; i < p_amount; i++) {
-                pieces.new_piece(p_raw_material, p_initial_price);
+            if(erp.new_pieces){
+                for (int i = 0; i < p_amount; i++) {
+                    pieces.new_piece(p_raw_material, p_initial_price);
+                }
             }
+            system_total_pieces += p_amount;        //FIXME: later remove
 
-            system_total_pieces += p_amount;
+
+            // Receive Order from ERP
+            List<Order> Orders = new ArrayList<>();
+            if(erp.new_order){
+                Order o = new Order(o_ID, o_number_of_pieces, o_delivery, o_final_Piece, pieces);
+                Orders.add(o_ID, o);
+                system_order_ID++;
+            }
 
             //! very pretty so not eliminating :)
 //        Pieces.forEach(Piece::info_piece);              // Prints where are all the pieces
 
             //Pieces arrived
-            for (int i = 0; i < p_amount; i++) {
-                pieces.arrived(p_raw_material, p_arrive_day);   //comes from PLC
+            if(opcua.piece_arrived){
+                for (int i = 0; i < p_amount; i++) {
+                    pieces.arrived(p_raw_material, p_arrive_day);   //comes from PLC
+                }
             }
 
-            //Move pieces to warehouse
-            for (int i = 0; i < p_amount; i++) {
-                war.piece_added(p_raw_material);
+            if(opcua.piece_warehouse){
+                //Move pieces to warehouse
+                for (int i = 0; i < p_amount; i++) {
+                    war.piece_added(p_raw_material);
+                }
+                System.out.println("Warehouse occupation: " + war.occupation());
             }
-            System.out.println("Warehouse occupation: " + war.occupation());
 
-
-            // Receive Order from ERP. Testing for only one order
-            List<Order> Orders = new ArrayList<>();
-            Order o = new Order(o_ID, o_number_of_pieces, o_delivery, o_final_Piece, pieces);
-            Orders.add(o_ID, o);
-            system_order_ID++;
 
             /********Start PLC Order*********/
             // Which raw piece works for a certain order
@@ -153,6 +175,14 @@ public class Production extends Thread{
             }
 
             // Order PLC
+            //! FIXME: not ready for this yet
+//            try {
+//                comms_opc.mandarFazerPeca(Orders.get(o_ID).raw_piece, Orders.get(o_ID).piece_type, 2);    //FIXME: needs to return machines in use
+//            } catch (UaException | ExecutionException | InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+
+
             Orders.get(o_ID).start_manufacturing(Machines);
 
             // Ir processando peças along with Warehouse and machine stuff. One by one in this case
@@ -171,7 +201,6 @@ public class Production extends Thread{
                 if (!pieces.dispatched(plc_raw_type, plc_final_piece, Orders.get(o_ID).expected_delivery, Orders.get(o_ID))) {
                     System.out.println("ERROR For somethingggg");
                 }
-
             }
 
             pieces.info_piece();

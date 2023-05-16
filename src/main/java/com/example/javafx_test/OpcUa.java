@@ -203,7 +203,7 @@ public class OpcUa extends Thread{
             return 0;
         }
 
-//FUNÇÃO ALTERADA PARA TESTAR PLC, VERSÃO "NORMAL" ABAIXO COMENTADO**************
+        //FUNÇÃO ALTERADA PARA TESTAR PLC, VERSÃO "NORMAL" ABAIXO COMENTADO**************
         int qm = 1;
 
         public int mandarFazerPeca ( int pecaWarehouse, int pecaFabricar, int maquina) throws
@@ -264,6 +264,12 @@ public class OpcUa extends Thread{
 
 
         }
+
+
+
+
+
+
         ///*++++++++++++++++
 
     /*public int mandarFazerPeca (int pecaWarehouse, int pecaFabricar, int maquina) throws UaException, ExecutionException, InterruptedException {
