@@ -10,5 +10,4 @@ module com.example.javafx_test {
 
     opens com.example.javafx_test to javafx.fxml;
     exports com.example.javafx_test;
-//    exports org.example.OpcUa;
 }
