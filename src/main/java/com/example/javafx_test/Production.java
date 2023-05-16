@@ -1,10 +1,7 @@
 package com.example.javafx_test;
 
-import org.eclipse.milo.opcua.stack.core.UaException;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class Production extends Thread{
 
@@ -14,7 +11,7 @@ public class Production extends Thread{
 
     public Object lock;
 
-    OPCUA_Controller opcua;
+    CommsController opcua;
 
     public ArrayList<Machine> Machines = new ArrayList<>();
 
@@ -24,7 +21,7 @@ public class Production extends Thread{
     }
 
 
-    public Production(Object l, OPCUA_Controller opc){  //FIXME: acho que ficava melhor com a classe OpcUa
+    public Production(Object l, CommsController opc){  //FIXME: acho que ficava melhor com a classe OpcUa
         this.lock = l;
         this.opcua = opc;
     }

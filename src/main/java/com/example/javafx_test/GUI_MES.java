@@ -16,7 +16,7 @@ public class GUI_MES extends Application {
         Object lock = new Object();
 
         // 3 different threads
-        OPCUA_Controller comms= new OPCUA_Controller(lock);
+        CommsController comms= new CommsController(lock);
         Production prod = new Production(lock, comms);
 
 
