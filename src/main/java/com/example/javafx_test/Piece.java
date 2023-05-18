@@ -42,6 +42,8 @@ public class Piece {
 
     public int production_cost; // How much did it cost in production
 
+    MyDB n = MyDB.getInstance();
+
     /**
      * Constructor
      */

@@ -17,6 +17,8 @@ public class Machine {
 
     Piece_new piece;
 
+    MyDB n = MyDB.getInstance();
+
     int ID;
 
     /**

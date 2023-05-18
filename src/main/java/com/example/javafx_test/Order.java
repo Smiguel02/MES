@@ -35,6 +35,8 @@ public class Order {
     // Ana Rita: daqui para baixo doesn't matter
     private Piece_new piece;
 
+    MyDB n = MyDB.getInstance();
+
     public int[][] paths={  // 3x5 Matrix
         {1,6,8,0,0},
         {2,3,6,8,0},

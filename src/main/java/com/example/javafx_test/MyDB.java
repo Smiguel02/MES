@@ -17,8 +17,13 @@ public class MyDB {
 
     static final String passwd = "studybud12345";
 
-    private static MyDB single_instance = null;
+    static String getInfoMachine = "SELECT * FROM infi2023.machine";
 
+    static String getInfoPiece = "SELECT * FROM infi2023.piece";
+
+    static String getInfoOrder = "SELECT * FROM infi2023.order";
+
+    private static MyDB single_instance = null;
 
     public MyDB(){}
 
@@ -41,11 +46,37 @@ public class MyDB {
         System.out.println(conn);
         return conn;
     }
-    // Hey bro
     public void disconnect() throws SQLException {
         if (conn != null)
             conn.close();
     }
 
+    //Obter a informação da máquina
+    int id_machine, id_order, tool, piece_detected;
+    boolean in_use, broken;
+    float work_time;
 
-}
+    //ArrayList<Machine> machine_info = new ArrayList<>();
+    /*public void getInfoMachine(int id_machine, int id_order) throws SQLException {
+        machine_info.clear();
+        getInfoMachine = "SELECT * FROM infi2023.machine";
+        try(Connection con = connect()){
+            System.out.println("Deu connect");
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(getInfoMachine);
+            while(rs.next()){
+                if((rs.getInt("id_machine")==id_machine) && (rs.getInt("id_order") == id_order))
+                {
+                    Machine m = new Machine();
+
+
+                }
+
+            }
+        }*/
+
+
+    }
+
+
+
