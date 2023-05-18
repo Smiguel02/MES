@@ -42,14 +42,14 @@ public class Piece_new {
      */
 
     public Piece_new(){
-        type[0] = new ArrayList<>();
-        type[1] = new ArrayList<>();
-        type_arrival_date[0] = new ArrayList<>();
-        type_arrival_date[1] = new ArrayList<>();
-        type_delivery_date[0] = new ArrayList<>();
-        type_delivery_date[1] = new ArrayList<>();
-        type_raw_price[0] = new ArrayList<>();
-        type_raw_price[1] = new ArrayList<>();
+        type[0] = new ArrayList<>();                // Initial raw 1
+        type[1] = new ArrayList<>();                // Initial raw 2
+        type_arrival_date[0] = new ArrayList<>();   // Arrival date raw 1
+        type_arrival_date[1] = new ArrayList<>();   // Arrival date raw 2
+        type_delivery_date[0] = new ArrayList<>();  // Delivery date raw 1
+        type_delivery_date[1] = new ArrayList<>();  // Delivery date raw 2
+        type_raw_price[0] = new ArrayList<>();      // Price raw 1
+        type_raw_price[1] = new ArrayList<>();      // Price raw 2
         for(int i=0;i<20;i++){
             this.new_piece(1, 0);
             this.arrived(1, 0);

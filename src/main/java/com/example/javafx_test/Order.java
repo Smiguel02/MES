@@ -6,32 +6,33 @@ public class Order {
 
     //FIXME: in future stuff adicionar ordens com peças misturadas. até pq é mais facil ter sempre a mesma peça
 
-    public int order_ID;
+    public int order_ID;        // Único de cada ordem, identificador da ordem
 
-    ArrayList<Machine> Machines = new ArrayList<>();
+    ArrayList<Machine> Machines = new ArrayList<>();        // 2 maquinas ja existentes atribuidas
 
-    public int piece_type;                          // piece final type
+    public int piece_type;                          // Peça final desejada, um único valor
 
-    public int raw_piece;
+    public int raw_piece;       // Peça inicial pela qual começou. Um único valor
 
-    public int raw_cost;        // Will be average raw cost probably, check it later
+    public int raw_cost;        // Valor de compra de peça (Nao sei se é average ou total). Um único valor
 
-    public int pieces_arrival;
+    public int pieces_arrival;      // Dia de chegada da peça (Nao sei se é average ou total). Unúnico valor
 
-    public int number_of_pieces;                    //Number of pieces
+    public int number_of_pieces;                    //Number of pieces inside order. Um unico valor
 
-    private int completed = 0;             // How many pieces have been already unloaded/dispatched
+    private int completed = 0;             // How many pieces have been already unloaded/dispatched. Um unico valor, <= number_of_pieces
 
-    public int start_date;           //TODO: how to implement this?       // Day scheduled by ERP to start things
+    public int start_date;          //Ana Rita ignore //TODO: how to implement this?       // Day scheduled by ERP to start things
 
-    public int expected_delivery;            // when to deliver the goods
+    public int expected_delivery;            // When to deliver the goods, valor único
 
-    public float expected_cost;               //Cost expected with no delays
+    public float expected_cost;               //Cost expected with no delays, um unico valor
 
-    public float production_cost = 0;
+    public float production_cost = 0;          // Calculado no fim, preço total de custo da ordem. um único valor. Usa machines para calcular
 
-    public float total_cost = 0;                  //Total cost of the order
+    public float total_cost = 0;                  // Total cost of the order, um unico valor
 
+    // Ana Rita: daqui para baixo doesn't matter
     private Piece_new piece;
 
     public int[][] paths={  // 3x5 Matrix
