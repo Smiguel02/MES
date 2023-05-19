@@ -56,27 +56,26 @@ public class MyDB {
     boolean in_use, broken;
     float work_time;
 
-    //ArrayList<Machine> machine_info = new ArrayList<>();
-    /*public void getInfoMachine(int id_machine, int id_order) throws SQLException {
+    ArrayList<Machine> machine_info = new ArrayList<>();
+
+    public void getInfoMachine(int id_machine, int id_order) throws SQLException {
         machine_info.clear();
         getInfoMachine = "SELECT * FROM infi2023.machine";
-        try(Connection con = connect()){
+        try (Connection con = connect()) {
             System.out.println("Deu connect");
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(getInfoMachine);
-            while(rs.next()){
-                if((rs.getInt("id_machine")==id_machine) && (rs.getInt("id_order") == id_order))
-                {
-                    Machine m = new Machine();
+            while (rs.next()) {
+                if ((rs.getInt("id_machine") == id_machine) && (rs.getInt("id_order") == id_order)) {
 
 
                 }
 
             }
-        }*/
-
+        }
 
     }
+}
 
 
 

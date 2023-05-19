@@ -1,17 +1,196 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" prefHeight="600.0" prefWidth="860.0" spacing="20.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/19" fx:controller="com.example.javafx_test.HelloController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-    </padding>
 
-    <Label fx:id="welcomeText" />
-    <Button onAction="#onHelloButtonClick" text="Hello!" />
-   <Label fx:id="information_test1" />
-   <Label fx:id="information_test2" />
-</VBox>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="716.0" prefWidth="1214.0" style="-fx-background-color: #b4dcf0;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="22.0" layoutY="31.0" prefHeight="30.0" prefWidth="96.0" text="Machine">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Label>
+      <Label layoutX="28.0" layoutY="79.0" prefHeight="30.0" prefWidth="42.0" text="Tool:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="28.0" layoutY="117.0" prefHeight="30.0" prefWidth="102.0" text="Machine in use:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="28.0" layoutY="162.0" prefHeight="30.0" prefWidth="114.0" text="Machine broken:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="28.0" layoutY="207.0" prefHeight="30.0" prefWidth="114.0" text="Piece Detected:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="28.0" layoutY="250.0" prefHeight="30.0" prefWidth="102.0" text="Work Time:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="label_tool" layoutX="142.0" layoutY="79.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_machine_in_use" layoutX="142.0" layoutY="117.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_machine_broken" layoutX="142.0" layoutY="162.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_piece_detected" layoutX="142.0" layoutY="207.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_work_time" layoutX="142.0" layoutY="249.0" prefHeight="32.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Button fx:id="atualizar_machine" layoutX="142.0" layoutY="32.0" mnemonicParsing="false" onAction="#atualizar_machine" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: #79B4EE;" text="Update">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Label layoutX="22.0" layoutY="342.0" prefHeight="30.0" prefWidth="69.0" text="Piece">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Label>
+      <Label layoutX="31.0" layoutY="395.0" prefHeight="30.0" prefWidth="52.0" text="Raw 1:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="31.0" layoutY="436.0" prefHeight="30.0" prefWidth="52.0" text="Raw 2:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="28.0" layoutY="483.0" prefHeight="30.0" prefWidth="102.0" text="Arrival Raw 1:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="28.0" layoutY="527.0" prefHeight="30.0" prefWidth="96.0" text="Arrival Raw 2:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="28.0" layoutY="578.0" prefHeight="30.0" prefWidth="121.0" text="Dispatch Raw 1:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="28.0" layoutY="625.0" prefHeight="30.0" prefWidth="114.0" text="Dispatch Raw 2:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="label_raw1" layoutX="147.0" layoutY="395.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_raw2" layoutX="147.0" layoutY="436.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_arrival_raw1" layoutX="147.0" layoutY="482.0" prefHeight="32.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_arrival_raw2" layoutX="146.0" layoutY="527.0" prefHeight="32.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="labvel_dispatch_raw1" layoutX="147.0" layoutY="577.0" prefHeight="32.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_dispatch_raw2" layoutX="146.0" layoutY="624.0" prefHeight="32.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label layoutX="292.0" layoutY="395.0" prefHeight="30.0" prefWidth="89.0" text="Price Raw 1:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="291.0" layoutY="436.0" prefHeight="30.0" prefWidth="90.0" text="Price Raw 2:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="291.0" layoutY="482.0" prefHeight="32.0" prefWidth="139.0" text="Total System Pieces: ">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Button fx:id="atualizar_piece" layoutX="147.0" layoutY="343.0" mnemonicParsing="false" onAction="#atualizar_piece" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: #79B4EE;" text="Update">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Label fx:id="lable_total_pieces" layoutX="437.0" layoutY="482.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_price_raw2" layoutX="437.0" layoutY="436.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_price_raw1" layoutX="437.0" layoutY="395.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label layoutX="361.0" layoutY="31.0" prefHeight="32.0" prefWidth="76.0" text="Order:">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Label>
+      <Label layoutX="368.0" layoutY="79.0" prefHeight="30.0" prefWidth="83.0" text="Piece Type:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="368.0" layoutY="116.0" prefHeight="32.0" prefWidth="83.0" text="Raw Piece:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="368.0" layoutY="161.0" prefHeight="32.0" prefWidth="76.0" text="Raw Cost:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="368.0" layoutY="206.0" prefHeight="32.0" prefWidth="96.0" text="Pieces Arrival:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="368.0" layoutY="250.0" prefHeight="30.0" prefWidth="129.0" text="Number of Pieces:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="label_number_pieces" layoutX="504.0" layoutY="249.0" prefHeight="32.0" prefWidth="114.0" style="-fx-background-color: white;" />
+      <Label fx:id="label_pieces_arrival" layoutX="504.0" layoutY="206.0" prefHeight="32.0" prefWidth="114.0" style="-fx-background-color: white;" />
+      <Label fx:id="label_raw_cost" layoutX="504.0" layoutY="161.0" prefHeight="32.0" prefWidth="114.0" style="-fx-background-color: white;" />
+      <Label fx:id="label_raw_piece" layoutX="504.0" layoutY="118.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" />
+      <Label fx:id="label_piece_type" layoutX="504.0" layoutY="79.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" />
+      <Label layoutX="660.0" layoutY="79.0" prefHeight="30.0" prefWidth="122.0" text="Order Completed:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="660.0" layoutY="116.0" prefHeight="32.0" prefWidth="122.0" text="Expected Delivery:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="660.0" layoutY="206.0" prefHeight="32.0" prefWidth="122.0" text="Production Cost:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="660.0" layoutY="161.0" prefHeight="32.0" prefWidth="122.0" text="Expected Cost:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="664.0" layoutY="249.0" prefHeight="32.0" prefWidth="83.0" text="Total Cost:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Button fx:id="atualizar_order" layoutX="504.0" layoutY="32.0" mnemonicParsing="false" onAction="#atualizar_order" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: #79B4EE;" text="Update">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Label fx:id="label_order_completed" layoutX="809.0" layoutY="78.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" />
+      <Label fx:id="label_expected_delivery" layoutX="809.0" layoutY="118.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" />
+      <Label fx:id="label_expected_cost" layoutX="809.0" layoutY="161.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" />
+      <Label fx:id="label_production_cost" layoutX="809.0" layoutY="207.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" />
+      <Label fx:id="label_total_cost" layoutX="809.0" layoutY="249.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" />
+   </children>
+</AnchorPane>
