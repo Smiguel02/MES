@@ -104,19 +104,6 @@ public class HelloController {
     }*/
 
 
-    @FXML
-    void atualizar_machine(ActionEvent event) throws IOException {
 
-    }
-
-    @FXML
-    void atualizar_order(ActionEvent event) throws IOException {
-
-    }
-
-    @FXML
-    void atualizar_piece(ActionEvent event) throws IOException{
-
-    }
 
 }
