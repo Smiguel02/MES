@@ -2,6 +2,7 @@ package com.example.javafx_test;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
@@ -9,7 +10,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class HelloController {
+public class HelloController implements Initializable {
 
 
     @FXML
@@ -96,12 +97,14 @@ public class HelloController {
     MyDB n = MyDB.getInstance();
 
     //Inicializar Machine, Order, Piece
-    /*@Override
+    @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //inicializar um controlador após o seu root element ja ter sido processado
         label_raw1.setText(String.valueOf(n.raw_1));
+        label_raw2.setText(String.valueOf(n.raw_2));
+        label_order_completed.setText(String.valueOf(n.order_completed));
 
-    }*/
+    }
 
 
 

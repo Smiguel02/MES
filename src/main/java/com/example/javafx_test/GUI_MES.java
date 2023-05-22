@@ -9,7 +9,8 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class GUI_MES extends Application {
+public class GUI_MES extends Application  {
+
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -18,11 +19,13 @@ public class GUI_MES extends Application {
         Scene scene = new Scene(fxmlLoader.load(), 1214, 716);
         HelloController controller = fxmlLoader.getController();
         //controller.set_controller_values(prod);
+        //controller.initialize();*/
         stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.show();
 
     }
+
 
 
 

@@ -6,10 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="b2dfacfb-aa89-45c7-ab1d-d84f49d37991" name="Changes" comment="Atualização DB, acrescentar model onde tem as caracteristicas com getter and setter da máquina, encomenda e peça.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Model/Piece.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Model/Piece.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/GUI_MES.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/GUI_MES.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/HelloController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/HelloController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/MES_Schedule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/MES_Schedule.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/MyDB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/MyDB.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,7 +37,7 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "C:/Users/mcmc/Desktop/a02_1-master"
+    "last_opened_file_path": "C:/Users/mcmc/Documents/MES"
   }
 }]]></component>
   <component name="RunManager">
@@ -104,7 +102,21 @@
       <option name="project" value="LOCAL" />
       <updated>1684764626630</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Atualização DB, acrescentar model onde tem as caracteristicas com getter and setter da máquina, encomenda e peça.">
+      <created>1684767584741</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1684767584741</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Atualização DB, acrescentar model onde tem as caracteristicas com getter and setter da máquina, encomenda e peça.">
+      <created>1684767598622</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1684767598623</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
