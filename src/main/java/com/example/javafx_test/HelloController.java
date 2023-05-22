@@ -99,8 +99,7 @@ public class HelloController {
     /*@Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //inicializar um controlador após o seu root element ja ter sido processado
-
-
+        label_raw1.setText(String.valueOf(n.raw_1));
 
     }*/
 

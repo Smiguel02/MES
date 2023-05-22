@@ -8,8 +8,6 @@ public class MES_Schedule {
     List<Order> Orders = new ArrayList();         // Piece object is started here
 
 
-
-
     // Initiates schedule, does it need any value??
     void MES_Schedule(){
 
