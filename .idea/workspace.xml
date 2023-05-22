@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b2dfacfb-aa89-45c7-ab1d-d84f49d37991" name="Changes" comment="Atualização DB, acrescentar model onde tem as caracteristicas com getter and setter da máquina, encomenda e peça.">
+    <list default="true" id="b2dfacfb-aa89-45c7-ab1d-d84f49d37991" name="Changes" comment="Pequenas alterações">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/GUI_MES.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/GUI_MES.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/HelloController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/HelloController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/MyDB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/MyDB.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,13 +32,13 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "C:/Users/mcmc/Documents/MES"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/mcmc/Documents/MES&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="GUI_MES" type="Application" factoryName="Application" activateToolWindowBeforeRun="false">
       <option name="ALTERNATIVE_JRE_PATH" value="19" />
@@ -116,7 +115,14 @@
       <option name="project" value="LOCAL" />
       <updated>1684767598623</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Pequenas alterações">
+      <created>1684770971422</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1684770971422</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -137,6 +143,7 @@
     <MESSAGE value="Botao retirado. Mudanca no hello" />
     <MESSAGE value="Pequena mudança" />
     <MESSAGE value="Atualização DB, acrescentar model onde tem as caracteristicas com getter and setter da máquina, encomenda e peça." />
-    <option name="LAST_COMMIT_MESSAGE" value="Atualização DB, acrescentar model onde tem as caracteristicas com getter and setter da máquina, encomenda e peça." />
+    <MESSAGE value="Pequenas alterações" />
+    <option name="LAST_COMMIT_MESSAGE" value="Pequenas alterações" />
   </component>
 </project>

@@ -69,41 +69,38 @@ public class MyDB {
     //Falta update da informação.
 
     //Get da informação
-    public void getInfo(ResultSet rs, String type) throws SQLException {
-        if(Objects.equals(type, "machine")){
-            id_machine = rs.getInt("id_machine");
-            id_m_order = rs.getInt("id_order");
-            tool = rs.getInt("tool");
-            piece_detected = rs.getInt("piece_detected");
-            in_use = rs.getBoolean("in_use");
-            broken = rs.getBoolean("broken");
-            work_time = rs.getFloat("work_time");
-        }
-        else if (Objects.equals(type, "order")){
-            id_order = rs.getInt("id_order");
-            piece_type = rs.getInt("piece_type");
-            raw_piece = rs.getInt("raw_piece");
-            raw_cost = rs.getInt("raw_cost");
-            pieces_arrival = rs.getInt("pieces_arrival");
-            number_pieces = rs.getInt("number_pieces");
-            order_completed = rs.getInt("order_completed");
-            expected_delivery = rs.getInt("expected_delivery");
-            expected_cost = rs.getFloat("expected_cost");
-            production_cost = rs.getFloat("production_cost");
-            total_cost = rs.getFloat("total_cost");
+    public void getInfo(ResultSet rs) throws SQLException {
 
-        }
-        else if (Objects.equals(type, "piece")){
-            raw_1 = rs.getInt("raw_1");
-            raw_2 = rs.getInt("raw_2");
-            raw_1_arrival = rs.getInt("raw_1_arrival");
-            raw_2_arrival = rs.getInt("raw_2_arrival");
-            raw_1_dispatch = rs.getInt("raw_1_dispatch");
-            raw_2_dispatch = rs.getInt("raw_2_dispatch");
-            raw_1_price = rs.getInt("raw_1_price");
-            raw_2_price = rs.getInt("raw_2_price");
-            total_system_pieces = rs.getInt("total_system_pieces");
-        }
+        id_machine = rs.getInt("id_machine");
+        id_m_order = rs.getInt("id_order");
+        tool = rs.getInt("tool");
+        piece_detected = rs.getInt("piece_detected");
+        in_use = rs.getBoolean("in_use");
+        broken = rs.getBoolean("broken");
+        work_time = rs.getFloat("work_time");
+
+        id_order = rs.getInt("id_order");
+        piece_type = rs.getInt("piece_type");
+        raw_piece = rs.getInt("raw_piece");
+        raw_cost = rs.getInt("raw_cost");
+        pieces_arrival = rs.getInt("pieces_arrival");
+        number_pieces = rs.getInt("number_pieces");
+        order_completed = rs.getInt("order_completed");
+        expected_delivery = rs.getInt("expected_delivery");
+        expected_cost = rs.getFloat("expected_cost");
+        production_cost = rs.getFloat("production_cost");
+        total_cost = rs.getFloat("total_cost");
+
+
+        raw_1 = rs.getInt("raw_1");
+        raw_2 = rs.getInt("raw_2");
+        raw_1_arrival = rs.getInt("raw_1_arrival");
+        raw_2_arrival = rs.getInt("raw_2_arrival");
+        raw_1_dispatch = rs.getInt("raw_1_dispatch");
+        raw_2_dispatch = rs.getInt("raw_2_dispatch");
+        raw_1_price = rs.getInt("raw_1_price");
+        raw_2_price = rs.getInt("raw_2_price");
+        total_system_pieces = rs.getInt("total_system_pieces");
 
     }
 
