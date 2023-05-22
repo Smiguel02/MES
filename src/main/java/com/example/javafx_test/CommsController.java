@@ -50,6 +50,7 @@ public class CommsController extends Thread{
 
         while(true){
 
+
             /**
              * Always updating OPC_UA code:
              * I would say here we check the values to check if any subscribed variable in the PLC has been updated. MES will get that value later.

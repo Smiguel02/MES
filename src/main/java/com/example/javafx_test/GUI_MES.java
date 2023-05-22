@@ -23,7 +23,7 @@ public class GUI_MES extends Application {
         prod.setName("Thread - MES");
         comms.setName("Thread - OPC_UA");
         Thread.currentThread().setName("Thread - GUI");
-        prod.start();
+//        prod.start();
         comms.start();
         System.out.println("Is prod alive? " + prod.isAlive());
 
