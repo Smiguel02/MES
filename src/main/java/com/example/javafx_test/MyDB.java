@@ -43,6 +43,7 @@ public class MyDB {
 
     public MyDB(){}
 
+
     // Static method to create instance of Singleton class
     public static MyDB getInstance() {
         if (single_instance == null) single_instance = new MyDB();
@@ -57,6 +58,7 @@ public class MyDB {
     // restricted to this class itself
 
     public Connection connect() throws SQLException {
+        System.out.println("Hello!");
         conn = DriverManager.getConnection(db_url, user, passwd);
         System.out.println(conn);
         return conn;
@@ -66,43 +68,80 @@ public class MyDB {
             conn.close();
     }
 
+    public int queryTest() throws SQLException {
+
+        if (conn == null)
+            throw new SQLException("Call connect before querying...");
+
+        Statement stmt = conn.createStatement();
+        ResultSet rs_machine = stmt.executeQuery(getInfoMachine);
+        System.out.println("passou query 1");
+        while(rs_machine.next()){
+            getInfo(rs_machine);
+            disconnect();
+            return id_machine;
+
+        }
+        ResultSet rs_order = stmt.executeQuery(getInfoOrder);
+        System.out.println("passou query 2");
+        while(rs_order.next()){
+            getInfo(rs_order);
+            disconnect();
+            return id_order;
+
+        }
+        ResultSet rs_piece= stmt.executeQuery(getInfoPiece);
+        System.out.println("passou query 3");
+        while(rs_piece.next()){
+            getInfo(rs_piece);
+            disconnect();
+            return 0;
+
+        }
+        return -1;
+
+    }
+
     //Falta update da informação.
 
     //Get da informação
     public void getInfo(ResultSet rs) throws SQLException {
 
-        id_machine = rs.getInt("id_machine");
-        id_m_order = rs.getInt("id_order");
-        tool = rs.getInt("tool");
-        piece_detected = rs.getInt("piece_detected");
-        in_use = rs.getBoolean("in_use");
-        broken = rs.getBoolean("broken");
-        work_time = rs.getFloat("work_time");
+                id_machine = rs.getInt("id_machine");
+                id_m_order = rs.getInt("id_order");
+                tool = rs.getInt("tool");
+                piece_detected = rs.getInt("piece_detected");
+                in_use = rs.getBoolean("in_use");
+                broken = rs.getBoolean("broken");
+                work_time = rs.getFloat("work_time");
 
-        id_order = rs.getInt("id_order");
-        piece_type = rs.getInt("piece_type");
-        raw_piece = rs.getInt("raw_piece");
-        raw_cost = rs.getInt("raw_cost");
-        pieces_arrival = rs.getInt("pieces_arrival");
-        number_pieces = rs.getInt("number_pieces");
-        order_completed = rs.getInt("order_completed");
-        expected_delivery = rs.getInt("expected_delivery");
-        expected_cost = rs.getFloat("expected_cost");
-        production_cost = rs.getFloat("production_cost");
-        total_cost = rs.getFloat("total_cost");
+                id_order = rs.getInt("id_order");
+                piece_type = rs.getInt("piece_type");
+                raw_piece = rs.getInt("raw_piece");
+                raw_cost = rs.getInt("raw_cost");
+                pieces_arrival = rs.getInt("pieces_arrival");
+                number_pieces = rs.getInt("number_pieces");
+                order_completed = rs.getInt("order_completed");
+                expected_delivery = rs.getInt("expected_delivery");
+                expected_cost = rs.getFloat("expected_cost");
+                production_cost = rs.getFloat("production_cost");
+                total_cost = rs.getFloat("total_cost");
 
 
-        raw_1 = rs.getInt("raw_1");
-        raw_2 = rs.getInt("raw_2");
-        raw_1_arrival = rs.getInt("raw_1_arrival");
-        raw_2_arrival = rs.getInt("raw_2_arrival");
-        raw_1_dispatch = rs.getInt("raw_1_dispatch");
-        raw_2_dispatch = rs.getInt("raw_2_dispatch");
-        raw_1_price = rs.getInt("raw_1_price");
-        raw_2_price = rs.getInt("raw_2_price");
-        total_system_pieces = rs.getInt("total_system_pieces");
+                raw_1 = rs.getInt("raw_1");
+                raw_2 = rs.getInt("raw_2");
+                raw_1_arrival = rs.getInt("raw_1_arrival");
+                raw_2_arrival = rs.getInt("raw_2_arrival");
+                raw_1_dispatch = rs.getInt("raw_1_dispatch");
+                raw_2_dispatch = rs.getInt("raw_2_dispatch");
+                raw_1_price = rs.getInt("raw_1_price");
+                raw_2_price = rs.getInt("raw_2_price");
+                total_system_pieces = rs.getInt("total_system_pieces");
 
-    }
+            }
+
+
+
 
     //Informação get and set
     //Machine ///////////////////////////////////////////////////////////////////////////

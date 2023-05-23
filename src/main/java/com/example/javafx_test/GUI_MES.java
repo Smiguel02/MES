@@ -11,19 +11,26 @@ import java.io.IOException;
 
 public class GUI_MES extends Application  {
 
-    private Parent root;
-
-
+    MyDB n = MyDB.getInstance();
 
     @Override
     public void start(Stage stage) throws Exception {
 
-        /*FXMLLoader fxmlLoader = new FXMLLoader(GUI_MES.class.getResource("hello-view.fxml"));
+
+
+        FXMLLoader fxmlLoader = new FXMLLoader(GUI_MES.class.getResource("hello-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1214, 716);
         //HelloController controller = fxmlLoader.getController();
         //stage.setTitle("Hello!");
         stage.setScene(scene);
-        stage.show();*/
+        stage.show();
+
+
+
+
+
+
+
 
         /*FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("hello-view.fxml"));
@@ -32,11 +39,11 @@ public class GUI_MES extends Application  {
         stage.setScene(new Scene(root, 1214,716));
         stage.show();*/
 
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("hello-view.fxml"));
+        /*FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.load(getClass().getResource("hello-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1214, 716);
         stage.setScene(scene);
-        stage.show();
+        stage.show();*/
 
     }
 
