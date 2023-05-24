@@ -1,10 +1,8 @@
 package com.example.javafx_test;
 
-//import model.*;
-//import org.apache.commons.lang3.StringUtils;
-
 import Model.Machine;
 import Model.Order;
+import Model.OrderERP;
 import Model.Piece;
 
 import java.sql.*;
@@ -27,7 +25,7 @@ public class MyDB {
 
     static String getInfoOrder = "SELECT * FROM infi2023.order";
 
-    private static MyDB single_instance = null;
+    static String getInfoOrderERP = "SELECT * FROM infi2023.ordererp";
 
 
     //Machine
@@ -39,7 +37,11 @@ public class MyDB {
     float expected_cost, production_cost, total_cost;
     //Piece
     int raw_1, raw_2, raw_1_arrival, raw_2_arrival, raw_1_dispatch, raw_2_dispatch, raw_1_price, raw_2_price, total_system_pieces;
+    //Order ERP
+    int id_order_erp, work_piece, start_piece, quantity, due_date, late_penalties, early_penalties, expected_profits;
+    String client_name;
 
+    private static MyDB single_instance = null;
 
     public MyDB(){}
 
@@ -47,6 +49,7 @@ public class MyDB {
     // Static method to create instance of Singleton class
     public static MyDB getInstance() {
         if (single_instance == null) single_instance = new MyDB();
+        System.out.println("OLA!");
         return single_instance;
     }
 
@@ -58,12 +61,14 @@ public class MyDB {
     // restricted to this class itself
 
     public Connection connect() throws SQLException {
-        System.out.println("Hello!");
+        System.out.println("Hello1!");
         conn = DriverManager.getConnection(db_url, user, passwd);
+        System.out.println("Hello2!");
         System.out.println(conn);
         return conn;
     }
     public void disconnect() throws SQLException {
+        System.out.println("Hello3!");
         if (conn != null)
             conn.close();
     }
@@ -77,7 +82,7 @@ public class MyDB {
         ResultSet rs_machine = stmt.executeQuery(getInfoMachine);
         System.out.println("passou query 1");
         while(rs_machine.next()){
-            getInfo(rs_machine);
+            getInfo(rs_machine, "machine");
             disconnect();
             return id_machine;
 
@@ -85,18 +90,25 @@ public class MyDB {
         ResultSet rs_order = stmt.executeQuery(getInfoOrder);
         System.out.println("passou query 2");
         while(rs_order.next()){
-            getInfo(rs_order);
+            getInfo(rs_order, "order");
             disconnect();
             return id_order;
 
         }
-        ResultSet rs_piece= stmt.executeQuery(getInfoPiece);
+        ResultSet rs_piece = stmt.executeQuery(getInfoPiece);
         System.out.println("passou query 3");
         while(rs_piece.next()){
-            getInfo(rs_piece);
+            getInfo(rs_piece, "piece");
             disconnect();
             return 0;
 
+        }
+        ResultSet rs_order_erp = stmt.executeQuery(getInfoOrderERP);
+        System.out.println("passou query 4");
+        while(rs_order_erp.next()){
+            getInfo(rs_order_erp, "ordererp");
+            disconnect();
+            return 0;
         }
         return -1;
 
@@ -105,42 +117,60 @@ public class MyDB {
     //Falta update da informação.
 
     //Get da informação
-    public void getInfo(ResultSet rs) throws SQLException {
+    public void getInfo(ResultSet rs, String type) throws SQLException {
 
-                id_machine = rs.getInt("id_machine");
-                id_m_order = rs.getInt("id_order");
-                tool = rs.getInt("tool");
-                piece_detected = rs.getInt("piece_detected");
-                in_use = rs.getBoolean("in_use");
-                broken = rs.getBoolean("broken");
-                work_time = rs.getFloat("work_time");
+        if(Objects.equals(type, "machine")) {
 
-                id_order = rs.getInt("id_order");
-                piece_type = rs.getInt("piece_type");
-                raw_piece = rs.getInt("raw_piece");
-                raw_cost = rs.getInt("raw_cost");
-                pieces_arrival = rs.getInt("pieces_arrival");
-                number_pieces = rs.getInt("number_pieces");
-                order_completed = rs.getInt("order_completed");
-                expected_delivery = rs.getInt("expected_delivery");
-                expected_cost = rs.getFloat("expected_cost");
-                production_cost = rs.getFloat("production_cost");
-                total_cost = rs.getFloat("total_cost");
+            id_machine = rs.getInt("id_machine");
+            id_m_order = rs.getInt("id_order");
+            tool = rs.getInt("tool");
+            System.out.println(tool);
+            piece_detected = rs.getInt("piece_detected");
+            in_use = rs.getBoolean("in_use");
+            broken = rs.getBoolean("broken");
+            work_time = rs.getFloat("work_time");
+        }
+        else if(Objects.equals(type, "order")) {
 
+            id_order = rs.getInt("id_order");
+            piece_type = rs.getInt("piece_type");
+            raw_piece = rs.getInt("raw_piece");
+            raw_cost = rs.getInt("raw_cost");
+            pieces_arrival = rs.getInt("pieces_arrival");
+            number_pieces = rs.getInt("number_pieces");
+            order_completed = rs.getInt("order_completed");
+            expected_delivery = rs.getInt("expected_delivery");
+            expected_cost = rs.getFloat("expected_cost");
+            production_cost = rs.getFloat("production_cost");
+            total_cost = rs.getFloat("total_cost");
+        }
+        else if(Objects.equals(type, "piece")) {
 
-                raw_1 = rs.getInt("raw_1");
-                raw_2 = rs.getInt("raw_2");
-                raw_1_arrival = rs.getInt("raw_1_arrival");
-                raw_2_arrival = rs.getInt("raw_2_arrival");
-                raw_1_dispatch = rs.getInt("raw_1_dispatch");
-                raw_2_dispatch = rs.getInt("raw_2_dispatch");
-                raw_1_price = rs.getInt("raw_1_price");
-                raw_2_price = rs.getInt("raw_2_price");
-                total_system_pieces = rs.getInt("total_system_pieces");
+            raw_1 = rs.getInt("raw_1");
+            raw_2 = rs.getInt("raw_2");
+            raw_1_arrival = rs.getInt("raw_1_arrival");
+            raw_2_arrival = rs.getInt("raw_2_arrival");
+            raw_1_dispatch = rs.getInt("raw_1_dispatch");
+            raw_2_dispatch = rs.getInt("raw_2_dispatch");
+            raw_1_price = rs.getInt("raw_1_price");
+            raw_2_price = rs.getInt("raw_2_price");
+            total_system_pieces = rs.getInt("total_system_pieces");
+        }
+        else if(Objects.equals(type, "ordererp")){
 
-            }
+            id_order_erp = rs.getInt("id_order_number");
+            client_name = rs.getString("client_name");
+            work_piece = rs.getInt("work_piece");
+            start_piece = rs.getInt("start_piece");
+            quantity = rs.getInt("quantity");
+            due_date = rs.getInt("due_date");
+            late_penalties = rs.getInt("late_penalties");
+            early_penalties = rs.getInt("early_penalties");
+            expected_profits = rs.getInt("expected_profits");
 
+        }
 
+    }
 
 
     //Informação get and set
@@ -257,6 +287,46 @@ public class MyDB {
         return -1;
 
     }
+
+    //Order ERP
+    //Obter a informação da encomenda ERP
+
+    ArrayList <OrderERP> order_erp_info = new ArrayList<>();
+    public int getInfoOrderERP(int id_order_number) throws SQLException{
+        order_erp_info.clear();
+        getInfoOrderERP = "SELECT * FROM infi2023.ordererp";
+        try (Connection con = connect()) {
+            System.out.println("Deu connect");
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(getInfoOrderERP);
+            while (rs.next()) {
+                if ((rs.getInt("id_order_number") == id_order_number)) {
+                    OrderERP e = new OrderERP();
+                    e.setClient_name(rs.getString("client_name"));
+                    e.setWork_piece(rs.getInt("work_piece"));
+                    e.setStart_piece(rs.getInt("start_piece"));
+                    e.setQuantity(rs.getInt("quantity"));
+                    e.setDue_date(rs.getInt("due_date"));
+                    e.setLate_penalties(rs.getInt("late_penalties"));
+                    e.setEarly_penalties(rs.getInt("early_penalties"));
+                    e.setExpected_profits(rs.getInt("expected_profits"));
+                    e.setId_order_erp(id_order_number);
+                    order_erp_info.add(e);
+                    disconnect();
+                    return 0;
+                }
+            }
+
+        }
+        catch (SQLException ex){
+            System.out.println(ex.getMessage());
+            disconnect();
+            return -1;
+        }
+        return -1;
+
+    }
+
 
 
 

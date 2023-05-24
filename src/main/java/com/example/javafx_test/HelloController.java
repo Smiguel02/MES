@@ -1,9 +1,16 @@
 package com.example.javafx_test;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
@@ -81,25 +88,23 @@ public class HelloController implements Initializable {
     @FXML
     private Label label_dispatch_raw1;
 
+    private Stage stage;
+
+    private Parent root;
+
+    /*@FXML
+    private Button sair;*/
+
     int result_query;
 
     MyDB n = MyDB.getInstance();
-
-    public HelloController(Label label_arrival_raw1) {
-        this.label_arrival_raw1 = label_arrival_raw1;
-    }
 
 
     //Inicializar Machine, Order, Piece
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        try {
-            n.connect();
-            System.out.println("passou");
-            result_query = n.queryTest();
-
-            //inicializar um controlador após o seu root element ja ter sido processado
+        //inicializar um controlador após o seu root element ja ter sido processado
             //Piece
             label_raw1.setText(String.valueOf(n.raw_1));
             System.out.println(n.raw_1);
@@ -117,6 +122,7 @@ public class HelloController implements Initializable {
             label_raw_piece.setText(String.valueOf(n.raw_piece));
             label_raw_cost.setText(String.valueOf(n.raw_cost));
             label_pieces_arrival.setText(String.valueOf(n.pieces_arrival));
+            label_number_pieces.setText(String.valueOf(n.number_pieces));
             label_order_completed.setText(String.valueOf(n.order_completed));
             label_expected_delivery.setText(String.valueOf(n.expected_delivery));
             label_expected_cost.setText(String.valueOf(n.expected_cost));
@@ -125,21 +131,28 @@ public class HelloController implements Initializable {
 
             //Machine
             label_tool.setText(String.valueOf(n.tool));
+            System.out.println(n.tool);
             label_machine_in_use.setText(String.valueOf(n.in_use));
             label_machine_broken.setText(String.valueOf(n.broken));
             label_piece_detected.setText(String.valueOf(n.piece_detected));
             label_work_time.setText(String.valueOf(n.work_time));
 
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-
 
     }
 
+    /*void Sair(ActionEvent event) throws IOException {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Logout");
+        alert.setHeaderText("You're about to logout!");
+        alert.setContentText("Do  you want to leave?");
+        if (alert.showAndWait().get() == ButtonType.OK) {
+            //current stage
+            stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+            //System.out.println("You successfully logged out!");
+            stage.close();
+        }
 
-
+    }*/
 
 
 }
