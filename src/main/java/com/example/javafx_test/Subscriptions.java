@@ -140,7 +140,8 @@ public class Subscriptions {
                 TimestampsToReturn.Both,
                 requests,
                 onItemCreated
-        ).get();
+        ).get(); //esta lista subscreve a todas as variaveis mas ficam com a função de atuaçao apos update igual, isto é, na ultima funcao definida acima
+        //  correcao a ser feita
 
         for (UaMonitoredItem item : items) {
             if (item.getStatusCode().isGood()) {
