@@ -16,6 +16,7 @@ import org.eclipse.milo.opcua.stack.core.types.structured.ReadValueId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -34,36 +35,110 @@ public class Subscriptions {
         UaSubscription subscription = client.getSubscriptionManager().createSubscription(15.0).get();
 
         // subscribe to the Value attribute of the server's CurrentTime node
-        ReadValueId readValueId = new ReadValueId(
+        ReadValueId fim_Maq1_sinal = new ReadValueId(
                 n.fim_Maq1_Sinal.getNodeId(),
                 AttributeId.Value.uid(), null, QualifiedName.NULL_VALUE
         );
-        // IMPORTANT: client handle must be unique per item within the context of a subscription.
-        // You are not required to use the UaSubscription's client handle sequence; it is provided as a convenience.
-        // Your application is free to assign client handles by whatever means necessary.
-        UInteger clientHandle = subscription.nextClientHandle(); //client handle is an identifier that is used to associate the subscription
-        MonitoringParameters parameters = new MonitoringParameters(
-                clientHandle,
+        UInteger fim_Maq1_sinal_Handle = subscription.getSubscriptionId();
+
+        ReadValueId fim_Maq2_sinal = new ReadValueId(
+                n.fim_Maq2_Sinal.getNodeId(),
+                AttributeId.Value.uid(), null, QualifiedName.NULL_VALUE
+        );
+        UInteger fim_Maq2_sinal_Handle = subscription.getSubscriptionId();
+
+        ReadValueId pospec1_Sinal = new ReadValueId(
+                n.pospec1_Sinal.getNodeId(),
+                AttributeId.Value.uid(), null, QualifiedName.NULL_VALUE
+        );
+        UInteger pospec1_Sinal_Handle = subscription.getSubscriptionId();
+
+        ReadValueId pospec2_Sinal = new ReadValueId(
+                n.pospec2_Sinal.getNodeId(),
+                AttributeId.Value.uid(), null, QualifiedName.NULL_VALUE
+        );
+        UInteger pospec2_Sinal_Handle = subscription.getSubscriptionId();
+
+
+        MonitoringParameters fim_Maq1_sinal_parameters = new MonitoringParameters(
+                fim_Maq1_sinal_Handle,
                 samplingInterval,     // sampling interval
                 null,       // filter, null means use default
-                uint(30),   // queue size
+                uint(10),   // queue size
                 true        // discard oldest
         );
-        MonitoredItemCreateRequest request = new MonitoredItemCreateRequest(
-                readValueId,
-                MonitoringMode.Reporting,
-                parameters
-        ); //monitoring settings for a specific variable within a subscription.
+        MonitoringParameters fim_Maq2_sinal_parameters = new MonitoringParameters(
+                fim_Maq2_sinal_Handle,
+                samplingInterval,     // sampling interval
+                null,       // filter, null means use default
+                uint(10),   // queue size
+                true        // discard oldest
+        );
+        MonitoringParameters pospec1_Sinal_parameters = new MonitoringParameters(
+                pospec1_Sinal_Handle,
+                samplingInterval,     // sampling interval
+                null,       // filter, null means use default
+                uint(10),   // queue size
+                true        // discard oldest
+        );
+        MonitoringParameters pospec2_Sinal_parameters = new MonitoringParameters(
+                pospec2_Sinal_Handle,
+                samplingInterval,     // sampling interval
+                null,       // filter, null means use default
+                uint(10),   // queue size
+                true        // discard oldest
+        );
 
-        // when creating items in MonitoringMode.Reporting this callback is where each item needs to have its
-        // value/event consumer hooked up. The alternative is to create the item in sampling mode, hook up the
-        // consumer after the creation call completes, and then change the mode for all items to reporting.
-        UaSubscription.ItemCreationCallback onItemCreated =
-                (item, id) -> item.setValueConsumer(this::onSubscriptionValue);
+        List<MonitoredItemCreateRequest> requests = new ArrayList<>();
+        MonitoredItemCreateRequest fim_Maq1_sinal_request = new MonitoredItemCreateRequest(
+                fim_Maq1_sinal,
+                MonitoringMode.Reporting,
+                fim_Maq1_sinal_parameters
+        );
+        requests.add(fim_Maq1_sinal_request);
+
+        MonitoredItemCreateRequest fim_Maq2_sinal_request = new MonitoredItemCreateRequest(
+                fim_Maq2_sinal,
+                MonitoringMode.Reporting,
+                fim_Maq2_sinal_parameters
+        );
+        requests.add(fim_Maq2_sinal_request);
+
+        MonitoredItemCreateRequest pospec1_Sinal_request = new MonitoredItemCreateRequest(
+                pospec1_Sinal,
+                MonitoringMode.Reporting,
+                pospec1_Sinal_parameters
+        );
+        requests.add(pospec1_Sinal_request);
+
+        MonitoredItemCreateRequest pospec2_Sinal_request = new MonitoredItemCreateRequest(
+                pospec2_Sinal,
+                MonitoringMode.Reporting,
+                pospec2_Sinal_parameters
+        );
+        requests.add(pospec2_Sinal_request);
+
+        UaSubscription.ItemCreationCallback onItemCreated = (item, id) -> {
+            if (item.getReadValueId().getNodeId().equals(n.fim_Maq1_Sinal.getNodeId())) {
+                System.out.println("1");
+                item.setValueConsumer(this::Fim_Maq1_sinal_onSubscriptionValue);
+            } else if (item.getReadValueId().getNodeId().equals(n.fim_Maq2_Sinal.getNodeId())) {
+                System.out.println("2");
+                item.setValueConsumer(this::Fim_Maq2_sinal_onSubscriptionValue);
+            } else if (item.getReadValueId().getNodeId().equals(n.pospec1_Sinal.getNodeId())) {
+                System.out.println("3");
+                item.setValueConsumer(this::pospec1_Sinal_onSubscriptionValue);
+            } else if (item.getReadValueId().getNodeId().equals(n.pospec2_Sinal.getNodeId())) {
+                System.out.println("4");
+                item.setValueConsumer(this::pospec2_Sinal_onSubscriptionValue);
+            }
+
+            // Add more conditions for additional variables
+        };
 
         List<UaMonitoredItem> items = subscription.createMonitoredItems(
                 TimestampsToReturn.Both,
-                newArrayList(request),
+                requests,
                 onItemCreated
         ).get();
 
@@ -76,8 +151,7 @@ public class Subscriptions {
 
             }
         }
-        // let the example run for 5 seconds then terminate
-        //Thread.sleep(5000);
+
 
     }
 
@@ -93,13 +167,43 @@ public class Subscriptions {
     // all data changes for all items belonging to the subscription.
 
     //This method is called automatically by the subscription whenever a new value is received.
-    private void onSubscriptionValue(UaMonitoredItem item, DataValue value) {
+    private void Fim_Maq1_sinal_onSubscriptionValue(UaMonitoredItem item, DataValue value) {
 
-            System.out.println(
-                    "999999999999999999999999999:subscription value received: item={" +
-                            item.getReadValueId().getNodeId()
-                            +"}, value={"
-                            + value.getValue() +"};");
+        System.out.println(
+                "1999999999999999999999999999:subscription value received: item={" +
+                        item.getReadValueId().getNodeId()
+                        +"}, value={"
+                        + value.getValue() +"};");
+
+
+    }
+    private void Fim_Maq2_sinal_onSubscriptionValue(UaMonitoredItem item, DataValue value) {
+
+        System.out.println(
+                "2999999999999999999999999999:subscription value received: item={" +
+                        item.getReadValueId().getNodeId()
+                        +"}, value={"
+                        + value.getValue() +"};");
+
+
+    }
+    private void pospec1_Sinal_onSubscriptionValue(UaMonitoredItem item, DataValue value) {
+
+        System.out.println(
+                "3999999999999999999999999999:subscription value received: item={" +
+                        item.getReadValueId().getNodeId()
+                        +"}, value={"
+                        + value.getValue() +"};");
+
+
+    }
+    private void pospec2_Sinal_onSubscriptionValue(UaMonitoredItem item, DataValue value) {
+
+        System.out.println(
+                "4999999999999999999999999999:subscription value received: item={" +
+                        item.getReadValueId().getNodeId()
+                        +"}, value={"
+                        + value.getValue() +"};");
 
 
     }
