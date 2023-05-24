@@ -30,7 +30,7 @@ public class OpcUa {
     UaVariableNode Gvlprod1;
     UaVariableNode Gvlprod2;
     UaVariableNode GvlSaida;
-    UaVariableNode GvlAt1Warehouse;
+    UaVariableNode GvlWarehouse;
     UaVariableNode GvlAt1SensP;
     UaVariableNode at1_Livre;
     UaVariableNode maq1_Livre;
@@ -44,6 +44,7 @@ public class OpcUa {
     private Boolean first_Order = true;
 
     List<ReadValueId> Ids_mandarFazerPeca = new ArrayList<>();
+    List<ReadValueId> Ids_mandarSairPeca = new ArrayList<>();
 
     private OpcUa() throws UaException {
     }
@@ -73,6 +74,7 @@ public class OpcUa {
             addressSpace = client.getAddressSpace();
             //opcuaclient instance will automatically attempt to reconnect any time the connection is lost, até disconnect is called
             InicializarNodes();
+            subs(); //Inicializa
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -89,24 +91,21 @@ public class OpcUa {
 
     private void InicializarNodes () throws UaException {
         Gvlprod1 = (UaVariableNode) addressSpace.getNode(
-                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.GVL.prod1")
+                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.GVL.prod1") //mandar fazer peca maq1
         );
         Gvlprod2 = (UaVariableNode) addressSpace.getNode(
-                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.GVL.prod2")
+                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.GVL.prod2") //mandar fazer peca maq2
         );
-        GvlSaida = (UaVariableNode) addressSpace.getNode(
-                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.GVL.saida")
-        );
-        GvlAt1Warehouse = (UaVariableNode) addressSpace.getNode(
-                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.GVL.AT1RWarO")
+        GvlWarehouse = (UaVariableNode) addressSpace.getNode(
+                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.GVL.AT1RWarO") //armazem
         );
         GvlAt1SensP = (UaVariableNode) addressSpace.getNode(
                 new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.GVL.AT1ISensP")
         );
         at1_Livre = (UaVariableNode) addressSpace.getNode(
-                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.AT1.livre")
+                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.AT1.livre")//ver AT1 se está livre
         );
-
+        //*******************
         fim_Maq1_Sinal = (UaVariableNode) addressSpace.getNode(
                 new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.posmaq1.sinal")
         );
@@ -119,6 +118,7 @@ public class OpcUa {
         pospec2_Sinal = (UaVariableNode) addressSpace.getNode(
                 new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.pospec2.sinal")
         );
+        //******************
         Gvl_pedir_peca_Ware = (UaVariableNode) addressSpace.getNode(
                 new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.GVL.entrada")
         );
@@ -150,14 +150,32 @@ public class OpcUa {
                         QualifiedName.NULL_VALUE
                 )
         );
-        /*Ids_mandarFazerPeca.add(
+
+
+        Ids_mandarSairPeca.add(
+                new ReadValueId(
+                        at1_Livre.getNodeId(),
+                        AttributeId.Value.uid(),
+                        null, // indexRange
+                        QualifiedName.NULL_VALUE
+                )
+        );
+        Ids_mandarSairPeca.add(
                 new ReadValueId(
                         Gvl_pedir_peca_Ware.getNodeId(),
                         AttributeId.Value.uid(),
                         null, // indexRange
                         QualifiedName.NULL_VALUE
                 )
-        );*/
+        );
+        Ids_mandarSairPeca.add(
+                new ReadValueId(
+                        Gvl_sai_peca_Ware.getNodeId(),
+                        AttributeId.Value.uid(),
+                        null, // indexRange
+                        QualifiedName.NULL_VALUE
+                )
+        );
 
     }
 
@@ -168,6 +186,7 @@ public class OpcUa {
         assert descriptionValue.getSourceTime() != null;
         System.out.println(descriptionValue.getServerTime());
         return value.getValue().getValue(); //devolve o valor lido
+
     }
 
     public List<DataValue> ReadMultiVars (List<ReadValueId> lista_Ids_ler) throws ExecutionException, InterruptedException {
@@ -201,177 +220,87 @@ public class OpcUa {
         return 0;
     }
 
-    //FUNÇÃO ALTERADA PARA TESTAR PLC, VERSÃO "NORMAL" ABAIXO COMENTADO**************
-    int qm = 1;
 
-    public int mandarFazerPeca (int pecaWarehouse, int pecaFabricar, int maquina) throws UaException, ExecutionException, InterruptedException {
+    //Manda fazer a peça. Fornecer peça inicial, peça a fabricar.
+    //Vai fazer na maq1, return1; senão vê maq2, return 2; senão return -1 pq nao mandou fazer
+    public int mandarFazerPeca (int pecaWarehouse, int pecaFabricar) throws UaException, ExecutionException, InterruptedException {
         /*
             ver se at1 está livre, ver maqX livre, meter prodX cenas, warO peça que quero
             Ids_mandarFazerPeca
             At1, Maq1, Maq2 (true true true)
         */
-        NodeId nodeid;
-        System.out.println("qm"+qm);
-        if(qm == 1){
-            nodeid = Gvlprod1.getNodeId();
-        }else if(qm == 2){
-            nodeid = Gvlprod2.getNodeId();
-        }else {
-            return 1;
-        }
-        UShort value = UShort.valueOf(pecaWarehouse);
-        System.out.println(nodeid);
 
-        DataValue pec_war = new DataValue(new Variant(value));
+        UShort value = UShort.valueOf(pecaWarehouse);
+
+        DataValue pec_war = new DataValue(new Variant(value)); //valores a escrever
         DataValue pec_fab = new DataValue(new Variant((short)pecaFabricar));
         UaVariableNode node_Maquina_livre, node_Maquina_Prod; //indicar que variavesi de máuqina ler e escrever
-        if(first_Order == Boolean.TRUE){
-            //pode mandar fazer logo
-            System.out.println("first order");
+        List<DataValue> dataValues = ReadMultiVars(Ids_mandarFazerPeca);
+        //0 At1, 1 maq1, 2 maq2
+        //vai ler as variáveis
+
+        //dataValues.get(qm).getValue().getValue().equals((short)0)
+
+        //se At1 está livre, 1
+        //verifica a maq1 e depois a maq2
+        if(dataValues.get(0).getValue().getValue().equals(true) && dataValues.get(1).getValue().getValue().equals((short)0)){
+            System.out.println("Está livre posso meter na maq1");
             List<WriteValue> writeValues = new ArrayList<>();
-            writeValues.add(new WriteValue(nodeid, AttributeId.Value.uid(), null, pec_fab));
+            writeValues.add(new WriteValue(Gvlprod1.getNodeId(), AttributeId.Value.uid(), null, pec_fab));
             writeValues.add(new WriteValue(Gvl_pedir_peca_Ware.getNodeId(), AttributeId.Value.uid(), null, pec_war));
             WriteMultiVars(writeValues);
             writeValues.clear();
-            first_Order = Boolean.FALSE;
-            return 0;
+            return 1;
+        } else if (dataValues.get(0).getValue().getValue().equals(true) && dataValues.get(2).getValue().getValue().equals((short)0)) {
+            System.out.println("Está livre posso meter na maq2");
+            List<WriteValue> writeValues = new ArrayList<>();
+            writeValues.add(new WriteValue(Gvlprod2.getNodeId(), AttributeId.Value.uid(), null, pec_fab));
+            writeValues.add(new WriteValue(Gvl_pedir_peca_Ware.getNodeId(), AttributeId.Value.uid(), null, pec_war));
+            WriteMultiVars(writeValues);
+            writeValues.clear();
+            return 2;
         }else{
-            List<DataValue> dataValues = ReadMultiVars(Ids_mandarFazerPeca);
-            //0 At1, 1 maq1, 2 maq2
-            System.out.println("prod"+qm+":"+dataValues.get(qm).getValue().getValue().equals((short)0));
-
-            if(dataValues.get(0).getValue().getValue().equals(true) && dataValues.get(qm).getValue().getValue().equals((short)0)){
-                System.out.println("Está livre posso meter");
-                List<WriteValue> writeValues = new ArrayList<>();
-                writeValues.add(new WriteValue(nodeid, AttributeId.Value.uid(), null, pec_fab));
-                writeValues.add(new WriteValue(Gvl_pedir_peca_Ware.getNodeId(), AttributeId.Value.uid(), null, pec_war));
-                WriteMultiVars(writeValues);
-                writeValues.clear();
-            }
-
+            return -1;
+            //não pode mandar fazer a peça
         }
-        if(qm == 1){
-            qm=2;
-        }else if(qm == 2){
-            qm=1;
-        }
-        //Object Atp1, maq;
-
-        return 1;
 
 
     }
-    public int mandarSairPeca (int pecaWarehouse, int pecaFabricar, int maquina) throws UaException, ExecutionException, InterruptedException {
+    public int mandarSairPeca (int pecaWarehouseSair) throws UaException, ExecutionException, InterruptedException {
         /*
             Mandar sair uma peça do armazém, Preciso de ver o At1 se está livre
-            gvl.saida meter a 1 e depois mudar com WarO
+            gvl.saida meter a 1 e depois mudar com WarO através do gvl.entrada
         */
-        NodeId nodeid;
-        qm=2;
-        System.out.println("qm"+qm);
-        if(qm == 1){
-            nodeid = Gvlprod1.getNodeId();
-        }else if(qm == 2){
-            nodeid = Gvlprod2.getNodeId();
-        }else {
-            return 1;
-        }
-        UShort value = UShort.valueOf(pecaWarehouse);
-        System.out.println(nodeid);
 
-        DataValue pec_war = new DataValue(new Variant(value));
-        DataValue pec_fab = new DataValue(new Variant((short)pecaFabricar));
-        UaVariableNode node_Maquina_livre, node_Maquina_Prod; //indicar que variavesi de máuqina ler e escrever
-        if(first_Order == Boolean.TRUE){
-            //pode mandar fazer logo
-            System.out.println("first order");
+        UShort value = UShort.valueOf(pecaWarehouseSair); //USHORT PARA UINT ---- SHORT PARA INT
+        DataValue pec_sair = new DataValue(new Variant(value)); //entrada
+        UShort verificacao = UShort.valueOf(0);
+        DataValue ok_sair = new DataValue(new Variant(Boolean.TRUE));
+
+
+        List<DataValue> dataValues = ReadMultiVars(Ids_mandarSairPeca);
+        //0 At1, , 1 entrada, 2 gvl.saida
+
+        if(dataValues.get(0).getValue().getValue().equals(true) && dataValues.get(2).getValue().getValue().equals(false) && dataValues.get(1).getValue().getValue().equals(verificacao)){
+            System.out.println("Está livre posso mandar sair");
             List<WriteValue> writeValues = new ArrayList<>();
-            writeValues.add(new WriteValue(nodeid, AttributeId.Value.uid(), null, pec_fab));
-            writeValues.add(new WriteValue(Gvl_pedir_peca_Ware.getNodeId(), AttributeId.Value.uid(), null, pec_war));
+            writeValues.add(new WriteValue(Gvl_sai_peca_Ware.getNodeId(), AttributeId.Value.uid(), null, ok_sair));
+            writeValues.add(new WriteValue(Gvl_pedir_peca_Ware.getNodeId(), AttributeId.Value.uid(), null, pec_sair));
             WriteMultiVars(writeValues);
             writeValues.clear();
-            //first_Order = Boolean.FALSE;
             return 0;
-        }else{
-            List<DataValue> dataValues = ReadMultiVars(Ids_mandarFazerPeca);
-            //0 At1, 1 maq1, 2 maq2
-            System.out.println("prod"+qm+":"+dataValues.get(qm).getValue().getValue().equals((short)0));
-
-            if(dataValues.get(0).getValue().getValue().equals(true) && dataValues.get(qm).getValue().getValue().equals((short)0)){
-                System.out.println("Está livre posso meter");
-                List<WriteValue> writeValues = new ArrayList<>();
-                writeValues.add(new WriteValue(nodeid, AttributeId.Value.uid(), null, pec_fab));
-                writeValues.add(new WriteValue(Gvl_pedir_peca_Ware.getNodeId(), AttributeId.Value.uid(), null, pec_war));
-                WriteMultiVars(writeValues);
-                writeValues.clear();
-            }
-
         }
-        if(qm == 1){
-            qm=2;
-        }else if(qm == 2){
-            qm=1;
-        }
-        //Object Atp1, maq;
 
-        return 1;
+
+        //erro
+        return -1;
 
     }
     public void subs() throws Exception {
         Subscriptions subs = new Subscriptions();
 
     }
-    ///*++++++++++++++++
-
-    /*public int mandarFazerPeca (int pecaWarehouse, int pecaFabricar, int maquina) throws UaException, ExecutionException, InterruptedException {
-        *
-            ver se at1 está livre, ver maqX livre, meter prodX cenas, warO peça que quero
-            Ids_mandarFazerPeca
-            At1, Maq1, Maq2 (true true true)
-        *
-        NodeId nodeid;
-        if(maquina == 1){
-            nodeid = Gvlprod1.getNodeId();
-
-        }else if(maquina == 2){
-            nodeid = Gvlprod2.getNodeId();
-        }else {
-            return 1;
-        }
-        UShort value = UShort.valueOf(pecaWarehouse);
-        System.out.println(value);
-
-        DataValue pec_war = new DataValue(new Variant(value));
-        DataValue pec_fab = new DataValue(new Variant((short)pecaFabricar));
-        UaVariableNode node_Maquina_livre, node_Maquina_Prod; //indicar que variavesi de máuqina ler e escrever
-        if(first_Order == Boolean.TRUE){
-            //pode mandar fazer logo
-            System.out.println("first order");
-            List<WriteValue> writeValues = new ArrayList<>();
-            writeValues.add(new WriteValue(nodeid, AttributeId.Value.uid(), null, pec_fab));
-            writeValues.add(new WriteValue(Gvl_pedir_peca_Ware.getNodeId(), AttributeId.Value.uid(), null, pec_war));
-            WriteMultiVars(writeValues);
-            writeValues.clear();
-            first_Order = Boolean.FALSE;
-            return 0;
-        }else{
-            List<DataValue> dataValues = ReadMultiVars(Ids_mandarFazerPeca);
-            //0 At1, 1 maq1, 2 maq2
-            if(dataValues.get(0).getValue().getValue().equals(true) && dataValues.get(maquina).getValue().getValue().equals((short)0)){
-                System.out.println("Está livre posso meter");
-                List<WriteValue> writeValues = new ArrayList<>();
-                writeValues.add(new WriteValue(nodeid, AttributeId.Value.uid(), null, pec_fab));
-                writeValues.add(new WriteValue(Gvl_pedir_peca_Ware.getNodeId(), AttributeId.Value.uid(), null, pec_war));
-                WriteMultiVars(writeValues);
-                writeValues.clear();
-            }
-
-        }
-        //Object Atp1, maq;
-
-        return 1;
 
 
-    }*/
 
 }
