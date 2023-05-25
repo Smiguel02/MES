@@ -358,7 +358,7 @@ public class MyDB {
         return -1;
 
     }
-/*
+
     //Updates
     //Update Machine
     static String updateId_order= null;
@@ -374,14 +374,14 @@ public class MyDB {
     static String updateWork_time= null;
 
     public int updateNome(String tipo){
-        int affect1, affect2;
+        int affect1;
 
         updateId_order = "UPDATE infi2023.machine SET id_order = ? WHERE id_machine = ?";
-        updateTool = "UPDATE infi2023.machine SET tool = ? WHERE id_machine = ?";
-        updateIn_use = "UPDATE infi2023.machine SET in_use = ? WHERE id_machine = ?";
-        updateBroken = "UPDATE infi2023.machine SET broken = ? WHERE id_machine = ?";
-        updatePiece_detected = "UPDATE infi2023.machine SET piece_detected = ? WHERE id_machine = ?";
-        updateWork_time = "UPDATE infi2023.machine SET work_time = ? WHERE id_machine = ?";
+        //updateTool = "UPDATE infi2023.machine SET tool = ? WHERE id_machine = ?";
+        //updateIn_use = "UPDATE infi2023.machine SET in_use = ? WHERE id_machine = ?";
+        //updateBroken = "UPDATE infi2023.machine SET broken = ? WHERE id_machine = ?";
+        //updatePiece_detected = "UPDATE infi2023.machine SET piece_detected = ? WHERE id_machine = ?";
+        //updateWork_time = "UPDATE infi2023.machine SET work_time = ? WHERE id_machine = ?";
 
         if(Objects.equals(tipo, "machine")){
             System.out.println("AQUIII");
@@ -395,15 +395,14 @@ public class MyDB {
                 affect1 = pstmt1.executeUpdate();
                 System.out.println("try 3 n");
 
-                PreparedStatement pstmt2  = con.prepareStatement(updateTool);
+                /*PreparedStatement pstmt2  = con.prepareStatement(updateTool);
                 System.out.println("try 1 n");
                 pstmt2.setInt(1, tool);
                 pstmt2.setInt(2, id_machine);
                 System.out.println("try 2 n");
                 affect2 = pstmt2.executeUpdate();
-                System.out.println("try 3 n");
-
-
+                System.out.println("try 3 n");*/
+                
                 if(affect1 < 0){
                     disconnect();
                     return affect1;
@@ -421,9 +420,7 @@ public class MyDB {
         }
         return -1;
 
-
-
-    }*/
+    }
 
 
 }
