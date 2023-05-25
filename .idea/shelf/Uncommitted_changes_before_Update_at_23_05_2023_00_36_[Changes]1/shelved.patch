@@ -1,0 +1,55 @@
+Index: src/main/java/com/example/javafx_test/CommsController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/javafx_test/CommsController.java b/src/main/java/com/example/javafx_test/CommsController.java
+--- a/src/main/java/com/example/javafx_test/CommsController.java	
++++ b/src/main/java/com/example/javafx_test/CommsController.java	
+@@ -44,12 +44,14 @@
+         OpcUa n = null;
+         try {
+             n = OpcUa.getInstance();
++            System.out.println("1");
+         } catch (Exception e) {
+             throw new RuntimeException(e);
+         }
+ 
+         while(true){
+ 
++
+             /**
+              * Always updating OPC_UA code:
+              * I would say here we check the values to check if any subscribed variable in the PLC has been updated. MES will get that value later.
+Index: src/main/java/com/example/javafx_test/Production.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/javafx_test/Production.java b/src/main/java/com/example/javafx_test/Production.java
+--- a/src/main/java/com/example/javafx_test/Production.java	
++++ b/src/main/java/com/example/javafx_test/Production.java	
+@@ -69,6 +69,7 @@
+         OpcUa comms_opc = null;     //FIXME: iniciado assim mas nem sei bem se está correto ou nao
+         try {
+             comms_opc = OpcUa.getInstance();
++            System.out.println("2");
+         } catch (Exception e) {
+             throw new RuntimeException(e);
+         }
+Index: src/main/java/com/example/javafx_test/OpcUa.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/javafx_test/OpcUa.java b/src/main/java/com/example/javafx_test/OpcUa.java
+--- a/src/main/java/com/example/javafx_test/OpcUa.java	
++++ b/src/main/java/com/example/javafx_test/OpcUa.java	
+@@ -90,6 +90,7 @@
+         }
+ 
+         private void InicializarNodes () throws UaException {
++            System.out.println("Nodes");
+             Gvlprod1 = (UaVariableNode) addressSpace.getNode(
+                     new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.GVL.prod1")
+             );
