@@ -2,6 +2,8 @@ package Model;
 
 public class Piece {
 
+    private int id_piece;
+
     private int raw_1;
 
     private int raw_2;
@@ -19,6 +21,14 @@ public class Piece {
     private int raw_2_price;
 
     private int total_system_pieces;
+
+    public int getId_piece() {
+        return id_piece;
+    }
+
+    public void setId_piece(int id_piece) {
+        this.id_piece = id_piece;
+    }
 
     public int getRaw_1() {
         return raw_1;

@@ -4,11 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b2dfacfb-aa89-45c7-ab1d-d84f49d37991" name="Changes" comment="Algumas atulizacoes no mydb com erp e mudanças no controlador">
+    <list default="true" id="b2dfacfb-aa89-45c7-ab1d-d84f49d37991" name="Changes" comment="Algumas atulizacoes no mydb">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Model/Piece.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Model/Piece.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/HelloController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/HelloController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/MyDB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/MyDB.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/javafx_test/hello-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/javafx_test/hello-view.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -155,7 +155,14 @@
       <option name="project" value="LOCAL" />
       <updated>1684945029602</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Algumas atulizacoes no mydb">
+      <created>1685006942574</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1685006942574</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -180,7 +187,8 @@
     <MESSAGE value="Label com inicialize" />
     <MESSAGE value="Algumas atulizacoes no mydb e no hello" />
     <MESSAGE value="Algumas atulizacoes no mydb com erp e mudanças no controlador" />
-    <option name="LAST_COMMIT_MESSAGE" value="Algumas atulizacoes no mydb com erp e mudanças no controlador" />
+    <MESSAGE value="Algumas atulizacoes no mydb" />
+    <option name="LAST_COMMIT_MESSAGE" value="Algumas atulizacoes no mydb" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/MES$GUI_MES.ic" NAME="GUI_MES Coverage Results" MODIFIED="1684848173365" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">

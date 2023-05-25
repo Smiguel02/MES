@@ -29,7 +29,6 @@ public class MyDB {
     static String getInfoOrderERP = "SELECT * FROM infi2023.ordererp";
 
     //Update
-
     static String update_machine = null;
 
     static String update_order = null;
@@ -37,6 +36,7 @@ public class MyDB {
     static String update_piece = null;
 
     static String update_order_erp = null;
+    //         updateEdit = "UPDATE studybud.favs SET tipo= ? , idaluno= ?  WHERE idaluno= ?  AND tipo= ?  ";
 
 
     //Machine
@@ -47,7 +47,7 @@ public class MyDB {
     int id_order, piece_type, raw_piece, raw_cost, pieces_arrival, number_pieces, order_completed, expected_delivery;
     float expected_cost, production_cost, total_cost;
     //Piece
-    int raw_1, raw_2, raw_1_arrival, raw_2_arrival, raw_1_dispatch, raw_2_dispatch, raw_1_price, raw_2_price, total_system_pieces;
+    int id_piece, raw_1, raw_2, raw_1_arrival, raw_2_arrival, raw_1_dispatch, raw_2_dispatch, raw_1_price, raw_2_price, total_system_pieces;
     //Order ERP
     int id_order_erp, work_piece, start_piece, quantity, due_date, late_penalties, early_penalties, expected_profits;
     String client_name;
@@ -84,7 +84,7 @@ public class MyDB {
             conn.close();
     }
 
-    public int queryTest() throws SQLException {
+    public int queryTestMachine(int id_machine) throws SQLException {
 
         if (conn == null)
             throw new SQLException("Call connect before querying...");
@@ -92,38 +92,56 @@ public class MyDB {
         Statement stmt = conn.createStatement();
         ResultSet rs_machine = stmt.executeQuery(getInfoMachine);
         System.out.println("passou query 1");
-        while(rs_machine.next()){
+        while (rs_machine.next()) {
             getInfo(rs_machine, "machine");
-            disconnect();
-            return id_machine;
-
         }
+        disconnect();
+        return id_machine;
+    }
+
+    public int queryTestOrder(int id_order) throws SQLException {
+        if (conn == null)
+            throw new SQLException("Call connect before querying...");
+
+        Statement stmt = conn.createStatement();
         ResultSet rs_order = stmt.executeQuery(getInfoOrder);
         System.out.println("passou query 2");
         while(rs_order.next()){
             getInfo(rs_order, "order");
-            disconnect();
-            return id_order;
-
         }
+        disconnect();
+        return id_order;
+    }
+
+    public int queryTestPiece(int id_piece) throws SQLException {
+        if (conn == null)
+            throw new SQLException("Call connect before querying...");
+
+        Statement stmt = conn.createStatement();
         ResultSet rs_piece = stmt.executeQuery(getInfoPiece);
         System.out.println("passou query 3");
         while(rs_piece.next()){
             getInfo(rs_piece, "piece");
-            disconnect();
-            return 0;
-
         }
+        disconnect();
+        return id_piece;
+    }
+
+    public int queryTestOrderERP(int id_order_erp) throws SQLException {
+        if (conn == null)
+            throw new SQLException("Call connect before querying...");
+
+        Statement stmt = conn.createStatement();
         ResultSet rs_order_erp = stmt.executeQuery(getInfoOrderERP);
         System.out.println("passou query 4");
         while(rs_order_erp.next()){
             getInfo(rs_order_erp, "ordererp");
-            disconnect();
-            return 0;
         }
-        return -1;
 
+        disconnect();
+        return id_order_erp;
     }
+
 
     //Falta update da informação.
 
@@ -158,6 +176,7 @@ public class MyDB {
         }
         else if(Objects.equals(type, "piece")) {
 
+            id_piece = rs.getInt("id_piece");
             raw_1 = rs.getInt("raw_1");
             raw_2 = rs.getInt("raw_2");
             raw_1_arrival = rs.getInt("raw_1_arrival");
@@ -268,7 +287,7 @@ public class MyDB {
     //Obter a informação da peça
 
     ArrayList <Piece> piece_info = new ArrayList<>();
-    public int getInfoPiece() throws SQLException{
+    public int getInfoPiece(int id_piece) throws SQLException{
         piece_info.clear();
         getInfoPiece = "SELECT * FROM infi2023.piece";
         try (Connection con = connect()) {
@@ -286,6 +305,7 @@ public class MyDB {
                 p.setRaw_1_price(rs.getInt("raw_1_price"));
                 p.setRaw_2_price(rs.getInt("raw_2_price"));
                 p.setTotal_system_pieces(rs.getInt("total_system_pieces"));
+                p.setId_piece(id_piece);
                 piece_info.add(p);
                 disconnect();
                 return 0;
@@ -338,12 +358,72 @@ public class MyDB {
         return -1;
 
     }
-
+/*
     //Updates
+    //Update Machine
+    static String updateId_order= null;
+
+    static String updateTool= null;
+
+    static String updateIn_use= null;
+
+    static String updateBroken= null;
+
+    static String updatePiece_detected= null;
+
+    static String updateWork_time= null;
+
+    public int updateNome(String tipo){
+        int affect1, affect2;
+
+        updateId_order = "UPDATE infi2023.machine SET id_order = ? WHERE id_machine = ?";
+        updateTool = "UPDATE infi2023.machine SET tool = ? WHERE id_machine = ?";
+        updateIn_use = "UPDATE infi2023.machine SET in_use = ? WHERE id_machine = ?";
+        updateBroken = "UPDATE infi2023.machine SET broken = ? WHERE id_machine = ?";
+        updatePiece_detected = "UPDATE infi2023.machine SET piece_detected = ? WHERE id_machine = ?";
+        updateWork_time = "UPDATE infi2023.machine SET work_time = ? WHERE id_machine = ?";
+
+        if(Objects.equals(tipo, "machine")){
+            System.out.println("AQUIII");
+            try(Connection con = connect()){
+                System.out.println("deu connect");
+                PreparedStatement pstmt1 = con.prepareStatement(updateId_order);
+                System.out.println("try 1 n");
+                pstmt1.setInt(1, id_order);
+                pstmt1.setInt(2, id_machine);
+                System.out.println("try 2 n");
+                affect1 = pstmt1.executeUpdate();
+                System.out.println("try 3 n");
+
+                PreparedStatement pstmt2  = con.prepareStatement(updateTool);
+                System.out.println("try 1 n");
+                pstmt2.setInt(1, tool);
+                pstmt2.setInt(2, id_machine);
+                System.out.println("try 2 n");
+                affect2 = pstmt2.executeUpdate();
+                System.out.println("try 3 n");
+
+
+                if(affect1 < 0){
+                    disconnect();
+                    return affect1;
+                }else{
+                    disconnect();
+                    return affect1;
+                }
+                // Analyse the resulting data
+
+            }catch (SQLException ex){
+                System.out.println(ex.getMessage());
+                return -1;
+            }
+
+        }
+        return -1;
 
 
 
-
+    }*/
 
 
 }
