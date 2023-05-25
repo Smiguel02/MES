@@ -4,11 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="863c4c01-492f-494a-87c4-0cfc1053f270" name="Changes" comment="Added subscriptions from other repo">
+    <list default="true" id="863c4c01-492f-494a-87c4-0cfc1053f270" name="Changes" comment="gson">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/CommsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/CommsController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/GUI_MES.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/GUI_MES.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/OpcUa.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/OpcUa.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,25 +25,25 @@
     <option name="showLibraryContents" value="true" />
     <option name="showMembers" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Downloaded.Files.Path.Enabled": "false",
-    "Repository.Attach.Annotations": "false",
-    "Repository.Attach.JavaDocs": "false",
-    "Repository.Attach.Sources": "false",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/User/IdeaProjects/MES",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "project.structure.last.edited": "Libraries",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.45287356"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;true&quot;,
+    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/anaca/IdeaProjects/INFI_Project/opc_ua&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.45287356&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="com.example.javafx_test" />
@@ -80,7 +77,42 @@
       <option name="project" value="LOCAL" />
       <updated>1684788420247</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="definicoes na pom">
+      <created>1684798980468</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1684798980468</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Função MandarFazerPeça: Faz peça que tu dizes, 1º tenta maq1, 2ºmaq2, return-1 se nao der&#10;Função MandarSairPeca: Manda sair a peça que tu digas do WarO">
+      <created>1684893221206</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1684893221206</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Subscricoes para 4 vars, tem um erro ainda a resolver.">
+      <created>1684897714001</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1684897714001</updated>
+    </task>
+    <task id="LOCAL-00005" summary="nota">
+      <created>1684898488226</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1684898488226</updated>
+    </task>
+    <task id="LOCAL-00006" summary="gson">
+      <created>1684986042668</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1684986042668</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -99,6 +131,12 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Added subscriptions from other repo" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added subscriptions from other repo" />
+    <MESSAGE value="jar na lib" />
+    <MESSAGE value="definicoes na pom" />
+    <MESSAGE value="Função MandarFazerPeça: Faz peça que tu dizes, 1º tenta maq1, 2ºmaq2, return-1 se nao der&#10;Função MandarSairPeca: Manda sair a peça que tu digas do WarO" />
+    <MESSAGE value="Subscricoes para 4 vars, tem um erro ainda a resolver." />
+    <MESSAGE value="nota" />
+    <MESSAGE value="gson" />
+    <option name="LAST_COMMIT_MESSAGE" value="gson" />
   </component>
 </project>
