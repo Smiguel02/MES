@@ -135,7 +135,7 @@ public class Subscriptions {
 
             // Add more conditions for additional variables
         };
-
+        //acabar
         List<UaMonitoredItem> items = subscription.createMonitoredItems(
                 TimestampsToReturn.Both,
                 requests,
