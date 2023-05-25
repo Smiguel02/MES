@@ -88,23 +88,37 @@ public class HelloController implements Initializable {
     @FXML
     private Label label_dispatch_raw1;
 
+    @FXML
+    private Label label_total_time;
+
+    @FXML
+    private Label label_cor; //se for na primeira metade do dia background -> #00a000; na segunda metade do dia background -> FF0000
+
+
+    @FXML
+    private Label label_day;
+
     private Stage stage;
 
     private Parent root;
-
-    /*@FXML
-    private Button sair;*/
 
     int result_query;
 
     MyDB n = MyDB.getInstance();
 
 
+
     //Inicializar Machine, Order, Piece
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        //inicializar um controlador após o seu root element ja ter sido processado
+        try {
+            n.connect();
+            System.out.println("passou_aqui");
+            result_query = n.queryTest();
+
+            System.out.println("Estou aqui");
+            //inicializar um controlador após o seu root element ja ter sido processado
             //Piece
             label_raw1.setText(String.valueOf(n.raw_1));
             System.out.println(n.raw_1);
@@ -133,26 +147,29 @@ public class HelloController implements Initializable {
             label_tool.setText(String.valueOf(n.tool));
             System.out.println(n.tool);
             label_machine_in_use.setText(String.valueOf(n.in_use));
+            System.out.println(n.in_use);
             label_machine_broken.setText(String.valueOf(n.broken));
+            System.out.println(n.broken);
             label_piece_detected.setText(String.valueOf(n.piece_detected));
             label_work_time.setText(String.valueOf(n.work_time));
 
+            //Dia
 
-    }
+            //Total time
 
-    /*void Sair(ActionEvent event) throws IOException {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Logout");
-        alert.setHeaderText("You're about to logout!");
-        alert.setContentText("Do  you want to leave?");
-        if (alert.showAndWait().get() == ButtonType.OK) {
-            //current stage
-            stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-            //System.out.println("You successfully logged out!");
-            stage.close();
+            /*if((n.total_time/2) >= n.time_real ){
+                label_cor.setBackground(#FF0000);
+            }
+            else{
+                label_cor.setBackground(#00a000);
+            }*/
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
 
-    }*/
+    }
 
 
 }

@@ -165,5 +165,23 @@
       <Label fx:id="label_expected_cost" alignment="CENTER" layoutX="809.0" layoutY="161.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" />
       <Label fx:id="label_production_cost" alignment="CENTER" layoutX="809.0" layoutY="207.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" />
       <Label fx:id="label_total_cost" alignment="CENTER" layoutX="809.0" layoutY="249.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" />
+      <Label layoutX="992.0" layoutY="31.0" text="Time:">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Label>
+      <Label layoutX="992.0" layoutY="84.0" text="Total Time:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="992.0" layoutY="122.0" text="Day:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="label_total_time" alignment="CENTER" layoutX="1077.0" layoutY="78.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_day" alignment="CENTER" layoutX="1077.0" layoutY="117.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_cor" layoutX="1022.0" layoutY="177.0" prefHeight="32.0" prefWidth="130.0" style="-fx-background-color: white;" />
    </children>
 </AnchorPane>

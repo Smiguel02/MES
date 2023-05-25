@@ -13,6 +13,7 @@ import java.util.jar.JarOutputStream;
 public class MyDB {
 
     /* syntax for DB_URL:         jdbc:postgresql://<database_host>:<port>/<database_name> */
+    //Info
     static final String db_url = "jdbc:postgresql://10.227.240.130:5432/pswa0201";
 
     static final String user = "pswa0201";
@@ -26,6 +27,16 @@ public class MyDB {
     static String getInfoOrder = "SELECT * FROM infi2023.order";
 
     static String getInfoOrderERP = "SELECT * FROM infi2023.ordererp";
+
+    //Update
+
+    static String update_machine = null;
+
+    static String update_order = null;
+
+    static String update_piece = null;
+
+    static String update_order_erp = null;
 
 
     //Machine
@@ -124,9 +135,10 @@ public class MyDB {
             id_machine = rs.getInt("id_machine");
             id_m_order = rs.getInt("id_order");
             tool = rs.getInt("tool");
-            System.out.println(tool);
+            //System.out.println(tool);
             piece_detected = rs.getInt("piece_detected");
             in_use = rs.getBoolean("in_use");
+            //System.out.println(in_use);
             broken = rs.getBoolean("broken");
             work_time = rs.getFloat("work_time");
         }
@@ -326,6 +338,10 @@ public class MyDB {
         return -1;
 
     }
+
+    //Updates
+
+
 
 
 
