@@ -11,25 +11,15 @@ public class Order {
     ArrayList<Machine> Machines = new ArrayList<>();        // 2 maquinas ja existentes atribuidas
 
     public int piece_type;                          // Peça final desejada, um único valor
-
     public int raw_piece;       // Peça inicial pela qual começou. Um único valor
-
     public int raw_cost;        // Valor de compra de peça (Nao sei se é average ou total). Um único valor
-
-    public int pieces_arrival;      // Dia de chegada da peça (Nao sei se é average ou total). Unúnico valor
-
-    public int number_of_pieces;                    //Number of pieces inside order. Um unico valor
-
+    public int pieces_arrival;      // Dia de chegada da peça (Nao sei se é average ou total). Un único valor
+    public int number_of_pieces;            //Number of pieces inside order. Um unico valor
     private int completed = 0;             // How many pieces have been already unloaded/dispatched. Um unico valor, <= number_of_pieces
-
-    public int start_date;          //Ana Rita ignore //TODO: how to implement this?       // Day scheduled by ERP to start things
-
+    public int start_date = 0;          //Ana Rita ignore //TODO: how to implement this?       // Day scheduled by ERP to start things
     public int expected_delivery;            // When to deliver the goods, valor único
-
     public float expected_cost;               //Cost expected with no delays, um unico valor
-
     public float production_cost = 0;          // Calculado no fim, preço total de custo da ordem. um único valor. Usa machines para calcular
-
     public float total_cost = 0;                  // Total cost of the order, um unico valor
 
     // Ana Rita: daqui para baixo doesn't matter
@@ -105,15 +95,15 @@ public class Order {
     }
 
 
-    public void start_manufacturing(ArrayList<Machine> m){
+    public void start_manufacturing(ArrayList<Machine> m, int start){
 
-        //int[] machines_index = PLCfunction::startorder(this.raw_piece, this.final_piece); @returns array of machines in use for order. if 0 error
-        int[] machines_index = {3, 4};
-        System.out.println("O PLC disse-me que estava a usar a M 3 e 4");
+        this.start_date = start;
+
+        System.out.println("O PLC disse-me que estava a usar a M "+m.get(0).ID+" e "+ m.get(1).ID);
 
         //Add existing thing to order
-        for(int i=0;i<machines_index.length;i++){
-            Machines.add(m.get(machines_index[i]-1));
+        for(int i=0;i<2;i++){
+            Machines = m;
             if((Machines.get(i).change_order(this)) != 0){
                 System.out.println("ERROR, should be 0");
             }

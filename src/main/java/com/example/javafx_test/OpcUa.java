@@ -27,12 +27,18 @@ public class OpcUa {
     private static OpcUaClient client;
     private static AddressSpace addressSpace;
     private static OpcUa instance = null;
+    UaVariableNode PLCTime;     // FIXME: new vairable, verify
     UaVariableNode Gvlprod1;
     UaVariableNode Gvlprod2;
     UaVariableNode GvlSaida;
     UaVariableNode GvlWarehouse;
     UaVariableNode GvlAt1SensP;
     UaVariableNode at1_Livre;
+    UaVariableNode at2_Livre;   //FIXME: create this variable lol
+
+    UaVariableNode ct8_Livre;   //FIXME: create this variable lol
+    UaVariableNode ct3_Livre;   //FIXME: create this variable lol
+
     UaVariableNode maq1_Livre;
     UaVariableNode maq2_Livre;
     UaVariableNode fim_Maq1_Sinal;
@@ -90,6 +96,10 @@ public class OpcUa {
     }
 
     private void InicializarNodes () throws UaException {
+        PLCTime = (UaVariableNode) addressSpace.getNode(
+                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.ficheirotexto.tempo") //tempo do PLC
+        );
+
         Gvlprod1 = (UaVariableNode) addressSpace.getNode(
                 new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.GVL.prod1") //mandar fazer peca maq1
         );
@@ -105,6 +115,18 @@ public class OpcUa {
         at1_Livre = (UaVariableNode) addressSpace.getNode(
                 new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.AT1.livre")//ver AT1 se está livre
         );
+        at2_Livre = (UaVariableNode) addressSpace.getNode(
+                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.AT2.livre")//ver AT2 se está livre
+        );
+
+        ct8_Livre = (UaVariableNode) addressSpace.getNode(
+                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.CT8.livre")//ver AT2 se está livre
+        );
+
+        ct3_Livre = (UaVariableNode) addressSpace.getNode(
+                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.CT3.livre")//ver AT2 se está livre
+        );
+
         //*******************
         fim_Maq1_Sinal = (UaVariableNode) addressSpace.getNode(
                 new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.posmaq1.sinal")
@@ -182,9 +204,9 @@ public class OpcUa {
     public Object ReadOneVar (UaVariableNode nodeId) throws UaException {
         DataValue value = nodeId.readValue();
         DataValue descriptionValue = nodeId.readAttribute(AttributeId.Value); //vai retirar o valor da var
-        System.out.println(descriptionValue.getValue().getValue()); //vai dar o valor da variavel
+//        System.out.println(descriptionValue.getValue().getValue()); //vai dar o valor da variavel
         assert descriptionValue.getSourceTime() != null;
-        System.out.println(descriptionValue.getServerTime());
+//        System.out.println(descriptionValue.getServerTime());
         return value.getValue().getValue(); //devolve o valor lido
 
     }
@@ -223,7 +245,52 @@ public class OpcUa {
 
     //Manda fazer a peça. Fornecer peça inicial, peça a fabricar.
     //Vai fazer na maq1, return1; senão vê maq2, return 2; senão return -1 pq nao mandou fazer
-    public int mandarFazerPeca (int pecaWarehouse, int pecaFabricar) throws UaException, ExecutionException, InterruptedException {
+    //TODO: alterar esta função
+//    public int mandarFazerPeca (int pecaWarehouse, int pecaFabricar) throws UaException, ExecutionException, InterruptedException {
+//        /*
+//            ver se at1 está livre, ver maqX livre, meter prodX cenas, warO peça que quero
+//            Ids_mandarFazerPeca
+//            At1, Maq1, Maq2 (true true true)
+//        */
+//
+//        UShort value = UShort.valueOf(pecaWarehouse);
+//
+//        DataValue pec_war = new DataValue(new Variant(value)); //valores a escrever
+//        DataValue pec_fab = new DataValue(new Variant((short)pecaFabricar));
+//        UaVariableNode node_Maquina_livre, node_Maquina_Prod; //indicar que variavesi de máuqina ler e escrever
+//        List<DataValue> dataValues = ReadMultiVars(Ids_mandarFazerPeca);
+//        //0 At1, 1 maq1, 2 maq2
+//        //vai ler as variáveis
+//
+//        //dataValues.get(qm).getValue().getValue().equals((short)0)
+//
+//        //se At1 está livre, 1
+//        //verifica a maq1 e depois a maq2
+//        if(dataValues.get(0).getValue().getValue().equals(true) && dataValues.get(1).getValue().getValue().equals((short)0)){
+//            System.out.println("Está livre posso meter na maq1");
+//            List<WriteValue> writeValues = new ArrayList<>();
+//            writeValues.add(new WriteValue(Gvlprod1.getNodeId(), AttributeId.Value.uid(), null, pec_fab));
+//            writeValues.add(new WriteValue(Gvl_pedir_peca_Ware.getNodeId(), AttributeId.Value.uid(), null, pec_war));
+//            WriteMultiVars(writeValues);
+//            writeValues.clear();
+//            return 1;
+//        } else if (dataValues.get(0).getValue().getValue().equals(true) && dataValues.get(2).getValue().getValue().equals((short)0)) {
+//            System.out.println("Está livre posso meter na maq2");
+//            List<WriteValue> writeValues = new ArrayList<>();
+//            writeValues.add(new WriteValue(Gvlprod2.getNodeId(), AttributeId.Value.uid(), null, pec_fab));
+//            writeValues.add(new WriteValue(Gvl_pedir_peca_Ware.getNodeId(), AttributeId.Value.uid(), null, pec_war));
+//            WriteMultiVars(writeValues);
+//            writeValues.clear();
+//            return 2;
+//        }else{
+//            return -1;
+//            //não pode mandar fazer a peça
+//        }
+//
+//
+//    }
+
+    public int mandarFazerPeca (int pecaWarehouse, int pecaFabricar, int MachineToUse) throws UaException, ExecutionException, InterruptedException {
         /*
             ver se at1 está livre, ver maqX livre, meter prodX cenas, warO peça que quero
             Ids_mandarFazerPeca
@@ -234,8 +301,6 @@ public class OpcUa {
 
         DataValue pec_war = new DataValue(new Variant(value)); //valores a escrever
         DataValue pec_fab = new DataValue(new Variant((short)pecaFabricar));
-        UaVariableNode node_Maquina_livre, node_Maquina_Prod; //indicar que variavesi de máuqina ler e escrever
-        List<DataValue> dataValues = ReadMultiVars(Ids_mandarFazerPeca);
         //0 At1, 1 maq1, 2 maq2
         //vai ler as variáveis
 
@@ -243,7 +308,7 @@ public class OpcUa {
 
         //se At1 está livre, 1
         //verifica a maq1 e depois a maq2
-        if(dataValues.get(0).getValue().getValue().equals(true) && dataValues.get(1).getValue().getValue().equals((short)0)){
+        if(MachineToUse == 1){
             System.out.println("Está livre posso meter na maq1");
             List<WriteValue> writeValues = new ArrayList<>();
             writeValues.add(new WriteValue(Gvlprod1.getNodeId(), AttributeId.Value.uid(), null, pec_fab));
@@ -251,7 +316,7 @@ public class OpcUa {
             WriteMultiVars(writeValues);
             writeValues.clear();
             return 1;
-        } else if (dataValues.get(0).getValue().getValue().equals(true) && dataValues.get(2).getValue().getValue().equals((short)0)) {
+        } else if (MachineToUse == 2) {
             System.out.println("Está livre posso meter na maq2");
             List<WriteValue> writeValues = new ArrayList<>();
             writeValues.add(new WriteValue(Gvlprod2.getNodeId(), AttributeId.Value.uid(), null, pec_fab));
@@ -266,6 +331,38 @@ public class OpcUa {
 
 
     }
+//    public int mandarSairPeca (int pecaWarehouseSair) throws UaException, ExecutionException, InterruptedException {
+//        /*
+//            Mandar sair uma peça do armazém, Preciso de ver o At1 se está livre
+//            gvl.saida meter a 1 e depois mudar com WarO através do gvl.entrada
+//        */
+//
+//        UShort value = UShort.valueOf(pecaWarehouseSair); //USHORT PARA UINT ---- SHORT PARA INT
+//        DataValue pec_sair = new DataValue(new Variant(value)); //entrada
+//        UShort verificacao = UShort.valueOf(0);
+//        DataValue ok_sair = new DataValue(new Variant(Boolean.TRUE));
+//
+//
+//        List<DataValue> dataValues = ReadMultiVars(Ids_mandarSairPeca);
+//        //0 At1, , 1 entrada, 2 gvl.saida
+//
+//        if(dataValues.get(0).getValue().getValue().equals(true) && dataValues.get(2).getValue().getValue().equals(false) && dataValues.get(1).getValue().getValue().equals(verificacao)){
+//            System.out.println("Está livre posso mandar sair");
+//            List<WriteValue> writeValues = new ArrayList<>();
+//            writeValues.add(new WriteValue(Gvl_sai_peca_Ware.getNodeId(), AttributeId.Value.uid(), null, ok_sair));
+//            writeValues.add(new WriteValue(Gvl_pedir_peca_Ware.getNodeId(), AttributeId.Value.uid(), null, pec_sair));
+//            WriteMultiVars(writeValues);
+//            writeValues.clear();
+//            return 0;
+//        }
+//
+//
+//        //erro
+//        return -1;
+//
+//    }
+
+
     public int mandarSairPeca (int pecaWarehouseSair) throws UaException, ExecutionException, InterruptedException {
         /*
             Mandar sair uma peça do armazém, Preciso de ver o At1 se está livre
@@ -274,28 +371,20 @@ public class OpcUa {
 
         UShort value = UShort.valueOf(pecaWarehouseSair); //USHORT PARA UINT ---- SHORT PARA INT
         DataValue pec_sair = new DataValue(new Variant(value)); //entrada
-        UShort verificacao = UShort.valueOf(0);
         DataValue ok_sair = new DataValue(new Variant(Boolean.TRUE));
 
+            //0 At1, , 1 entrada, 2 gvl.saida
 
-        List<DataValue> dataValues = ReadMultiVars(Ids_mandarSairPeca);
-        //0 At1, , 1 entrada, 2 gvl.saida
-
-        if(dataValues.get(0).getValue().getValue().equals(true) && dataValues.get(2).getValue().getValue().equals(false) && dataValues.get(1).getValue().getValue().equals(verificacao)){
             System.out.println("Está livre posso mandar sair");
             List<WriteValue> writeValues = new ArrayList<>();
             writeValues.add(new WriteValue(Gvl_sai_peca_Ware.getNodeId(), AttributeId.Value.uid(), null, ok_sair));
             writeValues.add(new WriteValue(Gvl_pedir_peca_Ware.getNodeId(), AttributeId.Value.uid(), null, pec_sair));
             WriteMultiVars(writeValues);
             writeValues.clear();
-            return 0;
-        }
-
-
-        //erro
-        return -1;
-
+        return 0;
     }
+
+
     public void subs() throws Exception {
         Subscriptions subs = new Subscriptions();
 

@@ -9,6 +9,11 @@ public class Production extends Thread{
 
     private float plant_time;
 
+    private int new_warehouse_piece = 0;
+
+    List<Order> Orders = new ArrayList<>();
+    private long time = 0;
+    private int day=0;
     public Object lock;
 
     CommsController opcua;
@@ -76,7 +81,7 @@ public class Production extends Thread{
         Warehouse war = new Warehouse();
         ERP_API erp = new ERP_API();
         Piece_new pieces = new Piece_new();
-//        ArrayList<Machine> Machines = new ArrayList<>();
+
 
         //Have 4 machines
         for(int i=0;i<4;i++){
@@ -103,21 +108,93 @@ public class Production extends Thread{
              ***********************
              ***********************/
 
-            // TODO: use this to also receive ERP stuff
+            //TODO: Test Production lol
 
+            // verify if new piece inside warehouse
+            if(opcua.piece_on_at2 != opcua.previous_piece_on_at2){
+                if(opcua.previous_piece_on_at2){
+                    war.piece_added(1);     //FIXME: como é que sei que peça esta a entrar bro??
+                }
+                opcua.previous_piece_on_at2 = opcua.piece_on_at2;
+            }
+            //verify if piece out of warehouse
+            if(opcua.piece_on_at1 != opcua.previous_piece_on_at1){
+                if(!opcua.previous_piece_on_at1 ){
+                    int aux = opcua.which_piece_left();
+                    if(aux!=0) {
+                        war.piece_removed(aux);
+                        if (aux == 1 || aux == 2) {
+                            // Piece to manufacturing
 
-            try {
-                if(opcua.update_values_verification()){
-                    // Call update values method that verifies and updates everything
-                    opcua.i_have_updated_my_values(true);// ends by saying the values have already been updated
-                    // In case OPC_UA is in lock waiting to udpate the values, this will allow it to continue
-                    synchronized (lock){
-                        lock.notify();
+                        } else {
+                            // Piece to dispatch
+                        }
                     }
                 }
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                opcua.previous_piece_on_at1 = opcua.piece_on_at1;
             }
+
+            this.time = opcua.time - opcua.initial_time;    //Updates time
+            this.day = (int)(this.time / 60000) + 1;
+
+
+            // Verify if new piece arrived on ct8 and if inside desired time
+            if(opcua.piece_arrived_on_ct8 != opcua.previous_piece_arrived_on_ct8){
+                if(!opcua.previous_piece_arrived_on_ct8 ){
+                    for(int i=0; i<this.Orders.size(); i++){
+                        if(Orders.get(i).pieces_arrival == this.day){
+                            if(pieces.arrived(Orders.get(i).raw_piece, p_arrive_day)){
+                                break;
+                            }
+                        }
+                        if(i == this.Orders.size()-1){
+                            System.out.println("ERROR, this piece doesn't belong to any order");
+                        }
+                    }
+                    /**
+                     * Chegam por ordem e simplesmente adicionamos. Looks like a good approach
+                     */
+                }
+                opcua.previous_piece_arrived_on_ct8 = opcua.piece_arrived_on_ct8;
+            }
+            // Verify if new piece arrived on ct3 and if inside desired time
+            if(opcua.piece_arrived_on_ct3 != opcua.previous_piece_arrived_on_ct3){
+                if(!opcua.previous_piece_arrived_on_ct3){
+                    for(int i=0; i<this.Orders.size(); i++){
+                        if(Orders.get(i).pieces_arrival == this.day){
+                            if(pieces.arrived(Orders.get(i).raw_piece, p_arrive_day)){
+                                break;
+                            }
+                        }
+                        if(i == this.Orders.size()-1){
+                            System.out.println("ERROR, this piece doesn't belong to any order");
+                        }
+                    }
+                    /**
+                     * Chegam por ordem e simplesmente adicionamos. Looks like a good approach
+                     */
+                }
+                opcua.previous_piece_arrived_on_ct3 = opcua.piece_arrived_on_ct3;
+            }
+
+
+
+
+
+            // TODO: add JSON verification if new order
+
+//            try {
+//                if(opcua.update_values_verification()){
+//                    // Call update values method that verifies and updates everything
+//                    opcua.i_have_updated_my_values(true);// ends by saying the values have already been updated
+//                    // In case OPC_UA is in lock waiting to udpate the values, this will allow it to continue
+//                    synchronized (lock){
+//                        lock.notify();
+//                    }
+//                }
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
 
 
             /***********************
@@ -137,7 +214,7 @@ public class Production extends Thread{
 
 
             // Receive Order from ERP
-            List<Order> Orders = new ArrayList<>();
+
             if(erp.new_order){
                 Order o = new Order(o_ID, o_number_of_pieces, o_delivery, o_final_Piece, pieces);
                 Orders.add(o_ID, o);
@@ -147,44 +224,51 @@ public class Production extends Thread{
             //! very pretty so not eliminating :)
 //        Pieces.forEach(Piece::info_piece);              // Prints where are all the pieces
 
-            //Pieces arrived
-            if(opcua.piece_arrived){
-                for (int i = 0; i < p_amount; i++) {
-                    pieces.arrived(p_raw_material, p_arrive_day);   //comes from PLC
-                }
-            }
-
-            if(opcua.piece_warehouse){
-                //Move pieces to warehouse
-                for (int i = 0; i < p_amount; i++) {
-                    war.piece_added(p_raw_material);
-                }
-                System.out.println("Warehouse occupation: " + war.occupation());
-            }
-
-
             /********Start PLC Order*********/
             // Which raw piece works for a certain order
             // Verify availability
-            if (war.specific_pieces_stored(Orders.get(o_ID).raw_piece) < Orders.get(o_ID).number_of_pieces) {
-                System.out.println("ERROR, not enough pieces to complete order");
-                return;
+            //FIXME: maybe later put this on MES_SCHEDULE
+            if(Orders.get(o_ID).start_date == 0){
+                if (war.specific_pieces_stored(Orders.get(o_ID).raw_piece) < Orders.get(o_ID).number_of_pieces) {
+                    System.out.println("ERROR, not enough pieces to complete order");
+                }else{
+                    if(opcua.available_machines[0] == 0 || opcua.available_machines[1] == 0){
+                        ArrayList<Machine> m_aux = new ArrayList<>();
+                        if(opcua.available_machines[0] == 0){
+                            m_aux.add(Machines.get(0));
+                            m_aux.add(Machines.get(1));
+
+                        }else{
+                            m_aux.add(Machines.get(2));
+                            m_aux.add(Machines.get(3));
+                        }
+                        Orders.get(o_ID).start_manufacturing(m_aux, this.day);
+                    }
+                }
+
+            }else{  // If order already started
+                if(war.specific_pieces_stored(Orders.get(o_ID).piece_type) == Orders.get(o_ID).number_of_pieces){
+                    // Are there enough pieces on the warehouse to finish the order? Then can start dispatching
+
+                }else{
+                    // Keep making pieces for this order
+                    opcua.do_piece(Orders.get(o_ID).raw_piece, Orders.get(o_ID).piece_type, ((Orders.get(o_ID).Machines.get(0).ID - 1) / 2));
+
+                    // Update values
+
+                    // Updates piece leaving warehouse on update parameters
+
+
+                }
+
             }
 
+
             // Order PLC
-            //! FIXME: not ready for this yet
-//            try {
-//                comms_opc.mandarFazerPeca(Orders.get(o_ID).raw_piece, Orders.get(o_ID).piece_type, 2);    //FIXME: needs to return machines in use
-//            } catch (UaException | ExecutionException | InterruptedException e) {
-//                throw new RuntimeException(e);
-//            }
-
-
-            Orders.get(o_ID).start_manufacturing(Machines);
-
             // Ir processando peças along with Warehouse and machine stuff. One by one in this case
             for (int i = 0; i < Orders.get(o_ID).number_of_pieces; i++) {
                 war.piece_removed(Orders.get(o_ID).raw_piece);
+                //TODO: Add this part to MES
                 Orders.get(o_ID).Machines.get(0).info_piece_placed(plc_raw_type);
                 Orders.get(o_ID).Machines.get(0).info_transformation_begun();
                 Orders.get(o_ID).Machines.get(0).info_transformation_over(plc_machine_2);
@@ -203,7 +287,7 @@ public class Production extends Thread{
             pieces.info_piece();
 
             try {
-                Thread.sleep(1000);     //TODO: change this at is delaying our program
+                Thread.sleep(15000);     //TODO: change this at is delaying our program
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

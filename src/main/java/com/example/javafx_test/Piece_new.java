@@ -107,8 +107,12 @@ public class Piece_new {
     }
 
     //Info from PLC, when piece arrives to Plant
-    public void arrived(int raw_type,int day){
-        type_arrival_date[raw_type-1].add(day);
+    public boolean arrived(int raw_type,int day){
+        if(type_arrival_date[raw_type-1].size() < type[raw_type -1].size()){
+            type_arrival_date[raw_type-1].add(day);
+            return true;
+        }
+        return false;
     }
 
     // Will update to new piece

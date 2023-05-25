@@ -39,6 +39,7 @@ public class Warehouse {
     /**
      * Receives info from PLC
      */
+    //FIXME: sould return some error message or something
     public void piece_removed(int type){
         is_full = false;
     }
