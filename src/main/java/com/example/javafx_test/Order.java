@@ -21,6 +21,10 @@ public class Order {
     public float expected_cost;               //Cost expected with no delays, um unico valor
     public float production_cost = 0;          // Calculado no fim, preço total de custo da ordem. um único valor. Usa machines para calcular
     public float total_cost = 0;                  // Total cost of the order, um unico valor
+    public boolean dispatching = false;
+    public int war_to_dispatch = 0;
+
+    private ArrayList<Integer> pieces_dispatched_index = new ArrayList<>();           // To calculate cost later  //TODO: not yet used
 
     // Ana Rita: daqui para baixo doesn't matter
     private Piece_new piece;
@@ -55,6 +59,10 @@ public class Order {
      */
     public void place_to_schedule(){
 
+    }
+
+    public void dispatch_started(){
+        dispatching = true;
     }
 
     // Receives from PLC signaling that the order has finished on the machines
@@ -120,11 +128,10 @@ public class Order {
     public void finish(int delivery_day){
 
         if(completed != number_of_pieces){
-            System.out.println("ERROR, can't finish order cause completed smaller than number of pieces");
+            System.out.println("\\u001B[31m"+"ERROR, can't finish order cause completed smaller than number of pieces" + "\\u001B[0m");
             return;
         }
 
-        int num=0;
         total_cost = this.real_order_cost(delivery_day);
 
         System.out.println("Order total cost: " + total_cost);
@@ -142,13 +149,14 @@ public class Order {
         System.out.println("Order has been finished!");
     }
 
+    // We will still count the last delivery day
     public float real_order_cost(int delivery_day){
 
         float prod_cost=0;
         float deprecation_cost =0;
 
         if(raw_cost == 0 || delivery_day == pieces_arrival){
-            System.out.println("ERROR, Invalid values for cost");
+            System.out.println("\\u001B[31m"+"ERROR, Invalid values for cost"+ "\\u001B[0m");
         }
 
         for(int i=0; i < Machines.size(); i++){
@@ -162,9 +170,10 @@ public class Order {
             System.out.println("ERROR, production cost shouldn't be zero, not that efficient ;(");
             return 0;
         }
+
         int raw_total = 0;
         //FIXME: probably change this one later as all this variables might be different between pieces
-        for(int i=0; i<this.number_of_pieces;i++){
+        for(int i=0; i<this.number_of_pieces; i++){
             raw_total += piece.raw_cost(raw_piece, piece_type, delivery_day, i);
             deprecation_cost += piece.raw_cost(raw_piece, piece_type, delivery_day, i) * (delivery_day - piece.arrive_date(raw_piece, piece_type, delivery_day, i));
         }
@@ -180,10 +189,11 @@ public class Order {
      * Assuming the piece can be dispatched earlier as long as it is in the same day
      * Will only consider last piece delivery day
      */
-    public void piece_dispatched(){
-        this.completed ++;
+    public void piece_dispatched(int dev_day){
+        this.completed ++;  // Sums dispatched pieces
+        this.pieces_dispatched_index.add(dev_day);      // Says the day they were delivered
 
-        //FIXME: later verify this as we can only dispatch ou deliver order(not sure) int the first half of the day
+        // Is already only allowed in the first half of the day
         if(this.completed == this.number_of_pieces){
             this.finish(piece.last_dispatched(this.raw_piece, this.piece_type));
         }

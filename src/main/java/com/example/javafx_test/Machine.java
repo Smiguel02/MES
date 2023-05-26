@@ -82,9 +82,9 @@ public class Machine {
     /**
      * Receives info from the PLC that a transformation has begun.
      */
-    public void info_transformation_begun(){
-        in_use = true;
-    }
+//    public void info_transformation_begun(){
+//        in_use = true;
+//    }
 
     /**
      * Updates when piece has been detected and starts counting machine use time
@@ -93,7 +93,10 @@ public class Machine {
      */
     public void info_piece_placed(int piece) {
         piece_detected = piece;
+        in_use = true;
     }
+
+
 
     /**
      * Status check, to PLC
@@ -106,11 +109,11 @@ public class Machine {
     /**
      * PLC signals MES that the transformation is over and what is the new piece
      */
-    public void info_transformation_over(int new_piece){
+    public void info_transformation_over(int new_piece , long prod_time){
         this.piece.transform(order.raw_piece, new_piece);
-        piece_detected=new_piece;
+        piece_detected=0;
+        work_time+=prod_time;
         in_use=false;
-
     }
 
     /**

@@ -111,12 +111,20 @@ public class Production extends Thread{
             //TODO: Test Production lol
 
             // verify if new piece inside warehouse
-            if(opcua.piece_on_at2 != opcua.previous_piece_on_at2){
+            if(opcua.piece_on_at2 != opcua.previous_piece_on_at2 && war.occupation() < opcua.war_piece_counter.size()){
                 if(opcua.previous_piece_on_at2){
-                    war.piece_added(1);     //FIXME: como é que sei que peça esta a entrar bro??
+                    for(int i= 0 ; i< 9; i++){
+                        if(war.specific_pieces_stored(i + 1) < opcua.war_piece_counter.get(i).intValue()){
+                            war.piece_added(i+1);
+                            break;
+                        }
+                    }
+
                 }
                 opcua.previous_piece_on_at2 = opcua.piece_on_at2;
+                System.out.println("PROD: Piece entered the warehouse");
             }
+
             //verify if piece out of warehouse
             if(opcua.piece_on_at1 != opcua.previous_piece_on_at1){
                 if(!opcua.previous_piece_on_at1 ){
@@ -124,10 +132,11 @@ public class Production extends Thread{
                     if(aux!=0) {
                         war.piece_removed(aux);
                         if (aux == 1 || aux == 2) {
-                            // Piece to manufacturing
+                            // Piece to manufacturing, update values
 
                         } else {
-                            // Piece to dispatch
+                            // Piece to dispatch, update values
+
                         }
                     }
                 }
@@ -237,7 +246,6 @@ public class Production extends Thread{
                         if(opcua.available_machines[0] == 0){
                             m_aux.add(Machines.get(0));
                             m_aux.add(Machines.get(1));
-
                         }else{
                             m_aux.add(Machines.get(2));
                             m_aux.add(Machines.get(3));
@@ -247,9 +255,18 @@ public class Production extends Thread{
                 }
 
             }else{  // If order already started
-                if(war.specific_pieces_stored(Orders.get(o_ID).piece_type) == Orders.get(o_ID).number_of_pieces){
+                //OPTIMIZE: Make it possible to start even though it is still finishing the order and the warehouse doesnt have enough pieces
+                if((war.specific_pieces_stored(Orders.get(o_ID).piece_type) == Orders.get(o_ID).number_of_pieces) || Orders.get(o_ID).dispatching){
                     // Are there enough pieces on the warehouse to finish the order? Then can start dispatching
+                    Orders.get(o_ID).dispatch_started();
+                    Orders.get(o_ID).war_to_dispatch += opcua.start_dispatch(Orders.get(o_ID));
 
+                    //Piece on dispatch dock and inside allowed timeline. Start dispatch procedure
+                    if( ((float)(this.day * 60000)/(this.time) < 0.5) && !opcua.piece_arrived_on_pm1 && opcua.previous_piece_arrived_on_pm1 && !opcua.piece_arrived_on_pm2 && opcua.previous_piece_arrived_on_pm2){
+                        if(!pieces.dispatched(Orders.get(o_ID).raw_piece, Orders.get(o_ID).piece_type, this.day, Orders.get(o_ID))){
+                            System.out.println("\\u001B[31m" + "ERROR For somethingggg" + "\\u001B[0m");
+                        }
+                    }
                 }else{
                     // Keep making pieces for this order
                     opcua.do_piece(Orders.get(o_ID).raw_piece, Orders.get(o_ID).piece_type, ((Orders.get(o_ID).Machines.get(0).ID - 1) / 2));
@@ -257,7 +274,6 @@ public class Production extends Thread{
                     // Update values
 
                     // Updates piece leaving warehouse on update parameters
-
 
                 }
 
@@ -269,15 +285,15 @@ public class Production extends Thread{
             for (int i = 0; i < Orders.get(o_ID).number_of_pieces; i++) {
                 war.piece_removed(Orders.get(o_ID).raw_piece);
                 //TODO: Add this part to MES
-                Orders.get(o_ID).Machines.get(0).info_piece_placed(plc_raw_type);
-                Orders.get(o_ID).Machines.get(0).info_transformation_begun();
-                Orders.get(o_ID).Machines.get(0).info_transformation_over(plc_machine_2);
-                Orders.get(o_ID).Machines.get(0).piece_out(15.6f);
-
-                Orders.get(o_ID).Machines.get(1).info_piece_placed(plc_machine_2);
-                Orders.get(o_ID).Machines.get(1).info_transformation_begun();
-                Orders.get(o_ID).Machines.get(1).info_transformation_over(plc_final_piece);
-                Orders.get(o_ID).Machines.get(1).piece_out(15.6f);
+//                Orders.get(o_ID).Machines.get(0).info_piece_placed(plc_raw_type);
+////                Orders.get(o_ID).Machines.get(0).info_transformation_begun();
+//                Orders.get(o_ID).Machines.get(0).info_transformation_over(plc_machine_2);
+//                Orders.get(o_ID).Machines.get(0).piece_out(15.6f);
+//
+//                Orders.get(o_ID).Machines.get(1).info_piece_placed(plc_machine_2);
+////                Orders.get(o_ID).Machines.get(1).info_transformation_begun();
+//                Orders.get(o_ID).Machines.get(1).info_transformation_over(plc_final_piece);
+//                Orders.get(o_ID).Machines.get(1).piece_out(15.6f);
 
                 if (!pieces.dispatched(plc_raw_type, plc_final_piece, Orders.get(o_ID).expected_delivery, Orders.get(o_ID))) {
                     System.out.println("ERROR For somethingggg");

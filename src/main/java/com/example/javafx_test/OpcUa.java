@@ -28,6 +28,9 @@ public class OpcUa {
     private static AddressSpace addressSpace;
     private static OpcUa instance = null;
     UaVariableNode PLCTime;     // FIXME: new vairable, verify
+    UaVariableNode time_maq1, time_maq2, time_maq3, time_maq4;
+    UaVariableNode p1_counter,p2_counter,p3_counter,p4_counter,p5_counter,p6_counter,p7_counter,p8_counter,p9_counter;
+    UaVariableNode PM1c_Sensor, PM2c_Sensor;
     UaVariableNode Gvlprod1;
     UaVariableNode Gvlprod2;
     UaVariableNode GvlSaida;
@@ -35,7 +38,8 @@ public class OpcUa {
     UaVariableNode GvlAt1SensP;
     UaVariableNode at1_Livre;
     UaVariableNode at2_Livre;   //FIXME: create this variable lol
-
+    UaVariableNode st1_Livre;
+    UaVariableNode pt1_Livre;
     UaVariableNode ct8_Livre;   //FIXME: create this variable lol
     UaVariableNode ct3_Livre;   //FIXME: create this variable lol
 
@@ -51,6 +55,8 @@ public class OpcUa {
 
     List<ReadValueId> Ids_mandarFazerPeca = new ArrayList<>();
     List<ReadValueId> Ids_mandarSairPeca = new ArrayList<>();
+
+    List<ReadValueId> PieceCounter = new ArrayList<>();
 
     private OpcUa() throws UaException {
     }
@@ -78,10 +84,14 @@ public class OpcUa {
             client.connect().get();
             System.out.println("*****connected**********");
             addressSpace = client.getAddressSpace();
+            System.out.println("1");
             //opcuaclient instance will automatically attempt to reconnect any time the connection is lost, até disconnect is called
             InicializarNodes();
+            System.out.println("2");
             subs(); //Inicializa
+            System.out.println("3");
         } catch (Exception e) {
+            System.out.println("OH NO SOMETHING WRONG");
             e.printStackTrace();
         }
     }
@@ -99,6 +109,52 @@ public class OpcUa {
         PLCTime = (UaVariableNode) addressSpace.getNode(
                 new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.ficheirotexto.tempo") //tempo do PLC
         );
+        time_maq1 = (UaVariableNode) addressSpace.getNode(
+                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.ficheirotexto.esttempomaq1") //tempo do PLC
+        );
+        time_maq2 = (UaVariableNode) addressSpace.getNode(
+                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.ficheirotexto.esttempomaq2") //tempo do PLC
+        );
+        time_maq3 = (UaVariableNode) addressSpace.getNode(
+                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.ficheirotexto.esttempomaq3") //tempo do PLC
+        );
+        time_maq4 = (UaVariableNode) addressSpace.getNode(
+                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.ficheirotexto.esttempomaq4") //tempo do PLC
+        );
+
+        p1_counter = (UaVariableNode) addressSpace.getNode(
+                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.ficheirotexto.p1") //tempo do PLC
+        );
+        p2_counter = (UaVariableNode) addressSpace.getNode(
+                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.ficheirotexto.p2") //tempo do PLC
+        );
+        p3_counter = (UaVariableNode) addressSpace.getNode(
+                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.ficheirotexto.p3") //tempo do PLC
+        );
+        p4_counter = (UaVariableNode) addressSpace.getNode(
+                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.ficheirotexto.p4") //tempo do PLC
+        );
+        p5_counter = (UaVariableNode) addressSpace.getNode(
+                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.ficheirotexto.p5") //tempo do PLC
+        );
+        p6_counter = (UaVariableNode) addressSpace.getNode(
+                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.ficheirotexto.p6") //tempo do PLC
+        );
+        p7_counter = (UaVariableNode) addressSpace.getNode(
+                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.ficheirotexto.p7") //tempo do PLC
+        );
+        p8_counter = (UaVariableNode) addressSpace.getNode(
+                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.ficheirotexto.p8") //tempo do PLC
+        );
+        p9_counter = (UaVariableNode) addressSpace.getNode(
+                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.ficheirotexto.p9") //tempo do PLC
+        );
+        PM1c_Sensor = (UaVariableNode) addressSpace.getNode(
+                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.GVL.PM1cISens") //tempo do PLC
+        );
+        PM2c_Sensor = (UaVariableNode) addressSpace.getNode(
+                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.GVL.PM2cISens") //tempo do PLC
+        );
 
         Gvlprod1 = (UaVariableNode) addressSpace.getNode(
                 new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.GVL.prod1") //mandar fazer peca maq1
@@ -114,6 +170,12 @@ public class OpcUa {
         );
         at1_Livre = (UaVariableNode) addressSpace.getNode(
                 new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.AT1.livre")//ver AT1 se está livre
+        );
+        st1_Livre = (UaVariableNode) addressSpace.getNode(
+                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.ST1.livre")//ver AT1 se está livre
+        );
+        pt1_Livre = (UaVariableNode) addressSpace.getNode(
+                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.PT1.livre")//ver AT1 se está livre
         );
         at2_Livre = (UaVariableNode) addressSpace.getNode(
                 new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.AT2.livre")//ver AT2 se está livre
@@ -146,6 +208,79 @@ public class OpcUa {
         );
         Gvl_sai_peca_Ware = (UaVariableNode) addressSpace.getNode(
                 new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.GVL.saida")
+        );
+
+        PieceCounter.add(
+                new ReadValueId(
+                        p1_counter.getNodeId(),
+                        AttributeId.Value.uid(),
+                        null, // indexRange
+                        QualifiedName.NULL_VALUE
+                )
+        );
+        PieceCounter.add(
+                new ReadValueId(
+                        p2_counter.getNodeId(),
+                        AttributeId.Value.uid(),
+                        null, // indexRange
+                        QualifiedName.NULL_VALUE
+                )
+        );
+        PieceCounter.add(
+                new ReadValueId(
+                        p3_counter.getNodeId(),
+                        AttributeId.Value.uid(),
+                        null, // indexRange
+                        QualifiedName.NULL_VALUE
+                )
+        );
+        PieceCounter.add(
+                new ReadValueId(
+                        p4_counter.getNodeId(),
+                        AttributeId.Value.uid(),
+                        null, // indexRange
+                        QualifiedName.NULL_VALUE
+                )
+        );
+        PieceCounter.add(
+                new ReadValueId(
+                        p5_counter.getNodeId(),
+                        AttributeId.Value.uid(),
+                        null, // indexRange
+                        QualifiedName.NULL_VALUE
+                )
+        );
+        PieceCounter.add(
+                new ReadValueId(
+                        p6_counter.getNodeId(),
+                        AttributeId.Value.uid(),
+                        null, // indexRange
+                        QualifiedName.NULL_VALUE
+                )
+        );
+        PieceCounter.add(
+                new ReadValueId(
+                        p7_counter.getNodeId(),
+                        AttributeId.Value.uid(),
+                        null, // indexRange
+                        QualifiedName.NULL_VALUE
+                )
+        );
+        PieceCounter.add(
+                new ReadValueId(
+                        p8_counter.getNodeId(),
+                        AttributeId.Value.uid(),
+                        null, // indexRange
+                        QualifiedName.NULL_VALUE
+                )
+        );
+        PieceCounter.add(
+                new ReadValueId(
+                        p9_counter.getNodeId(),
+                        AttributeId.Value.uid(),
+                        null, // indexRange
+                        QualifiedName.NULL_VALUE
+                )
         );
 
         Ids_mandarFazerPeca.add(
@@ -257,8 +392,8 @@ public class OpcUa {
 //
 //        DataValue pec_war = new DataValue(new Variant(value)); //valores a escrever
 //        DataValue pec_fab = new DataValue(new Variant((short)pecaFabricar));
-//        UaVariableNode node_Maquina_livre, node_Maquina_Prod; //indicar que variavesi de máuqina ler e escrever
-//        List<DataValue> dataValues = ReadMultiVars(Ids_mandarFazerPeca);
+////        UaVariableNode node_Maquina_livre, node_Maquina_Prod; //indicar que variavesi de máuqina ler e escrever
+////        List<DataValue> dataValues = ReadMultiVars(Ids_mandarFazerPeca);
 //        //0 At1, 1 maq1, 2 maq2
 //        //vai ler as variáveis
 //
@@ -266,7 +401,7 @@ public class OpcUa {
 //
 //        //se At1 está livre, 1
 //        //verifica a maq1 e depois a maq2
-//        if(dataValues.get(0).getValue().getValue().equals(true) && dataValues.get(1).getValue().getValue().equals((short)0)){
+////        if(dataValues.get(0).getValue().getValue().equals(true) && dataValues.get(1).getValue().getValue().equals((short)0)){
 //            System.out.println("Está livre posso meter na maq1");
 //            List<WriteValue> writeValues = new ArrayList<>();
 //            writeValues.add(new WriteValue(Gvlprod1.getNodeId(), AttributeId.Value.uid(), null, pec_fab));
@@ -274,18 +409,18 @@ public class OpcUa {
 //            WriteMultiVars(writeValues);
 //            writeValues.clear();
 //            return 1;
-//        } else if (dataValues.get(0).getValue().getValue().equals(true) && dataValues.get(2).getValue().getValue().equals((short)0)) {
-//            System.out.println("Está livre posso meter na maq2");
-//            List<WriteValue> writeValues = new ArrayList<>();
-//            writeValues.add(new WriteValue(Gvlprod2.getNodeId(), AttributeId.Value.uid(), null, pec_fab));
-//            writeValues.add(new WriteValue(Gvl_pedir_peca_Ware.getNodeId(), AttributeId.Value.uid(), null, pec_war));
-//            WriteMultiVars(writeValues);
-//            writeValues.clear();
-//            return 2;
-//        }else{
-//            return -1;
-//            //não pode mandar fazer a peça
-//        }
+////        } else if (dataValues.get(0).getValue().getValue().equals(true) && dataValues.get(2).getValue().getValue().equals((short)0)) {
+////            System.out.println("Está livre posso meter na maq2");
+////            List<WriteValue> writeValues = new ArrayList<>();
+////            writeValues.add(new WriteValue(Gvlprod2.getNodeId(), AttributeId.Value.uid(), null, pec_fab));
+////            writeValues.add(new WriteValue(Gvl_pedir_peca_Ware.getNodeId(), AttributeId.Value.uid(), null, pec_war));
+////            WriteMultiVars(writeValues);
+////            writeValues.clear();
+////            return 2;
+////        }else{
+////            return -1;
+////            //não pode mandar fazer a peça
+////        }
 //
 //
 //    }
@@ -329,8 +464,9 @@ public class OpcUa {
             //não pode mandar fazer a peça
         }
 
-
     }
+
+
 //    public int mandarSairPeca (int pecaWarehouseSair) throws UaException, ExecutionException, InterruptedException {
 //        /*
 //            Mandar sair uma peça do armazém, Preciso de ver o At1 se está livre
@@ -374,8 +510,6 @@ public class OpcUa {
         DataValue ok_sair = new DataValue(new Variant(Boolean.TRUE));
 
             //0 At1, , 1 entrada, 2 gvl.saida
-
-            System.out.println("Está livre posso mandar sair");
             List<WriteValue> writeValues = new ArrayList<>();
             writeValues.add(new WriteValue(Gvl_sai_peca_Ware.getNodeId(), AttributeId.Value.uid(), null, ok_sair));
             writeValues.add(new WriteValue(Gvl_pedir_peca_Ware.getNodeId(), AttributeId.Value.uid(), null, pec_sair));

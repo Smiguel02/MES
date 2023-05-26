@@ -9,8 +9,11 @@ module com.example.javafx_test {
     requires java.sql;
     requires org.slf4j;
     requires com.google.common;
+    requires com.google.gson;
 
 
     opens com.example.javafx_test to javafx.fxml;
     exports com.example.javafx_test;
+    exports jsoncomms;
+    opens jsoncomms to javafx.fxml;
 }

@@ -147,7 +147,7 @@ public class Piece_new {
 
         //Verifies with order values
         if(o.piece_type != piece_type){
-            System.out.println("ERROR, piece type error when delivering");
+            System.out.println("\\u001B[31m" + "ERROR, piece type error when delivering" + "\\u001B[0m");
             return false;
         }
 
@@ -162,12 +162,12 @@ public class Piece_new {
         }
 
         if(index == type_arrival_date[raw_piece-1].size()){
-            System.out.println("ERROR didn't find corresponding variable");
+            System.out.println("\\u001B[31m"+"ERROR didn't find corresponding variable"+ "\\u001B[0m");
             return false;
         }
 
         type_delivery_date[raw_piece-1].add(index,today);
-        o.piece_dispatched();
+        o.piece_dispatched(today);
 
         return true;
     }
