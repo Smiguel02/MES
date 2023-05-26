@@ -26,7 +26,7 @@ public class Production extends Thread{
     }
 
 
-    public Production(Object l, CommsController opc){  //FIXME: acho que ficava melhor com a classe OpcUa
+    public Production(Object l, CommsController opc){
         this.lock = l;
         this.opcua = opc;
     }
@@ -42,7 +42,7 @@ public class Production extends Thread{
 
         //ERROR case
         if(p_quantity>system_total_pieces-last_no_order_piece){
-            System.out.println("ERROR, not enough pieces to give to order");
+            System.out.println("\\u001B[31m"+"ERROR, not enough pieces to give to order"+"\\u001B[0m");
             int[] pieces_index = new int[system_total_pieces - last_no_order_piece];
             pieces_index[p_quantity - 1] = -1;
             return pieces_index;
@@ -95,7 +95,7 @@ public class Production extends Thread{
 
         //ERP Simulation values
         int system_total_pieces=pieces.total_pieces(), system_order_ID=0;         // Order ID values are given by ERP. To test many
-        int p_raw_material=2, p_arrive_day=4, p_amount=4, p_initial_price=30;   //FIXME: consigo saber sempre initial price se comrpar de proposito par auma ordem. Se a ordem trocar, é easy to do the transfer
+        int p_raw_material=2, p_arrive_day=4, p_amount=4, p_initial_price=30;   //FIXME: consigo saber sempre initial price se comprar de proposito para uma ordem. Se a ordem trocar, é easy to do the transfer
         int o_final_Piece = 7, o_number_of_pieces=4, o_delivery=9, o_ID = 0;
         int plc_raw_type = 2, plc_machine_2 = 4, plc_final_piece = 7;
         int order_real_cost;
@@ -108,18 +108,22 @@ public class Production extends Thread{
              ***********************
              ***********************/
 
-            //TODO: Test Production lol
-
             // verify if new piece inside warehouse
             if(opcua.piece_on_at2 != opcua.previous_piece_on_at2 && war.occupation() < opcua.war_piece_counter.size()){
                 if(opcua.previous_piece_on_at2){
                     for(int i= 0 ; i< 9; i++){
                         if(war.specific_pieces_stored(i + 1) < opcua.war_piece_counter.get(i).intValue()){
                             war.piece_added(i+1);
+                            if(Orders.get(o_ID).piece_type == (i +1)){
+                                pieces.transform(Orders.get(o_ID).raw_piece, (i +1));
+                            }else{
+                                System.out.println("\\u001B[31m"+ "ERROR, Piece not updated by the correct order!"+"\\u001B[0m");
+                            }
+
+                            System.out.println("Piece added!");
                             break;
                         }
                     }
-
                 }
                 opcua.previous_piece_on_at2 = opcua.piece_on_at2;
                 System.out.println("PROD: Piece entered the warehouse");
@@ -131,13 +135,7 @@ public class Production extends Thread{
                     int aux = opcua.which_piece_left();
                     if(aux!=0) {
                         war.piece_removed(aux);
-                        if (aux == 1 || aux == 2) {
-                            // Piece to manufacturing, update values
-
-                        } else {
-                            // Piece to dispatch, update values
-
-                        }
+                        System.out.println("Piece that entered: " + aux);
                     }
                 }
                 opcua.previous_piece_on_at1 = opcua.piece_on_at1;
@@ -157,7 +155,7 @@ public class Production extends Thread{
                             }
                         }
                         if(i == this.Orders.size()-1){
-                            System.out.println("ERROR, this piece doesn't belong to any order");
+                            System.out.println("\\u001B[31m" +"ERROR, this piece doesn't belong to any order" +"\\u001B[0m");
                         }
                     }
                     /**
@@ -176,7 +174,7 @@ public class Production extends Thread{
                             }
                         }
                         if(i == this.Orders.size()-1){
-                            System.out.println("ERROR, this piece doesn't belong to any order");
+                            System.out.println("\\u001B[31m" +"ERROR, this piece doesn't belong to any order"+"\\u001B[0m");
                         }
                     }
                     /**
@@ -186,6 +184,28 @@ public class Production extends Thread{
                 opcua.previous_piece_arrived_on_ct3 = opcua.piece_arrived_on_ct3;
             }
 
+
+
+            // Update Machine values
+            for(int i= 0; i< Machines.size(); i++){
+                //New piece detected
+                if(opcua.machines_signal.get(i) && !opcua.previous_machines_signal.get(i)){
+                    opcua.previous_machines_signal.set(i, true);
+                    Orders.get(o_ID).Machines.get(i).info_piece_placed();
+                }else if(!opcua.machines_signal.get(i) && opcua.previous_machines_signal.get(i)){
+                    opcua.previous_machines_signal.set(i, false);
+                    if(Machines.get(i).work_time() < (opcua.machs_time.get(i)- opcua.initial_machs_time.get(i))){
+                        // Machine has been used and time has been updated
+                        Machines.get(i).info_transformation_over((opcua.machs_time.get(i)- opcua.initial_machs_time.get(i)));
+                        if(Machines.get(i).work_time()!= (opcua.machs_time.get(i)- opcua.initial_machs_time.get(i))){
+                            System.out.println("\\u001B[31m" +"ERROR, Machine Prod time not updated correctly"+ "\\u001B[0m");
+                        }
+                    }else{
+                        System.out.println("\\u001B[31m" +"ERROR, work time shoub be smalleeeeeer"+ "\\u001B[0m");
+                    }
+                 }
+
+            }
 
 
 
@@ -218,9 +238,9 @@ public class Production extends Thread{
                 for (int i = 0; i < p_amount; i++) {
                     pieces.new_piece(p_raw_material, p_initial_price);
                 }
+                erp.new_pieces = false;
+                system_total_pieces += p_amount;
             }
-            system_total_pieces += p_amount;        //FIXME: later remove
-
 
             // Receive Order from ERP
 
@@ -228,6 +248,7 @@ public class Production extends Thread{
                 Order o = new Order(o_ID, o_number_of_pieces, o_delivery, o_final_Piece, pieces);
                 Orders.add(o_ID, o);
                 system_order_ID++;
+                erp.new_order = false;
             }
 
             //! very pretty so not eliminating :)
@@ -239,7 +260,7 @@ public class Production extends Thread{
             //FIXME: maybe later put this on MES_SCHEDULE
             if(Orders.get(o_ID).start_date == 0){
                 if (war.specific_pieces_stored(Orders.get(o_ID).raw_piece) < Orders.get(o_ID).number_of_pieces) {
-                    System.out.println("ERROR, not enough pieces to complete order");
+                    System.out.println("\\u001B[31m" +"ERROR, not enough pieces to complete order" +"\\u001B[0m");
                 }else{
                     if(opcua.available_machines[0] == 0 || opcua.available_machines[1] == 0){
                         ArrayList<Machine> m_aux = new ArrayList<>();
@@ -270,11 +291,6 @@ public class Production extends Thread{
                 }else{
                     // Keep making pieces for this order
                     opcua.do_piece(Orders.get(o_ID).raw_piece, Orders.get(o_ID).piece_type, ((Orders.get(o_ID).Machines.get(0).ID - 1) / 2));
-
-                    // Update values
-
-                    // Updates piece leaving warehouse on update parameters
-
                 }
 
             }
@@ -282,28 +298,23 @@ public class Production extends Thread{
 
             // Order PLC
             // Ir processando peças along with Warehouse and machine stuff. One by one in this case
-            for (int i = 0; i < Orders.get(o_ID).number_of_pieces; i++) {
-                war.piece_removed(Orders.get(o_ID).raw_piece);
-                //TODO: Add this part to MES
+//            for (int i = 0; i < Orders.get(o_ID).number_of_pieces; i++) {
+//                war.piece_removed(Orders.get(o_ID).raw_piece);
+//                //TODO: Add this part to MES
+//                //FIXME: vou chamar piece transform no fim da cena quando entrar no Warehouse!
 //                Orders.get(o_ID).Machines.get(0).info_piece_placed(plc_raw_type);
-////                Orders.get(o_ID).Machines.get(0).info_transformation_begun();
+//                Orders.get(o_ID).Machines.get(0).info_transformation_begun();
 //                Orders.get(o_ID).Machines.get(0).info_transformation_over(plc_machine_2);
 //                Orders.get(o_ID).Machines.get(0).piece_out(15.6f);
 //
 //                Orders.get(o_ID).Machines.get(1).info_piece_placed(plc_machine_2);
-////                Orders.get(o_ID).Machines.get(1).info_transformation_begun();
+//                Orders.get(o_ID).Machines.get(1).info_transformation_begun();
 //                Orders.get(o_ID).Machines.get(1).info_transformation_over(plc_final_piece);
 //                Orders.get(o_ID).Machines.get(1).piece_out(15.6f);
-
-                if (!pieces.dispatched(plc_raw_type, plc_final_piece, Orders.get(o_ID).expected_delivery, Orders.get(o_ID))) {
-                    System.out.println("ERROR For somethingggg");
-                }
-            }
-
-            pieces.info_piece();
+//            }
 
             try {
-                Thread.sleep(15000);     //TODO: change this at is delaying our program
+                Thread.sleep(10);     //TODO: change this at is delaying our program
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

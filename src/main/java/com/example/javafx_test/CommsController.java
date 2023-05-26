@@ -44,7 +44,10 @@ public class CommsController extends Thread{
     public List<Long> initial_machs_time = new ArrayList<>();
 
     public List<Short> war_piece_counter = new ArrayList<>();
-    public UShort p1, p2,p3,p4,p5,p6,p7,p8,p9;
+    public List<Boolean> machines_signal = new ArrayList<>();
+    public List<Boolean> previous_machines_signal = new ArrayList<>();
+
+
 
     private Order Ord_dispatch;
 
@@ -109,6 +112,8 @@ public class CommsController extends Thread{
             //Initialize machine time
             machs_time.add(0L);
             initial_machs_time.add(0L);
+            machines_signal.add(false);
+            previous_machines_signal.add(false);
         }
         for(int i= 0; i<9 ; i++){
             //Pieces on warehouse told by PLC
@@ -118,7 +123,6 @@ public class CommsController extends Thread{
 
 
         while(true){
-
 
             /**
              * Always updating OPC_UA code:
@@ -151,31 +155,30 @@ public class CommsController extends Thread{
 
                 if(init_time){
                     initial_time = time;
-                    initial_machs_time.set(0, machs_time.get(0));
-                    initial_machs_time.set(1, machs_time.get(1));
-                    initial_machs_time.set(2, machs_time.get(2));
-                    initial_machs_time.set(3, machs_time.get(3));
+                    for(int i = 0; i< initial_machs_time.size(); i++){
+                        initial_machs_time.set(i, machs_time.get(i));
+                    }
                     init_time = false;
                 }
 
-                System.out.println("Read variables debugging -> ");
-                System.out.println("at1: " + piece_on_at1);
-                System.out.println("at2: " + piece_on_at2);
-                System.out.println("PLCTime: " + (time - initial_time));
-                System.out.println("ct8: " + piece_arrived_on_ct8);
-                System.out.println("ct3: " + piece_arrived_on_ct3);
-                System.out.println("st1: " + piece_arrived_on_st1);
-                System.out.println("pt1: " + piece_arrived_on_pt1);
-                System.out.println("Prod1: " + available_machines[0]);
-                System.out.println("Prod2: " + available_machines[1]);
-                System.out.println("Piece ask war: " + piece_ask_war);
-                System.out.println("Piece leave war: " + piece_leave_war);
-                System.out.println("Mach 1 Time: " + machs_time.get(0));
-                System.out.println("Mach 2 Time: " + machs_time.get(1));
-                System.out.println("Mach 3 Time: " + machs_time.get(2));
-                System.out.println("Mach 4 Time: " + machs_time.get(3));
-                System.out.println("Dispatch 1: " + piece_arrived_on_pm1);
-                System.out.println("Dispatch 2: " + piece_arrived_on_pm2);
+//                System.out.println("Read variables debugging -> ");
+//                System.out.println("at1: " + piece_on_at1);
+//                System.out.println("at2: " + piece_on_at2);
+//                System.out.println("PLCTime: " + (time - initial_time));
+//                System.out.println("ct8: " + piece_arrived_on_ct8);
+//                System.out.println("ct3: " + piece_arrived_on_ct3);
+//                System.out.println("st1: " + piece_arrived_on_st1);
+//                System.out.println("pt1: " + piece_arrived_on_pt1);
+//                System.out.println("Prod1: " + available_machines[0]);
+//                System.out.println("Prod2: " + available_machines[1]);
+//                System.out.println("Piece ask war: " + piece_ask_war);
+//                System.out.println("Piece leave war: " + piece_leave_war);
+//                System.out.println("Mach 1 Time: " + machs_time.get(0));
+//                System.out.println("Mach 2 Time: " + machs_time.get(1));
+//                System.out.println("Mach 3 Time: " + machs_time.get(2));
+//                System.out.println("Mach 4 Time: " + machs_time.get(3));
+//                System.out.println("Dispatch 1: " + piece_arrived_on_pm1);
+//                System.out.println("Dispatch 2: " + piece_arrived_on_pm2);
 
             } catch (UaException e) {
                 throw new RuntimeException(e);
@@ -183,9 +186,14 @@ public class CommsController extends Thread{
 
             try {
                 List<DataValue> aux_counter= n.ReadMultiVars(n.PieceCounter);
+                List<DataValue> aux_mach_signals= n.ReadMultiVars(n.Machs_signal);
                 for(int i=0;i<9;i ++){
                     war_piece_counter.set(i, (short)aux_counter.get(i).getValue().getValue());
                 }
+                for(int i=0;i<4;i ++){
+                    machines_signal.set(i, (boolean)aux_mach_signals.get(i).getValue().getValue());
+                }
+
         } catch ( ExecutionException | InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -218,7 +226,6 @@ public class CommsController extends Thread{
                         aux_make_piece[0] = 0;
                         aux_make_piece[1] = 0;
                         aux_make_piece[2] = 0;
-
                     }
                 } catch (UaException | ExecutionException | InterruptedException e) {
                     throw new RuntimeException(e);

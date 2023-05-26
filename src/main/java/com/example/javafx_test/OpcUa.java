@@ -31,6 +31,8 @@ public class OpcUa {
     UaVariableNode time_maq1, time_maq2, time_maq3, time_maq4;
     UaVariableNode p1_counter,p2_counter,p3_counter,p4_counter,p5_counter,p6_counter,p7_counter,p8_counter,p9_counter;
     UaVariableNode PM1c_Sensor, PM2c_Sensor;
+    UaVariableNode Mach1_signal,Mach2_signal,Mach3_signal,Mach4_signal;
+
     UaVariableNode Gvlprod1;
     UaVariableNode Gvlprod2;
     UaVariableNode GvlSaida;
@@ -55,8 +57,9 @@ public class OpcUa {
 
     List<ReadValueId> Ids_mandarFazerPeca = new ArrayList<>();
     List<ReadValueId> Ids_mandarSairPeca = new ArrayList<>();
-
     List<ReadValueId> PieceCounter = new ArrayList<>();
+    List<ReadValueId> Machs_signal = new ArrayList<>();
+
 
     private OpcUa() throws UaException {
     }
@@ -84,12 +87,10 @@ public class OpcUa {
             client.connect().get();
             System.out.println("*****connected**********");
             addressSpace = client.getAddressSpace();
-            System.out.println("1");
+
             //opcuaclient instance will automatically attempt to reconnect any time the connection is lost, até disconnect is called
             InicializarNodes();
-            System.out.println("2");
-            subs(); //Inicializa
-            System.out.println("3");
+//            subs(); //Inicializa
         } catch (Exception e) {
             System.out.println("OH NO SOMETHING WRONG");
             e.printStackTrace();
@@ -108,6 +109,18 @@ public class OpcUa {
     private void InicializarNodes () throws UaException {
         PLCTime = (UaVariableNode) addressSpace.getNode(
                 new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.ficheirotexto.tempo") //tempo do PLC
+        );
+        Mach1_signal = (UaVariableNode) addressSpace.getNode(
+                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.GVL.ST3ISens") //tempo do PLC
+        );
+        Mach2_signal = (UaVariableNode) addressSpace.getNode(
+                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.GVL.ST5ISens") //tempo do PLC
+        );
+        Mach3_signal = (UaVariableNode) addressSpace.getNode(
+                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.GVL.PT5ISens") //tempo do PLC
+        );
+        Mach4_signal = (UaVariableNode) addressSpace.getNode(
+                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.GVL.PT6ISens") //tempo do PLC
         );
         time_maq1 = (UaVariableNode) addressSpace.getNode(
                 new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.ficheirotexto.esttempomaq1") //tempo do PLC
@@ -208,6 +221,39 @@ public class OpcUa {
         );
         Gvl_sai_peca_Ware = (UaVariableNode) addressSpace.getNode(
                 new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.GVL.saida")
+        );
+
+        Machs_signal.add(
+                new ReadValueId(
+                        Mach1_signal.getNodeId(),
+                        AttributeId.Value.uid(),
+                        null, // indexRange
+                        QualifiedName.NULL_VALUE
+                )
+        );
+        Machs_signal.add(
+                new ReadValueId(
+                        Mach2_signal.getNodeId(),
+                        AttributeId.Value.uid(),
+                        null, // indexRange
+                        QualifiedName.NULL_VALUE
+                )
+        );
+        Machs_signal.add(
+                new ReadValueId(
+                        Mach3_signal.getNodeId(),
+                        AttributeId.Value.uid(),
+                        null, // indexRange
+                        QualifiedName.NULL_VALUE
+                )
+        );
+        Machs_signal.add(
+                new ReadValueId(
+                        Mach4_signal.getNodeId(),
+                        AttributeId.Value.uid(),
+                        null, // indexRange
+                        QualifiedName.NULL_VALUE
+                )
         );
 
         PieceCounter.add(
@@ -353,10 +399,10 @@ public class OpcUa {
                 lista_Ids_ler
         ).get();
         List<DataValue> dataValues = List.of(readResponse.getResults());
-        System.out.println(dataValues);
+//        System.out.println(dataValues);
         for (DataValue dataValue : dataValues) {
             Variant variant = dataValue.getValue();
-            System.out.println("Value: " + variant.getValue() );
+//            System.out.println("Value: " + variant.getValue() );
         }
         return dataValues; //lê os valores da lista e retorna a lista datavalues por ordem de leitura
     }
@@ -368,9 +414,9 @@ public class OpcUa {
 
         for (int i = 0; i < statusCodes.size(); i++) {
             if (statusCodes.get(i).isGood()) {
-                System.out.println("Write operation succeeded for node " + writeValues.get(i).getNodeId() +" "+ writeValues.get(i).getValue().getValue());
+//                System.out.println("Write operation succeeded for node " + writeValues.get(i).getNodeId() +" "+ writeValues.get(i).getValue().getValue());
             } else {
-                System.out.println("Write operation failed for node " + writeValues.get(i).getNodeId() + ": " + statusCodes.get(i));
+//                System.out.println("Write operation failed for node " + writeValues.get(i).getNodeId() + ": " + statusCodes.get(i));
             }
         }
 
@@ -519,10 +565,10 @@ public class OpcUa {
     }
 
 
-    public void subs() throws Exception {
-        Subscriptions subs = new Subscriptions();
-
-    }
+//    public void subs() throws Exception {
+//        Subscriptions subs = new Subscriptions();
+//
+//    }
 
 
 

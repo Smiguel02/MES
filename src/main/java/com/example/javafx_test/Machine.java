@@ -3,7 +3,7 @@ package com.example.javafx_test;
 public class Machine {
 
     //In seconds
-    private float work_time;           // Total time piece has been on the machine sensor. In seconds.
+    private long work_time;           // Total time piece has been on the machine sensor. In seconds.
 
     public int  current_tool;       // current tool on the machine
 
@@ -14,9 +14,7 @@ public class Machine {
     public boolean broken;          // Hope not cause later we can't fix it
 
     Order order;               // Which order the machine is currently dealing with
-
     Piece_new piece;
-
     int ID;
 
     /**
@@ -25,15 +23,11 @@ public class Machine {
      */
 
 
-    public float work_time(){
+    public long work_time(){
         return work_time;
     }
 
-    /**
-     *
-     * @param new_order 0 if no order
-     * @return
-     */
+
     // Returns previous order total_cost
     //TODO: add verification steps
     public int change_order(Order new_order){
@@ -78,7 +72,6 @@ public class Machine {
         current_tool = tool;
     }
 
-
     /**
      * Receives info from the PLC that a transformation has begun.
      */
@@ -89,10 +82,8 @@ public class Machine {
     /**
      * Updates when piece has been detected and starts counting machine use time
      * FIXME: receive timeline or start_time here??
-     * @param piece
      */
-    public void info_piece_placed(int piece) {
-        piece_detected = piece;
+    public void info_piece_placed() {
         in_use = true;
     }
 
@@ -109,11 +100,10 @@ public class Machine {
     /**
      * PLC signals MES that the transformation is over and what is the new piece
      */
-    public void info_transformation_over(int new_piece , long prod_time){
-        this.piece.transform(order.raw_piece, new_piece);
-        piece_detected=0;
-        work_time+=prod_time;
-        in_use=false;
+    public void info_transformation_over(long total_prod_time){
+//        this.piece.transform(order.raw_piece, new_piece);
+        work_time+=(total_prod_time-work_time);
+        in_use=false;       //FIXME: only updated when machine prod whatever is 0
     }
 
     /**

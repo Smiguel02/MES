@@ -17,20 +17,20 @@ public class GUI_MES extends Application {
 
         // 3 different threads
         CommsController comms= new CommsController(lock);
-//        Production prod = new Production(lock, comms);
+        Production prod = new Production(lock, comms);
 
 
-//        prod.setName("Thread - MES");
+        prod.setName("Thread - MES");
         comms.setName("Thread - OPC_UA");
         Thread.currentThread().setName("Thread - GUI");
 //        prod.start();
         comms.start();
-//        System.out.println("Is prod alive? " + prod.isAlive());
+        System.out.println("Is prod alive? " + prod.isAlive());
 
         FXMLLoader fxmlLoader = new FXMLLoader(GUI_MES.class.getResource("hello-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 320, 240);
         HelloController controller = fxmlLoader.getController();
-//        controller.set_controller_values(prod);
+        controller.set_controller_values(prod);
         stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.show();
