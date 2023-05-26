@@ -18,9 +18,6 @@ public class Warehouse {
      * Program Initiates with 20 P1 pieces
      */
     public Warehouse(){
-        for(int i=0;i<20;i++){
-            this.piece_added(1);
-        }
         is_full = false;
     }
 

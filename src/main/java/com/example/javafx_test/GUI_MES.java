@@ -23,8 +23,8 @@ public class GUI_MES extends Application {
         prod.setName("Thread - MES");
         comms.setName("Thread - OPC_UA");
         Thread.currentThread().setName("Thread - GUI");
-//        prod.start();
         comms.start();
+        prod.start();
         System.out.println("Is prod alive? " + prod.isAlive());
 
         FXMLLoader fxmlLoader = new FXMLLoader(GUI_MES.class.getResource("hello-view.fxml"));

@@ -15,6 +15,8 @@ public class Piece_new {
 
     private ArrayList<Integer>[] type_arrival_date= new ArrayList[2];      // Arrival date
 
+    private ArrayList<Boolean>[] have_arrived= new ArrayList[2];      // Arrival date
+
     private ArrayList<Integer>[] type_delivery_date= new ArrayList[2];     // Which day they were dispatched
 
     private ArrayList<Integer>[] type_raw_price= new ArrayList[2];       //FIXME: NOT YET being used on other classes
@@ -46,14 +48,41 @@ public class Piece_new {
         type[1] = new ArrayList<>();                // Initial raw 2
         type_arrival_date[0] = new ArrayList<>();   // Arrival date raw 1
         type_arrival_date[1] = new ArrayList<>();   // Arrival date raw 2
+        have_arrived[0] = new ArrayList<>();   // If have arrived on plant
+        have_arrived[1] = new ArrayList<>();   // If have arrived on plant
         type_delivery_date[0] = new ArrayList<>();  // Delivery date raw 1
         type_delivery_date[1] = new ArrayList<>();  // Delivery date raw 2
         type_raw_price[0] = new ArrayList<>();      // Price raw 1
         type_raw_price[1] = new ArrayList<>();      // Price raw 2
-        for(int i=0;i<20;i++){
-            this.new_piece(1, 0);
-            this.arrived(1, 0);
+    }
+
+    public int expected_piece(){
+    int size = 0, index = 2;
+
+        if(this.have_arrived[0].size() < this.have_arrived[1].size()){
+            size = this.have_arrived[0].size();
+            index = 1;
+        }else{
+            size = this.have_arrived[1].size();
+            index = 0;
         }
+        int i= 0;
+        for(i=0; i<size; i++){
+            if(!have_arrived[0].get(i) || !have_arrived[1].get(i)){
+                if(type_arrival_date[0].get(i) < type_arrival_date[1].get(i)){
+                    return 1;
+                }else{
+                    return 2;
+                }
+            }
+        };
+        for(i=i; i < this.have_arrived[index].size(); i++){
+            if(!have_arrived[index].get(i)){
+                return index + 1;
+            }
+        }
+        System.out.println("ERROR, Didn't find any piece");
+        return 0;
     }
 
     int total_pieces(){
@@ -95,7 +124,7 @@ public class Piece_new {
 
     }
 
-    public void new_piece(int raw_type, int price){
+    public void new_piece(int raw_type, int price, int arrive_day){
 
         if(!(raw_type == 1 || raw_type == 2)){
             System.out.println("ERROR, give me raw type only dude");
@@ -104,12 +133,32 @@ public class Piece_new {
         type[raw_type -1].add(raw_type);
         type_raw_price[raw_type-1].add(price);
         type_delivery_date[raw_type-1].add(0);
+        type_arrival_date[raw_type-1].add(arrive_day);
+        have_arrived[raw_type-1].add(false);
+        System.out.println("Waiting for " +raw_type+ " piece!");
     }
 
     //Info from PLC, when piece arrives to Plant
     public boolean arrived(int raw_type,int day){
-        if(type_arrival_date[raw_type-1].size() < type[raw_type -1].size()){
-            type_arrival_date[raw_type-1].add(day);
+
+        int i=0;
+        for(i=0 ; i<have_arrived[raw_type-1].size() ; i++){
+            if(!have_arrived[raw_type-1].get(i)){
+                break;
+            }
+        }
+        if(i == have_arrived[raw_type-1].size()){
+            System.out.println("PIECE: ERROR, not expecting that piece, please remove!");
+        }
+
+        System.out.println("PIECE: Arrive index -> " + i);
+        if(day != type_arrival_date[raw_type-1].get(i)){
+            System.out.println("ERROR, Arrival day is " + type_arrival_date[raw_type-1].get(have_arrived[raw_type-1].size()-1) +"but arrived on " + day);
+        }
+
+        if(!have_arrived[raw_type-1].get(i)){
+            System.out.println("I acknowledged the piece!");
+            have_arrived[raw_type-1].set(i,true);
             return true;
         }
         return false;

@@ -80,6 +80,15 @@ public class CommsController extends Thread{
         return war_leaving;   // if error
     }
 
+    public int number_of_pieces_on_warehouse(){
+        int sum = 0;
+        for(int i=0; i<war_piece_counter.size();i++){
+            sum += (int)war_piece_counter.get(i);
+        }
+
+        return sum - 20;
+    }
+
     // Flag is 1 if is MES, 0 if is OPC_UA
     public synchronized void i_have_updated_my_values(boolean FLAG){
         opcua_values_updated = !FLAG;
@@ -279,11 +288,6 @@ public class CommsController extends Thread{
              * OPCUA and JSON classes (or will have), and can send the commands whenever. Maybe might need to make some functions synchronized (let Miguel worry with this lol)
              */
 
-            try {
-                sleep(1000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
         }
 
 

@@ -51,6 +51,7 @@ public class Order {
         expected_delivery=delivery;
         piece = p;
         raw_piece = which_raw_piece(type);
+        System.out.println("ORDER: Raw piece: " + raw_piece);
         raw_cost = 15;      //FIXME: change this ducking value
     }
 
