@@ -172,6 +172,8 @@ public class HelloController implements Initializable {
     @FXML
     private Label label_work_time_4;
 
+    MyDB n = MyDB.getInstance();
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
