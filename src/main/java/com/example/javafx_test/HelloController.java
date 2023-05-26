@@ -118,8 +118,7 @@ public class HelloController implements Initializable {
         try {
             n.connect();
             System.out.println("passou_aqui");
-
-            result_query_machine = n.queryTestMachine(n.id_machine);
+            result_query_machine = n.queryTestMachine();
             System.out.println("Machine");
             System.out.println(n.id_machine);
             if ((result_query_machine < 0)) {
@@ -137,15 +136,14 @@ public class HelloController implements Initializable {
 
             }
 
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         try {
             n.connect();
             System.out.println("passou_aqui");
             System.out.println("Estou aqui1111");
-            result_query_piece = n.queryTestPiece(n.id_piece);
+            result_query_piece = n.queryTestPiece();
             System.out.println("Piece");
             System.out.println(n.id_piece);
             if ((result_query_piece < 0)) {
@@ -164,7 +162,7 @@ public class HelloController implements Initializable {
                 label_total_pieces.setText(String.valueOf(n.total_system_pieces));
 
             }
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
@@ -173,13 +171,12 @@ public class HelloController implements Initializable {
             n.connect();
             System.out.println("passou_aqui");
             System.out.println("Estou aqui2222");
-            result_query_order = n.queryTestOrder(n.id_order);
+            result_query_order = n.queryTestOrder();
             System.out.println("Order");
             System.out.println(n.id_order);
             if ((result_query_order < 0)) {
                 System.out.printf("Error in query test");
             } else {
-
                 //Order
                 label_piece_type.setText(String.valueOf(n.piece_type));
                 label_raw_piece.setText(String.valueOf(n.raw_piece));
@@ -192,19 +189,26 @@ public class HelloController implements Initializable {
                 label_production_cost.setText(String.valueOf(n.production_cost));
                 label_total_cost.setText(String.valueOf(n.total_cost));
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            n.connect();
+
+            //Mudar a cor do bakckground daquela label branca
+
+            //Dia
+
+            //Total time
+
+            /*if((n.total_time/2) >= n.time_real ){ -> se for na segunda metade do dia
+               label_cor.setBackground(#FF0000); -> vermelho
+            }
+           else{ -> primeira metade do dia
+               label_cor.setBackground(#00a000); -> verde
+            }*/
         }catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-        //Dia
-
-        //Total time
-
-        /*if((n.total_time/2) >= n.time_real ){
-               label_cor.setBackground(#FF0000);
-          }
-           else{
-               label_cor.setBackground(#00a000);
-          }*/
     }
 }
