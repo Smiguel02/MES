@@ -25,7 +25,7 @@ public class GUI_MES extends Application  {
         stage.setScene(scene);
         stage.show();*/
 
-        Parent root = FXMLLoader.load(getClass().getResource("hello-view.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("gui_example.fxml"));
         stage.setTitle("");
         stage.setScene(new Scene(root, 1214, 716));
         stage.show();

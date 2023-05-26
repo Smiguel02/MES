@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="716.0" prefWidth="1214.0" style="-fx-background-color: #b4dcf0;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.javafx_test.HelloController">
+   <children>
+      <Label layoutX="32.0" layoutY="41.0" prefHeight="30.0" prefWidth="96.0" text="Machine:">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Label>
+      <Label layoutX="38.0" layoutY="89.0" prefHeight="30.0" prefWidth="42.0" text="Tool:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="38.0" layoutY="127.0" prefHeight="30.0" prefWidth="102.0" text="Machine in use:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="38.0" layoutY="172.0" prefHeight="30.0" prefWidth="114.0" text="Machine broken:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="38.0" layoutY="217.0" prefHeight="30.0" prefWidth="114.0" text="Piece Detected:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="38.0" layoutY="260.0" prefHeight="30.0" prefWidth="102.0" text="Work Time:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="label_tool_1" alignment="CENTER" layoutX="152.0" layoutY="89.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_machine_in_use_1" alignment="CENTER" layoutX="152.0" layoutY="127.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_machine_broken_1" alignment="CENTER" layoutX="152.0" layoutY="172.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_piece_detected_1" alignment="CENTER" layoutX="152.0" layoutY="217.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_work_time_1" alignment="CENTER" layoutX="152.0" layoutY="259.0" prefHeight="32.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label alignment="CENTER" layoutX="161.0" layoutY="41.0" prefHeight="30.0" prefWidth="96.0" text="1">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Label>
+      <Label fx:id="label_tool_2" alignment="CENTER" layoutX="291.0" layoutY="89.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_machine_in_use_2" alignment="CENTER" layoutX="291.0" layoutY="127.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_machine_broken_2" alignment="CENTER" layoutX="291.0" layoutY="172.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_piece_detected_2" alignment="CENTER" layoutX="291.0" layoutY="217.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_work_time_2" alignment="CENTER" layoutX="291.0" layoutY="259.0" prefHeight="32.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label alignment="CENTER" layoutX="300.0" layoutY="41.0" prefHeight="30.0" prefWidth="96.0" text="2">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Label>
+      <Label fx:id="label_tool_3" alignment="CENTER" layoutX="433.0" layoutY="89.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_machine_in_use_3" alignment="CENTER" layoutX="433.0" layoutY="127.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_machine_broken_3" alignment="CENTER" layoutX="433.0" layoutY="172.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_piece_detected_3" alignment="CENTER" layoutX="433.0" layoutY="217.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_work_time_3" alignment="CENTER" layoutX="433.0" layoutY="259.0" prefHeight="32.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label alignment="CENTER" layoutX="442.0" layoutY="41.0" prefHeight="30.0" prefWidth="96.0" text="3">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Label>
+      <Label alignment="CENTER" layoutX="578.0" layoutY="41.0" prefHeight="30.0" prefWidth="96.0" text="4">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Label>
+      <Label fx:id="label_tool_4" alignment="CENTER" layoutX="569.0" layoutY="89.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_machine_in_use_4" alignment="CENTER" layoutX="569.0" layoutY="127.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_machine_broken_4" alignment="CENTER" layoutX="569.0" layoutY="172.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_piece_detected_4" alignment="CENTER" layoutX="569.0" layoutY="217.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_work_time_4" alignment="CENTER" layoutX="569.0" layoutY="259.0" prefHeight="32.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label layoutX="943.0" layoutY="41.0" text="Time:">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Label>
+      <Label layoutX="954.0" layoutY="94.0" text="Total Time:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="957.0" layoutY="132.0" text="Day:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="label_total_time" alignment="CENTER" layoutX="1040.0" layoutY="89.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_day" alignment="CENTER" layoutX="1040.0" layoutY="127.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_cor" layoutX="985.0" layoutY="186.0" prefHeight="32.0" prefWidth="130.0" style="-fx-background-color: white;" />
+      <Label layoutX="32.0" layoutY="326.0" prefHeight="32.0" prefWidth="76.0" text="Order:">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Label>
+      <Label layoutX="34.0" layoutY="374.0" prefHeight="30.0" prefWidth="83.0" text="Piece Type:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="34.0" layoutY="412.0" prefHeight="32.0" prefWidth="83.0" text="Raw Piece:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="32.0" layoutY="455.0" prefHeight="32.0" prefWidth="76.0" text="Raw Cost:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="32.0" layoutY="498.0" prefHeight="32.0" prefWidth="96.0" text="Pieces Arrival:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="30.0" layoutY="539.0" prefHeight="30.0" prefWidth="129.0" text="Number of Pieces:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="28.0" layoutY="578.0" prefHeight="30.0" prefWidth="122.0" text="Order Completed:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="28.0" layoutY="616.0" prefHeight="32.0" prefWidth="122.0" text="Expected Delivery:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="28.0" layoutY="656.0" prefHeight="32.0" prefWidth="122.0" text="Expected Cost:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="442.0" layoutY="373.0" prefHeight="32.0" prefWidth="122.0" text="Production Cost:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="442.0" layoutY="412.0" prefHeight="32.0" prefWidth="83.0" text="Total Cost:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label alignment="CENTER" layoutX="184.0" layoutY="326.0" prefHeight="30.0" prefWidth="96.0" text="1">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Label>
+      <Label alignment="CENTER" layoutX="318.0" layoutY="326.0" prefHeight="30.0" prefWidth="96.0" text="2">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Label>
+      <Label fx:id="label_piece_type_1" alignment="CENTER" layoutX="175.0" layoutY="374.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" />
+      <Label fx:id="label_raw_piece_1" alignment="CENTER" layoutX="176.0" layoutY="413.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" />
+      <Label fx:id="label_raw_cost_1" alignment="CENTER" layoutX="176.0" layoutY="455.0" prefHeight="32.0" prefWidth="114.0" style="-fx-background-color: white;" />
+      <Label fx:id="label_pieces_arrival_1" alignment="CENTER" layoutX="176.0" layoutY="498.0" prefHeight="32.0" prefWidth="114.0" style="-fx-background-color: white;" />
+      <Label fx:id="label_number_pieces_1" alignment="CENTER" layoutX="175.0" layoutY="538.0" prefHeight="32.0" prefWidth="114.0" style="-fx-background-color: white;" />
+      <Label fx:id="label_order_completed_1" alignment="CENTER" layoutX="174.0" layoutY="578.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" />
+      <Label fx:id="label_expected_delivery_1" alignment="CENTER" layoutX="174.0" layoutY="617.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" />
+      <Label fx:id="label_expected_cost_1" alignment="CENTER" layoutX="175.0" layoutY="657.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" />
+      <Label fx:id="label_production_cost_1" alignment="CENTER" layoutX="578.0" layoutY="374.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" />
+      <Label fx:id="label_total_cost_1" alignment="CENTER" layoutX="578.0" layoutY="413.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" />
+      <Label alignment="CENTER" layoutX="587.0" layoutY="326.0" prefHeight="30.0" prefWidth="96.0" text="1">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Label>
+      <Label fx:id="label_piece_type_2" alignment="CENTER" layoutX="309.0" layoutY="374.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" />
+      <Label fx:id="label_raw_piece_2" alignment="CENTER" layoutX="309.0" layoutY="413.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" />
+      <Label fx:id="label_raw_cost_2" alignment="CENTER" layoutX="309.0" layoutY="455.0" prefHeight="32.0" prefWidth="114.0" style="-fx-background-color: white;" />
+      <Label fx:id="label_pieces_arrival_2" alignment="CENTER" layoutX="309.0" layoutY="498.0" prefHeight="32.0" prefWidth="114.0" style="-fx-background-color: white;" />
+      <Label fx:id="label_number_pieces_2" alignment="CENTER" layoutX="309.0" layoutY="538.0" prefHeight="32.0" prefWidth="114.0" style="-fx-background-color: white;" />
+      <Label fx:id="label_order_completed_2" alignment="CENTER" layoutX="309.0" layoutY="578.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" />
+      <Label fx:id="label_expected_delivery_2" alignment="CENTER" layoutX="309.0" layoutY="617.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" />
+      <Label fx:id="label_expected_cost_2" alignment="CENTER" layoutX="309.0" layoutY="657.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" />
+      <Label fx:id="label_production_cost_2" alignment="CENTER" layoutX="706.0" layoutY="374.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" />
+      <Label fx:id="label_total_cost_2" alignment="CENTER" layoutX="706.0" layoutY="413.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" />
+      <Label alignment="CENTER" layoutX="715.0" layoutY="326.0" prefHeight="30.0" prefWidth="96.0" text="2">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Label>
+      <Label layoutX="907.0" layoutY="326.0" prefHeight="32.0" prefWidth="130.0" text="Warehouse:">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Label>
+      <Label layoutX="917.0" layoutY="373.0" prefHeight="32.0" prefWidth="42.0" text="P1:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="917.0" layoutY="412.0" prefHeight="32.0" prefWidth="42.0" text="P2:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="917.0" layoutY="455.0" prefHeight="32.0" prefWidth="42.0" text="P3:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="917.0" layoutY="498.0" prefHeight="32.0" prefWidth="42.0" text="P4:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="917.0" layoutY="538.0" prefHeight="32.0" prefWidth="42.0" text="P5:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="917.0" layoutY="577.0" prefHeight="32.0" prefWidth="42.0" text="P6:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="917.0" layoutY="616.0" prefHeight="32.0" prefWidth="42.0" text="P7:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="1076.0" layoutY="412.0" prefHeight="32.0" prefWidth="42.0" text="P9:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="1076.0" layoutY="373.0" prefHeight="32.0" prefWidth="42.0" text="P8:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="label_war_p1" layoutX="954.0" layoutY="373.0" prefHeight="32.0" prefWidth="96.0" style="-fx-background-color: white;" />
+      <Label fx:id="label_war_p2" layoutX="954.0" layoutY="412.0" prefHeight="32.0" prefWidth="96.0" style="-fx-background-color: white;" />
+      <Label fx:id="label_war_p3" layoutX="954.0" layoutY="455.0" prefHeight="32.0" prefWidth="96.0" style="-fx-background-color: white;" />
+      <Label fx:id="label_war_p4" layoutX="954.0" layoutY="498.0" prefHeight="32.0" prefWidth="96.0" style="-fx-background-color: white;" />
+      <Label fx:id="label_war_p5" layoutX="954.0" layoutY="538.0" prefHeight="32.0" prefWidth="96.0" style="-fx-background-color: white;" />
+      <Label fx:id="label_war_p6" layoutX="954.0" layoutY="577.0" prefHeight="32.0" prefWidth="96.0" style="-fx-background-color: white;" />
+      <Label fx:id="label_war_p7" layoutX="954.0" layoutY="616.0" prefHeight="32.0" prefWidth="96.0" style="-fx-background-color: white;" />
+      <Label fx:id="label_war_p8" layoutX="1105.0" layoutY="373.0" prefHeight="32.0" prefWidth="96.0" style="-fx-background-color: white;" />
+      <Label fx:id="label_war_p9" layoutX="1105.0" layoutY="412.0" prefHeight="32.0" prefWidth="96.0" style="-fx-background-color: white;" />
+   </children>
+</AnchorPane>

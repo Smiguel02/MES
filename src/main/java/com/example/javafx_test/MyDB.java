@@ -27,6 +27,7 @@ public class MyDB {
     static String getInfoOrder = "SELECT * FROM infi2023.order";
 
     static String getInfoOrderERP = "SELECT * FROM infi2023.ordererp";
+    static String getInfoWarehouse = "SELECT * FROM infi2023.warehouse";
 
     //Update
     static String update_machine = null;
@@ -36,6 +37,8 @@ public class MyDB {
     static String update_piece = null;
 
     static String update_order_erp = null;
+
+    static String update_warehouse = null;
     //         updateEdit = "UPDATE studybud.favs SET tipo= ? , idaluno= ?  WHERE idaluno= ?  AND tipo= ?  ";
 
 
@@ -51,6 +54,9 @@ public class MyDB {
     //Order ERP
     int id_order_number, work_piece, start_piece, quantity, due_date, late_penalties, early_penalties, expected_profits;
     String client_name;
+    //Warehouse
+    int id_warehouse, war_max_capacity;
+    boolean is_full;
 
     private static MyDB single_instance = null;
 
@@ -195,6 +201,13 @@ public class MyDB {
             late_penalties = rs.getInt("late_penalties");
             early_penalties = rs.getInt("early_penalties");
             expected_profits = rs.getInt("expected_profits");
+
+        }
+        else if(Objects.equals(type, "warehouse")){
+
+            id_warehouse = rs.getInt("id_warehouse");
+            war_max_capacity = rs.getInt("WAR_MAX_CAPACITY");
+            is_full = rs.getBoolean("is_full");
 
         }
 
@@ -1505,6 +1518,42 @@ public class MyDB {
                 System.out.println("try 1 n");
                 pstmt.setInt(1,total_system_pieces);
                 pstmt.setInt(2, id_piece);
+                System.out.println("try 2 n");
+                affect = pstmt.executeUpdate();
+                System.out.println("try 3 n");
+
+                if(affect < 0){
+                    disconnect();
+                    return affect;
+                }else{
+                    disconnect();
+                    return affect;
+                }
+                // Analyse the resulting data
+
+            }catch (SQLException ex){
+                System.out.println(ex.getMessage());
+                return -1;
+            }
+        }
+        return -1;
+    }
+
+    //Warehouse
+    static String updateIs_full = null;
+    public int updateIsFull(String tipo){
+        int affect;
+
+        updateIs_full = "UPDATE infi2023.warehouse SET is_full = ? WHERE id_warehouse = ?";
+
+        if(Objects.equals(tipo, "warehouse")){
+            System.out.println("AQUIII");
+            try(Connection con = connect()){
+                System.out.println("deu connect");
+                PreparedStatement pstmt = con.prepareStatement(updateIs_full);
+                System.out.println("try 1 n");
+                pstmt.setBoolean(1,is_full);
+                pstmt.setInt(2, id_warehouse);
                 System.out.println("try 2 n");
                 affect = pstmt.executeUpdate();
                 System.out.println("try 3 n");
