@@ -40,6 +40,7 @@ public class CommsController extends Thread{
     public boolean piece_leave_war = false;
     public UShort piece_ask_war =  UShort.valueOf(0);
 
+    private boolean can_MES_read_values = true, can_OPCUA_read_values = false;  // Synchronization variables
     long time = 0, initial_time =0;
     boolean init_time=true;
     public List<Long> machs_time = new ArrayList<>();
@@ -62,6 +63,36 @@ public class CommsController extends Thread{
         // For MES:Updated main function and when it ends sends a notify
         //For OPC_UA: if true, enters in lock.wait(), if false just udpates values
         return opcua_values_updated;
+    }
+
+    public synchronized boolean can_I_read_values(int who, int iter){
+        //who = 0, MES
+        //who = 1, OPCUA
+
+        // iter = 0, primeira iteração
+        // iter = 1, segunda iteração
+        boolean aux ;
+        switch(iter){
+            case 0:
+                aux = can_OPCUA_read_values;
+                can_OPCUA_read_values = can_MES_read_values;
+                can_MES_read_values = aux;
+                return true;
+
+            case 1:
+                switch(who){
+                    case 0:
+                        return !can_MES_read_values;
+
+                    case 1:
+                        return !can_OPCUA_read_values;
+                }
+                break;
+        }
+
+
+        System.out.println("ERROR, flag values badly sent");
+        return false;
     }
 
     public int start_dispatch(Order disp){
@@ -229,7 +260,7 @@ public class CommsController extends Thread{
              *              Orders from MES         *
              ****************************************/
 
-            values_updated = true;
+
             //Dispatch Order from Warehouse, with this condition can dispatch
             if (Ord_dispatch != null && !piece_on_at1 && !piece_arrived_on_st1 && !piece_arrived_on_pt1) {
                 try {
@@ -238,7 +269,6 @@ public class CommsController extends Thread{
                 } catch (UaException | ExecutionException | InterruptedException e) {
                     throw new RuntimeException(e);
                 }
-                values_updated = false;
             }
 
             // Ordering new piece
@@ -261,7 +291,6 @@ public class CommsController extends Thread{
                             System.out.println("AUX(0,1,2) ("+aux_make_piece[0]+" ,"+aux_make_piece[1]+ ", "+aux_make_piece[2]+" )");
                             System.out.println("piece_on_at1: " + piece_on_at1 + "|| piece_on_at2: " + piece_on_at2);
                             System.out.println("I did this!");
-                            values_updated = false;
                         }
                     } catch (UaException | ExecutionException | InterruptedException e) {
                         throw new RuntimeException(e);
@@ -283,7 +312,6 @@ public class CommsController extends Thread{
                 } catch (UaException | ExecutionException | InterruptedException e) {
                     throw new RuntimeException(e);
                 }
-                values_updated = false;
             }
 
 
@@ -299,6 +327,17 @@ public class CommsController extends Thread{
              * Orders from MES to both the PLC and ERP and sent from the main MES code. It has access to the
              * OPCUA and JSON classes (or will have), and can send the commands whenever. Maybe might need to make some functions synchronized (let Miguel worry with this lol)
              */
+
+            int iteraction = 0;
+            while(can_I_read_values(1, iteraction)){
+                iteraction = 1;
+                try {
+                    sleep(5);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+//            System.out.println("DOS");
 
         }
 

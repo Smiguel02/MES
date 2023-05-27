@@ -16,6 +16,7 @@ public class Production extends Thread{
     private long time = 0;
     private int day=0;
     public Object lock;
+    public boolean war_update = false;
 
     CommsController opcua;
 
@@ -111,38 +112,43 @@ public class Production extends Thread{
              ***********************/
 
             // verify if new piece inside warehouse
-            if(opcua.piece_on_at2 != opcua.previous_piece_on_at2){
-                if(opcua.previous_piece_on_at2){
-                    while(opcua.number_of_pieces_on_warehouse() == war.occupation()){
-                        // OPTIMIZE: IS BLOCKING, maybe think of otehr implementation
-                    }
-                    for(int i= 0 ; i< 9; i++){
-                        if(war.specific_pieces_stored(i + 1) < opcua.war_piece_counter.get(i).intValue()){
-                            System.out.println("Piece of type " + (i+1) + " added to Warehouse!");
-                            war.piece_added(i+1);
-                            if(Orders.get(o_ID).piece_type == (i +1)){
-                                System.out.println("Piece transformation happened and notified order!");
-                                pieces.transform(Orders.get(o_ID).raw_piece, (i +1));
+            if(opcua.piece_on_at2 != opcua.previous_piece_on_at2 || war_update){
+                if(opcua.previous_piece_on_at2 || war_update){
+                    if(opcua.number_of_pieces_on_warehouse() == war.occupation()){
+                        war_update = true;
+                    }else{
+                        war_update = false;
+                        for(int i= 0 ; i< 9; i++){
+                            if(war.specific_pieces_stored(i + 1) < opcua.war_piece_counter.get(i).intValue()){
+                                System.out.println("Piece of type " + (i+1) + " added to Warehouse!");
+                                war.piece_added(i+1);
+                                if(Orders.get(o_ID).piece_type == (i +1)){
+                                    System.out.println("Piece transformation happened and notified order!");
+                                    pieces.transform(Orders.get(o_ID).raw_piece, (i +1));
+                                }
+                                break;
                             }
-                            break;
                         }
                     }
                 }
                 System.out.println("Warehouse size -> " + war.occupation());
-                    opcua.previous_piece_on_at2 = opcua.piece_on_at2;
+                opcua.previous_piece_on_at2 = opcua.piece_on_at2;
             }
 
             //verify if piece out of warehouse
-            if(opcua.piece_on_at1 != opcua.previous_piece_on_at1){
-                if(!opcua.previous_piece_on_at1 ){
-                    while(opcua.number_of_pieces_on_warehouse() == war.occupation()){
+            if(opcua.piece_on_at1 != opcua.previous_piece_on_at1 || war_update){
+                if(!opcua.previous_piece_on_at1 || war_update){
+                    if(opcua.number_of_pieces_on_warehouse() == war.occupation()){
                         // OPTIMIZE: IS BLOCKING, maybe think of otehr implementation
-                    }
-                    for(int i= 0 ; i< 9; i++){
-                        if(war.specific_pieces_stored(i + 1) > opcua.war_piece_counter.get(i).intValue()){
-                            System.out.println("Piece of type " + (i+1) + " removed from Warehouse!");
-                            war.piece_removed(i+1);
-                            break;
+                        war_update = true;
+                    }else {
+                        war_update = false;
+                        for(int i= 0 ; i< 9; i++){
+                            if(war.specific_pieces_stored(i + 1) > opcua.war_piece_counter.get(i).intValue()){
+                                System.out.println("Piece of type " + (i+1) + " removed from Warehouse!");
+                                war.piece_removed(i+1);
+                                break;
+                            }
                         }
                     }
                 }
@@ -287,7 +293,7 @@ public class Production extends Thread{
                 }else{
                     // Keep making pieces for this order
                     System.out.println("piece_on_at1: " + opcua.piece_on_at1 + "|| piece_on_at2: " + opcua.piece_on_at2 + " values: " + opcua.values());
-                    if(!opcua.piece_on_at1 && !opcua.piece_on_at2 && opcua.values()){
+                    if(!opcua.piece_on_at1 && !opcua.piece_on_at2){
                         System.out.println("AGAIN???????");
                         opcua.update_piece_values(Orders.get(o_ID).raw_piece, Orders.get(o_ID).piece_type, ((Orders.get(o_ID).Machines.get(0).ID - 1) / 2) + 1);
                         while(opcua.aux_make_piece[0] != 0){
@@ -311,12 +317,19 @@ public class Production extends Thread{
 //                opcua.update_piece_values(Orders.get(o_ID).raw_piece, Orders.get(o_ID).piece_type, ((Orders.get(o_ID).Machines.get(0).ID - 1) / 2) + 1);
 
             }
-
-            try {
-                Thread.sleep(10);     //TODO: change this at is delaying our program
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+            int iteraction = 0;
+            while(opcua.can_I_read_values(0 , iteraction)){
+                iteraction = 1;
+                try {
+                    Thread.sleep(10);     //TODO: change this at is delaying our program
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
+//            System.out.println("Uno");
+
+
+
             /**
              * Performs a whole Order!
              */
