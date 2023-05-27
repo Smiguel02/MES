@@ -50,7 +50,7 @@ public class Machine {
 
     public Machine(int tool, int identification, Piece_new p){
         work_time=0;
-        current_tool =tool;
+        current_tool = tool;
         in_use=false;
         piece_detected = 0;
         broken = false;

@@ -4,11 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b2dfacfb-aa89-45c7-ab1d-d84f49d37991" name="Changes" comment="Pequena modificacao">
+    <list default="true" id="b2dfacfb-aa89-45c7-ab1d-d84f49d37991" name="Changes" comment="Preencher labels da máquina">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/HelloController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/HelloController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/MyDB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/MyDB.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/javafx_test/gui_example.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/javafx_test/gui_example.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/Machine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/Machine.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -204,7 +203,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685116444986</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="Preencher labels da máquina">
+      <created>1685206078042</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1685206078043</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -235,7 +241,8 @@
     <MESSAGE value="Ficheiros com changes q" />
     <MESSAGE value="Update no fxml e na base de dados. Modificacoes no mydb. novo ficheiro fxml com atualizacoes novas." />
     <MESSAGE value="Pequena modificacao" />
-    <option name="LAST_COMMIT_MESSAGE" value="Pequena modificacao" />
+    <MESSAGE value="Preencher labels da máquina" />
+    <option name="LAST_COMMIT_MESSAGE" value="Preencher labels da máquina" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

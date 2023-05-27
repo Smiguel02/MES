@@ -165,7 +165,7 @@ public class HelloController implements Initializable {
     @FXML
     private Label label_work_time_4;
 
-    int a;
+    int a, b, c;
 
     MyDB n = MyDB.getInstance();
 
@@ -214,7 +214,46 @@ public class HelloController implements Initializable {
 
         try{
             n.connect();
+            List <Order> ord =  new ArrayList<>();
+            b = n.queryTestOrder();
+            System.out.println("Order_Label");
+            if(b < 0){
+                System.out.printf("Error in query test");
+            }
+            else{
+                label_piece_type_1.setText(String.valueOf(ord.get(0).piece_type));
+                label_piece_type_2.setText(String.valueOf(ord.get(1).piece_type));
+                label_raw_piece_1.setText(String.valueOf(ord.get(0).raw_piece));
+                label_raw_piece_2.setText(String.valueOf(ord.get(1).raw_piece));
+                label_raw_cost_1.setText(String.valueOf(ord.get(0).raw_cost));
+                label_raw_cost_2.setText(String.valueOf(ord.get(1).raw_cost));
+                label_pieces_arrival_1.setText(String.valueOf(ord.get(0).pieces_arrival));
+                label_pieces_arrival_2.setText(String.valueOf(ord.get(1).pieces_arrival));
+                label_number_pieces_1.setText(String.valueOf(ord.get(0).number_of_pieces));
+                label_number_pieces_2.setText(String.valueOf(ord.get(1).number_of_pieces));
+                //label_order_completed_1.setText(Boolean.valueOf(ord.get(0).finish())); //nao  consigo ir buscar se ja foi completa quantas peças na order
+                //label_order_completed_1.setText(String.valueOf(ord.get(1)));
+                label_expected_delivery_1.setText(String.valueOf(ord.get(0).expected_delivery));
+                label_expected_delivery_2.setText(String.valueOf(ord.get(1).expected_delivery));
+                label_expected_cost_1.setText(String.valueOf(ord.get(0).expected_cost));
+                label_expected_cost_2.setText(String.valueOf(ord.get(1).expected_cost));
+                label_production_cost_1.setText(String.valueOf(ord.get(0).production_cost));
+                label_production_cost_2.setText(String.valueOf(ord.get(1).production_cost));
+                label_total_cost_1.setText(String.valueOf(ord.get(0).total_cost));
+                label_total_cost_2.setText(String.valueOf(ord.get(1).total_cost));
 
+            }
+            /*if((ord.get(0).piece_dispatched() && ()) Se a order 1 e 2 for completa então fazer clean ao array list
+                 ord.clear();
+            }*/
+
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        try{
+            n.connect();
 
         }
         catch (SQLException e) {
