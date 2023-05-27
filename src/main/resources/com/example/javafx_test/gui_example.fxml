@@ -4,7 +4,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="716.0" prefWidth="1214.0" style="-fx-background-color: #b4dcf0;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.javafx_test.HelloController">
    <children>
       <Label layoutX="32.0" layoutY="41.0" prefHeight="30.0" prefWidth="96.0" text="Machine:">
@@ -22,26 +21,20 @@
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <Label layoutX="38.0" layoutY="172.0" prefHeight="30.0" prefWidth="114.0" text="Machine broken:">
+      <Label layoutX="37.0" layoutY="171.0" prefHeight="30.0" prefWidth="114.0" text="Piece Detected:">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <Label layoutX="38.0" layoutY="217.0" prefHeight="30.0" prefWidth="114.0" text="Piece Detected:">
-         <font>
-            <Font name="System Bold" size="14.0" />
-         </font>
-      </Label>
-      <Label layoutX="38.0" layoutY="260.0" prefHeight="30.0" prefWidth="102.0" text="Work Time:">
+      <Label layoutX="38.0" layoutY="210.0" prefHeight="30.0" prefWidth="102.0" text="Work Time:">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
       <Label fx:id="label_tool_1" alignment="CENTER" layoutX="152.0" layoutY="89.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
       <Label fx:id="label_machine_in_use_1" alignment="CENTER" layoutX="152.0" layoutY="127.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
-      <Label fx:id="label_machine_broken_1" alignment="CENTER" layoutX="152.0" layoutY="172.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
-      <Label fx:id="label_piece_detected_1" alignment="CENTER" layoutX="152.0" layoutY="217.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
-      <Label fx:id="label_work_time_1" alignment="CENTER" layoutX="152.0" layoutY="259.0" prefHeight="32.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_piece_detected_1" alignment="CENTER" layoutX="152.0" layoutY="171.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_work_time_1" alignment="CENTER" layoutX="152.0" layoutY="209.0" prefHeight="32.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
       <Label alignment="CENTER" layoutX="161.0" layoutY="41.0" prefHeight="30.0" prefWidth="96.0" text="1">
          <font>
             <Font name="System Bold" size="22.0" />
@@ -49,9 +42,8 @@
       </Label>
       <Label fx:id="label_tool_2" alignment="CENTER" layoutX="291.0" layoutY="89.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
       <Label fx:id="label_machine_in_use_2" alignment="CENTER" layoutX="291.0" layoutY="127.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
-      <Label fx:id="label_machine_broken_2" alignment="CENTER" layoutX="291.0" layoutY="172.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
-      <Label fx:id="label_piece_detected_2" alignment="CENTER" layoutX="291.0" layoutY="217.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
-      <Label fx:id="label_work_time_2" alignment="CENTER" layoutX="291.0" layoutY="259.0" prefHeight="32.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_piece_detected_2" alignment="CENTER" layoutX="291.0" layoutY="171.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_work_time_2" alignment="CENTER" layoutX="291.0" layoutY="209.0" prefHeight="32.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
       <Label alignment="CENTER" layoutX="300.0" layoutY="41.0" prefHeight="30.0" prefWidth="96.0" text="2">
          <font>
             <Font name="System Bold" size="22.0" />
@@ -59,9 +51,8 @@
       </Label>
       <Label fx:id="label_tool_3" alignment="CENTER" layoutX="433.0" layoutY="89.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
       <Label fx:id="label_machine_in_use_3" alignment="CENTER" layoutX="433.0" layoutY="127.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
-      <Label fx:id="label_machine_broken_3" alignment="CENTER" layoutX="433.0" layoutY="172.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
-      <Label fx:id="label_piece_detected_3" alignment="CENTER" layoutX="433.0" layoutY="217.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
-      <Label fx:id="label_work_time_3" alignment="CENTER" layoutX="433.0" layoutY="259.0" prefHeight="32.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_piece_detected_3" alignment="CENTER" layoutX="433.0" layoutY="171.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_work_time_3" alignment="CENTER" layoutX="433.0" layoutY="209.0" prefHeight="32.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
       <Label alignment="CENTER" layoutX="442.0" layoutY="41.0" prefHeight="30.0" prefWidth="96.0" text="3">
          <font>
             <Font name="System Bold" size="22.0" />
@@ -74,9 +65,8 @@
       </Label>
       <Label fx:id="label_tool_4" alignment="CENTER" layoutX="569.0" layoutY="89.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
       <Label fx:id="label_machine_in_use_4" alignment="CENTER" layoutX="569.0" layoutY="127.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
-      <Label fx:id="label_machine_broken_4" alignment="CENTER" layoutX="569.0" layoutY="172.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
-      <Label fx:id="label_piece_detected_4" alignment="CENTER" layoutX="569.0" layoutY="217.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
-      <Label fx:id="label_work_time_4" alignment="CENTER" layoutX="569.0" layoutY="259.0" prefHeight="32.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_piece_detected_4" alignment="CENTER" layoutX="569.0" layoutY="171.0" prefHeight="30.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
+      <Label fx:id="label_work_time_4" alignment="CENTER" layoutX="569.0" layoutY="209.0" prefHeight="32.0" prefWidth="114.0" style="-fx-background-color: white;" wrapText="true" />
       <Label layoutX="943.0" layoutY="41.0" text="Time:">
          <font>
             <Font name="System Bold" size="22.0" />

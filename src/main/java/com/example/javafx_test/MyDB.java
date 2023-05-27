@@ -27,6 +27,7 @@ public class MyDB {
     static String getInfoOrder = "SELECT * FROM infi2023.order";
 
     static String getInfoOrderERP = "SELECT * FROM infi2023.ordererp";
+
     static String getInfoWarehouse = "SELECT * FROM infi2023.warehouse";
 
     //Update
@@ -39,7 +40,8 @@ public class MyDB {
     static String update_order_erp = null;
 
     static String update_warehouse = null;
-    //         updateEdit = "UPDATE studybud.favs SET tipo= ? , idaluno= ?  WHERE idaluno= ?  AND tipo= ?  ";
+
+    //updateEdit = "UPDATE studybud.favs SET tipo= ? , idaluno= ?  WHERE idaluno= ?  AND tipo= ?  ";
 
 
     //Machine
@@ -100,6 +102,7 @@ public class MyDB {
         System.out.println("passou query 1");
         while (rs_machine.next()) {
             getInfo(rs_machine, "machine");
+
         }
         disconnect();
         return id_machine;
@@ -208,6 +211,7 @@ public class MyDB {
             id_warehouse = rs.getInt("id_warehouse");
             war_max_capacity = rs.getInt("WAR_MAX_CAPACITY");
             is_full = rs.getBoolean("is_full");
+            //warehouse_piece = rs.getArray("piece_list");
 
         }
 

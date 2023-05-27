@@ -4,8 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b2dfacfb-aa89-45c7-ab1d-d84f49d37991" name="Changes" comment="Update no fxml e na base de dados. Modificacoes no mydb. novo ficheiro fxml com atualizacoes novas.">
+    <list default="true" id="b2dfacfb-aa89-45c7-ab1d-d84f49d37991" name="Changes" comment="Pequena modificacao">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/HelloController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/HelloController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/MyDB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/MyDB.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/javafx_test/gui_example.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/javafx_test/gui_example.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,13 +37,13 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/mcmc/Documents/MES&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "last_opened_file_path": "C:/Users/mcmc/Documents/INFI_Project"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="GUI_MES" type="Application" factoryName="Application" activateToolWindowBeforeRun="false">
       <option name="ALTERNATIVE_JRE_PATH" value="19" />
@@ -194,7 +197,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685116389243</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Pequena modificacao">
+      <created>1685116444986</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1685116444986</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -224,7 +234,18 @@
     <MESSAGE value="Mudanças mydb com codigo update" />
     <MESSAGE value="Ficheiros com changes q" />
     <MESSAGE value="Update no fxml e na base de dados. Modificacoes no mydb. novo ficheiro fxml com atualizacoes novas." />
-    <option name="LAST_COMMIT_MESSAGE" value="Update no fxml e na base de dados. Modificacoes no mydb. novo ficheiro fxml com atualizacoes novas." />
+    <MESSAGE value="Pequena modificacao" />
+    <option name="LAST_COMMIT_MESSAGE" value="Pequena modificacao" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.RuntimeException" package="java.lang" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/MES$GUI_MES.ic" NAME="GUI_MES Coverage Results" MODIFIED="1684848173365" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">

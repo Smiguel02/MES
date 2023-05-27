@@ -1,6 +1,7 @@
 package com.example.javafx_test;
 
 
+import Model.OrderERP;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -13,9 +14,13 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class HelloController implements Initializable {
+
     @FXML
     private Label label_cor;
 
@@ -33,18 +38,6 @@ public class HelloController implements Initializable {
 
     @FXML
     private Label label_expected_delivery_2;
-
-    @FXML
-    private Label label_machine_broken_1;
-
-    @FXML
-    private Label label_machine_broken_2;
-
-    @FXML
-    private Label label_machine_broken_3;
-
-    @FXML
-    private Label label_machine_broken_4;
 
     @FXML
     private Label label_machine_in_use_1;
@@ -172,11 +165,61 @@ public class HelloController implements Initializable {
     @FXML
     private Label label_work_time_4;
 
+    int a;
+
     MyDB n = MyDB.getInstance();
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        try{
+            n.connect();
+            List <Machine> mach = new ArrayList<>();
+            a = n.queryTestMachine();
+            System.out.println("Machine_Label");
+            if(a<0){
+                System.out.printf("Error in query test");
+            }
+            else{
+                System.out.println("Machine_Label_Preencher");
+                //Machine
+                //Tool
+                label_tool_1.setText(String.valueOf(mach.get(0).current_tool));
+                label_tool_2.setText(String.valueOf(mach.get(1).current_tool));
+                label_tool_3.setText(String.valueOf(mach.get(2).current_tool));
+                label_tool_4.setText(String.valueOf(mach.get(3).current_tool));
+                //In_use
+                label_machine_in_use_1.setText(String.valueOf(mach.get(0).in_use));
+                label_machine_in_use_2.setText(String.valueOf(mach.get(1).in_use));
+                label_machine_in_use_3.setText(String.valueOf(mach.get(2).in_use));
+                label_machine_in_use_4.setText(String.valueOf(mach.get(3).in_use));
+                //Piece_detected
+                label_piece_detected_1.setText(String.valueOf(mach.get(0).piece_detected));
+                label_piece_detected_2.setText(String.valueOf(mach.get(1).piece_detected));
+                label_piece_detected_3.setText(String.valueOf(mach.get(2).piece_detected));
+                label_piece_detected_4.setText(String.valueOf(mach.get(3).piece_detected));
+                //Work_time
+                label_work_time_1.setText(String.valueOf(mach.get(0).work_time()));
+                label_work_time_2.setText(String.valueOf(mach.get(1).work_time()));
+                label_work_time_3.setText(String.valueOf(mach.get(2).work_time()));
+                label_work_time_4.setText(String.valueOf(mach.get(3).work_time()));
+
+            }
+            mach.clear();
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        try{
+            n.connect();
+
+
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 }
