@@ -28,7 +28,7 @@ public class ERPClient implements Runnable{
             System.out.println("cliente inicia thread");
             // Create an ArrayList to send
             // Create an instance of the Order request´, aqui vai ser o request
-
+            //todo: ver como vais colocar os valores na linha de baixo
             pedidos orderRequest = new pedidos(1,0,0);
 
 
@@ -75,7 +75,7 @@ public class ERPClient implements Runnable{
 
 
 
-
+            //todo: no if e no else ver onde guardas as ordens
             if (orderRequest.getFlag_start()==1){
 
                 String request1 = jsonObject1.get("request1").getAsString();

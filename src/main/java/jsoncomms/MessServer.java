@@ -43,7 +43,7 @@ public class MessServer implements Runnable{
                         rawPieces order_received = new Gson().fromJson(request, rawPieces.class);
                         //System.out.println("Received message from client: " + receivedMessage +"||"+ receivedChecksum);
                         // Validate the checksum
-
+                        //todo: processar o recebimento de novas peças
                         if (validateChecksum(request, receivedChecksum)) {
                             System.out.println("Received ArrayList:");
                             System.out.println(order_received.getpieceType());
