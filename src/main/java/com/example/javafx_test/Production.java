@@ -286,11 +286,30 @@ public class Production extends Thread{
                     }
                 }else{
                     // Keep making pieces for this order
-                    opcua.update_piece_values(Orders.get(o_ID).raw_piece, Orders.get(o_ID).piece_type, ((Orders.get(o_ID).Machines.get(0).ID - 1) / 2) + 1);
-                    while(!opcua.piece_on_at1){
-                        //OPTIMIZE: blocking and there must be a better way!
+                    System.out.println("piece_on_at1: " + opcua.piece_on_at1 + "|| piece_on_at2: " + opcua.piece_on_at2 + " values: " + opcua.values());
+                    if(!opcua.piece_on_at1 && !opcua.piece_on_at2 && opcua.values()){
+                        System.out.println("AGAIN???????");
+                        opcua.update_piece_values(Orders.get(o_ID).raw_piece, Orders.get(o_ID).piece_type, ((Orders.get(o_ID).Machines.get(0).ID - 1) / 2) + 1);
+                        while(opcua.aux_make_piece[0] != 0){
+                            //OPTIMIZE: as it is blocking
+                            try {
+                                sleep(5);
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+
+                        System.out.println("Make piece values (0,1,2): ("+opcua.aux_make_piece[0]+" ,"+opcua.aux_make_piece[1]+ ", "+opcua.aux_make_piece[2]+" )");
                     }
+
+
+//                    while(!opcua.piece_on_at1 || !opcua.previous_piece_on_at1){
+//                        //FIXME: this commented code doesnt work and Idk why
+//                    }
+//                    System.out.println("PROD: Outside of while wait loop!");
                 }
+//                opcua.update_piece_values(Orders.get(o_ID).raw_piece, Orders.get(o_ID).piece_type, ((Orders.get(o_ID).Machines.get(0).ID - 1) / 2) + 1);
+
             }
 
             try {

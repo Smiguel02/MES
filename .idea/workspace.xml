@@ -8,14 +8,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/CommsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/CommsController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/OpcUa.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/OpcUa.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/Order.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/Piece_new.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/Piece_new.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/Production.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/Production.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/jsoncomms/ERPClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/jsoncomms/ERPClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/jsoncomms/MainApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/jsoncomms/MainApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/jsoncomms/MessServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/jsoncomms/MessServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/jsoncomms/Order_json.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/order/Order_json.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -104,6 +97,7 @@
       <workItem from="1685116872029" duration="157000" />
       <workItem from="1685117255978" duration="3622000" />
       <workItem from="1685127697963" duration="14161000" />
+      <workItem from="1685193160547" duration="5814000" />
     </task>
     <task id="LOCAL-00001" summary="Added subscriptions from other repo">
       <created>1684788420247</created>

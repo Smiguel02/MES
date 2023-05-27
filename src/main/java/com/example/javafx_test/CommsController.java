@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class CommsController extends Thread{
 
     Object lock;
-    private int aux_make_piece[] = {0,0,0};
+    public int aux_make_piece[] = {0,0,0};
     private int aux_leave_piece = 0;
     public int war_leaving = 0;
     private boolean opcua_values_updated = false;
@@ -50,7 +50,7 @@ public class CommsController extends Thread{
     public List<Boolean> previous_machines_signal = new ArrayList<>();
 
 
-    private boolean values_updated = false;
+    private boolean values_updated = true;
     private Order Ord_dispatch;
 
 
@@ -94,10 +94,24 @@ public class CommsController extends Thread{
         this.lock = l;
     }
 
-    public synchronized void update_piece_values(int pecaWarehouse, int pecaFabricar, int MachineToUse){
+    public boolean update_piece_values(int pecaWarehouse, int pecaFabricar, int MachineToUse){
+//        boolean aux = values_updated;
+
         aux_make_piece[0] = pecaWarehouse;
         aux_make_piece[1] = pecaFabricar;
         aux_make_piece[2] = MachineToUse;
+
+//        if(pecaWarehouse == 0){
+//            values_updated = false;
+//        }else{
+//            values_updated =  true;
+//        }
+//
+//        return aux;
+        return true;
+    }
+    public boolean values(){
+        return values_updated;
     }
 
     @Override
@@ -215,6 +229,7 @@ public class CommsController extends Thread{
              *              Orders from MES         *
              ****************************************/
 
+            values_updated = true;
             //Dispatch Order from Warehouse, with this condition can dispatch
             if (Ord_dispatch != null && !piece_on_at1 && !piece_arrived_on_st1 && !piece_arrived_on_pt1) {
                 try {
@@ -223,11 +238,12 @@ public class CommsController extends Thread{
                 } catch (UaException | ExecutionException | InterruptedException e) {
                     throw new RuntimeException(e);
                 }
+                values_updated = false;
             }
 
             // Ordering new piece
             if (aux_make_piece[0] != 0 && aux_make_piece[1] != 0 && !piece_on_at1 && available_machines[aux_make_piece[2]] == 0) {
-                if (((aux_make_piece[2] == 1) &&  !pos_cam1_ocup) || ((aux_make_piece[2] == 2) && !pos_cam2_ocup && !pos_cam1_ocup)){ // piece on at1 already verified above
+                if (((aux_make_piece[2] == 1) &&  !pos_cam1_ocup && !piece_on_at2) || ((aux_make_piece[2] == 2) && !pos_cam2_ocup && !pos_cam1_ocup && !piece_on_at2)){ // piece on at1 already verified above
                     try {
                         System.out.println("Ordered new piece execution");
                         if (n.mandarFazerPeca(aux_make_piece[0], aux_make_piece[1], aux_make_piece[2]) == -1) {
@@ -237,7 +253,15 @@ public class CommsController extends Thread{
                                 System.out.println("OHHHH SHIT");
                             }
                             war_leaving = aux_make_piece[1];
+                            aux_make_piece[0] = 0;
+                            aux_make_piece[1] = 0;
+                            aux_make_piece[2] = 0;
                             update_piece_values(0,0,0);
+                            System.out.println("Values updated! " + values_updated);
+                            System.out.println("AUX(0,1,2) ("+aux_make_piece[0]+" ,"+aux_make_piece[1]+ ", "+aux_make_piece[2]+" )");
+                            System.out.println("piece_on_at1: " + piece_on_at1 + "|| piece_on_at2: " + piece_on_at2);
+                            System.out.println("I did this!");
+                            values_updated = false;
                         }
                     } catch (UaException | ExecutionException | InterruptedException e) {
                         throw new RuntimeException(e);
@@ -259,7 +283,9 @@ public class CommsController extends Thread{
                 } catch (UaException | ExecutionException | InterruptedException e) {
                     throw new RuntimeException(e);
                 }
+                values_updated = false;
             }
+
 
             /**
              * Always updating JSON code:
@@ -268,23 +294,6 @@ public class CommsController extends Thread{
              * Might be needed to create other boolean if we think other stuff is needed
              */
 
-            //! At the end of the cycle updates values
-            if(false){   //FIXME: change this as it depends on the values of OPC_UA
-                try {
-                    if(update_values_verification()){
-                        synchronized (lock){
-                            System.out.println("Waiting for MES to read me 0_0");
-                            lock.wait();
-                            System.out.println("Goshhh MES finally");
-                        }
-                    }
-                    //Update values
-                    i_have_updated_my_values(false);
-
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
 
             /**
              * Orders from MES to both the PLC and ERP and sent from the main MES code. It has access to the

@@ -505,6 +505,7 @@ public class OpcUa {
             writeValues.add(new WriteValue(Gvl_pedir_peca_Ware.getNodeId(), AttributeId.Value.uid(), null, pec_war));
             WriteMultiVars(writeValues);
             writeValues.clear();
+            System.out.println("Sent values on OPCUA!");
             return 1;
         } else if (MachineToUse == 2) {
             System.out.println("Está livre, a meter na maq2");
