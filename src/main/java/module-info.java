@@ -16,4 +16,6 @@ module com.example.javafx_test {
     exports com.example.javafx_test;
     exports jsoncomms;
     opens jsoncomms to javafx.fxml;
+    exports model.order;
+    opens model.order to javafx.fxml;
 }

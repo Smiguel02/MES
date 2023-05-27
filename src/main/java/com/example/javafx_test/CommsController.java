@@ -33,6 +33,8 @@ public class CommsController extends Thread{
     public boolean piece_arrived_on_pm1 = false, previous_piece_arrived_on_pm1 = false;
     public boolean piece_arrived_on_pm2 = false, previous_piece_arrived_on_pm2 = false;
 
+    public boolean pos_cam1_ocup, pos_cam2_ocup;
+
     public short available_machines[] ={0,0};
 
     public boolean piece_leave_war = false;
@@ -48,7 +50,7 @@ public class CommsController extends Thread{
     public List<Boolean> previous_machines_signal = new ArrayList<>();
 
 
-
+    private boolean values_updated = false;
     private Order Ord_dispatch;
 
 
@@ -75,18 +77,12 @@ public class CommsController extends Thread{
 //        return 0;   // if no new piece dispatched
     }
 
-    public synchronized int which_piece_left(){
-        System.out.println("Piece " + war_leaving+ " left the Warehouse");
-        return war_leaving;   // if error
-    }
-
     public int number_of_pieces_on_warehouse(){
         int sum = 0;
         for(int i=0; i<war_piece_counter.size();i++){
             sum += (int)war_piece_counter.get(i);
         }
-
-        return sum - 20;
+        return sum;
     }
 
     // Flag is 1 if is MES, 0 if is OPC_UA
@@ -98,7 +94,7 @@ public class CommsController extends Thread{
         this.lock = l;
     }
 
-    public synchronized void do_piece(int pecaWarehouse, int pecaFabricar, int MachineToUse){
+    public synchronized void update_piece_values(int pecaWarehouse, int pecaFabricar, int MachineToUse){
         aux_make_piece[0] = pecaWarehouse;
         aux_make_piece[1] = pecaFabricar;
         aux_make_piece[2] = MachineToUse;
@@ -131,7 +127,7 @@ public class CommsController extends Thread{
 
 
 
-        while(true){
+        while(true) {
 
             /**
              * Always updating OPC_UA code:
@@ -144,27 +140,29 @@ public class CommsController extends Thread{
              ****************************/
 
             try {
-                time = (long)n.ReadOneVar(n.PLCTime);
-                piece_on_at2 = !(boolean)n.ReadOneVar(n.at2_Livre);  //FIXME: Como é que sei que peça saiu?
-                piece_on_at1 = !(boolean)n.ReadOneVar(n.at1_Livre);  //FIXME: Como é que sei que peça entrou?
-                piece_arrived_on_ct8 = !(boolean)n.ReadOneVar(n.ct8_Livre);
-                piece_arrived_on_ct3 = !(boolean)n.ReadOneVar(n.ct3_Livre);
-                piece_arrived_on_st1 = !(boolean)n.ReadOneVar(n.st1_Livre);
-                piece_arrived_on_pt1 = !(boolean)n.ReadOneVar(n.pt1_Livre);
-                available_machines[0] = (short)n.ReadOneVar(n.Gvlprod1);
-                available_machines[1] = (short)n.ReadOneVar(n.Gvlprod2);
-                piece_ask_war = (UShort)n.ReadOneVar(n.Gvl_pedir_peca_Ware);
-                piece_leave_war = (boolean)n.ReadOneVar(n.Gvl_sai_peca_Ware);
-                machs_time.set(0, (long)n.ReadOneVar(n.time_maq1));
-                machs_time.set(1, (long)n.ReadOneVar(n.time_maq2));
-                machs_time.set(2, (long)n.ReadOneVar(n.time_maq3));
-                machs_time.set(3, (long)n.ReadOneVar(n.time_maq4));
-                piece_arrived_on_pm1 = (boolean)n.ReadOneVar(n.PM1c_Sensor);
-                piece_arrived_on_pm2 = (boolean)n.ReadOneVar(n.PM2c_Sensor);
+                time = (long) n.ReadOneVar(n.PLCTime);
+                piece_on_at2 = !(boolean) n.ReadOneVar(n.at2_Livre);
+                piece_on_at1 = !(boolean) n.ReadOneVar(n.at1_Livre);
+                piece_arrived_on_ct8 = !(boolean) n.ReadOneVar(n.ct8_Livre);
+                piece_arrived_on_ct3 = !(boolean) n.ReadOneVar(n.ct3_Livre);
+                piece_arrived_on_st1 = !(boolean) n.ReadOneVar(n.st1_Livre);
+                piece_arrived_on_pt1 = !(boolean) n.ReadOneVar(n.pt1_Livre);
+                available_machines[0] = (short) n.ReadOneVar(n.Gvlprod1);
+                available_machines[1] = (short) n.ReadOneVar(n.Gvlprod2);
+                piece_ask_war = (UShort) n.ReadOneVar(n.Gvl_pedir_peca_Ware);
+                piece_leave_war = (boolean) n.ReadOneVar(n.Gvl_sai_peca_Ware);
+                machs_time.set(0, (long) n.ReadOneVar(n.time_maq1));
+                machs_time.set(1, (long) n.ReadOneVar(n.time_maq2));
+                machs_time.set(2, (long) n.ReadOneVar(n.time_maq3));
+                machs_time.set(3, (long) n.ReadOneVar(n.time_maq4));
+                piece_arrived_on_pm1 = (boolean) n.ReadOneVar(n.PM1c_Sensor);
+                piece_arrived_on_pm2 = (boolean) n.ReadOneVar(n.PM2c_Sensor);
+                pos_cam1_ocup = (boolean)n.ReadOneVar(n.poscaminho1_ocupado);
+                pos_cam2_ocup = (boolean)n.ReadOneVar(n.poscaminho2_ocupado);
 
-                if(init_time){
+                if (init_time) {
                     initial_time = time;
-                    for(int i = 0; i< initial_machs_time.size(); i++){
+                    for (int i = 0; i < initial_machs_time.size(); i++) {
                         initial_machs_time.set(i, machs_time.get(i));
                     }
                     init_time = false;
@@ -194,16 +192,22 @@ public class CommsController extends Thread{
             }
 
             try {
-                List<DataValue> aux_counter= n.ReadMultiVars(n.PieceCounter);
-                List<DataValue> aux_mach_signals= n.ReadMultiVars(n.Machs_signal);
-                for(int i=0;i<9;i ++){
-                    war_piece_counter.set(i, (short)aux_counter.get(i).getValue().getValue());
-                }
-                for(int i=0;i<4;i ++){
-                    machines_signal.set(i, (boolean)aux_mach_signals.get(i).getValue().getValue());
-                }
+                war_piece_counter.set(0, (short) n.ReadOneVar(n.p1_counter));
+                war_piece_counter.set(1, (short) n.ReadOneVar(n.p2_counter));
+                war_piece_counter.set(2, (short) n.ReadOneVar(n.p3_counter));
+                war_piece_counter.set(3, (short) n.ReadOneVar(n.p4_counter));
+                war_piece_counter.set(4, (short) n.ReadOneVar(n.p5_counter));
+                war_piece_counter.set(5, (short) n.ReadOneVar(n.p6_counter));
+                war_piece_counter.set(6, (short) n.ReadOneVar(n.p7_counter));
+                war_piece_counter.set(7, (short) n.ReadOneVar(n.p8_counter));
+                war_piece_counter.set(8, (short) n.ReadOneVar(n.p9_counter));
 
-        } catch ( ExecutionException | InterruptedException e) {
+                machines_signal.set(0, (boolean) n.ReadOneVar(n.Mach1_signal));
+                machines_signal.set(1, (boolean) n.ReadOneVar(n.Mach2_signal));
+                machines_signal.set(2, (boolean) n.ReadOneVar(n.Mach3_signal));
+                machines_signal.set(3, (boolean) n.ReadOneVar(n.Mach4_signal));
+
+            } catch (UaException e) {
                 throw new RuntimeException(e);
             }
 
@@ -212,35 +216,34 @@ public class CommsController extends Thread{
              ****************************************/
 
             //Dispatch Order from Warehouse, with this condition can dispatch
-            if(Ord_dispatch!= null && !piece_on_at1 && !piece_arrived_on_st1 && !piece_arrived_on_pt1){
+            if (Ord_dispatch != null && !piece_on_at1 && !piece_arrived_on_st1 && !piece_arrived_on_pt1) {
                 try {
                     n.mandarSairPeca(Ord_dispatch.piece_type);
-                    Ord_dispatch.war_to_dispatch ++;
+                    Ord_dispatch.war_to_dispatch++;
                 } catch (UaException | ExecutionException | InterruptedException e) {
                     throw new RuntimeException(e);
                 }
             }
 
             // Ordering new piece
-            if(aux_make_piece[0] != 0 && aux_make_piece[1] != 0 && !piece_on_at1 && available_machines[aux_make_piece[2]] == 0){
-                try {
-                    System.out.println("Ordered new piece");
-                    if(n.mandarFazerPeca(aux_make_piece[0], aux_make_piece[1], aux_make_piece[2] ) == -1){
-                        System.out.println( "\\u001B[31m"+"ERROR, sent peça without machine being available" + "\\u001B[0m");
-                    }else{
-                        if(war_leaving != 0){
-                        System.out.println("OHHHH SHIT");
+            if (aux_make_piece[0] != 0 && aux_make_piece[1] != 0 && !piece_on_at1 && available_machines[aux_make_piece[2]] == 0) {
+                if (((aux_make_piece[2] == 1) &&  !pos_cam1_ocup) || ((aux_make_piece[2] == 2) && !pos_cam2_ocup && !pos_cam1_ocup)){ // piece on at1 already verified above
+                    try {
+                        System.out.println("Ordered new piece execution");
+                        if (n.mandarFazerPeca(aux_make_piece[0], aux_make_piece[1], aux_make_piece[2]) == -1) {
+                            System.out.println("\\u001B[31m" + "ERROR, sent peça without machine being available" + "\\u001B[0m");
+                        } else {
+                            if (war_leaving != 0) {
+                                System.out.println("OHHHH SHIT");
+                            }
+                            war_leaving = aux_make_piece[1];
+                            update_piece_values(0,0,0);
+                        }
+                    } catch (UaException | ExecutionException | InterruptedException e) {
+                        throw new RuntimeException(e);
                     }
-                        war_leaving = aux_make_piece[1];
-                        aux_make_piece[0] = 0;
-                        aux_make_piece[1] = 0;
-                        aux_make_piece[2] = 0;
-                    }
-                } catch (UaException | ExecutionException | InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
             }
-
+        }
             if(!piece_on_at1 && piece_leave_war && Objects.equals(piece_ask_war, UShort.valueOf(0)) && aux_leave_piece != 0){
                 try {
                     System.out.println("Dispatched a piece");

@@ -321,7 +321,14 @@ public class Piece_new {
         return 0;   //Error
     }
 
-
+    public int which_day_arrives(int raw){
+        for(int i= 0; i<type_arrival_date[raw-1].size(); i++){
+            if(!have_arrived[raw-1].get(i)){
+                return type_arrival_date[raw -1].get(i);
+            }
+        }
+    return 0;
+    }
 
     /**
      * Gives info about piece location

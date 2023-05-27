@@ -3,6 +3,7 @@ package jsoncomms;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import model.order.Order_json;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -25,7 +26,7 @@ public class ERPClient implements Runnable{
             System.out.println("cliente inicia thread");
             // Create an ArrayList to send
             // Create an instance of the Order request´, aqui vai ser o request
-            Order_json orderRequest = new Order_json("ABC123", "XYZ789", "10:00 AM");
+            Order_json orderRequest = new Order_json("ABC1234", "XYZ789", "10:00 AM");
 
 
             // Convert the order request to a JSON string

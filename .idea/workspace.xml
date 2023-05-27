@@ -4,14 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="863c4c01-492f-494a-87c4-0cfc1053f270" name="Changes" comment="Some more OPCUA variables. Saving now before testing MES">
+    <list default="true" id="863c4c01-492f-494a-87c4-0cfc1053f270" name="Changes" comment="Reads new pieces well!">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/CommsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/CommsController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/GUI_MES.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/GUI_MES.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/OpcUa.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/OpcUa.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/Order.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/Piece_new.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/Piece_new.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/Production.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/Production.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/Warehouse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/Warehouse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jsoncomms/ERPClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/jsoncomms/ERPClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jsoncomms/MainApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/jsoncomms/MainApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jsoncomms/MessServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/jsoncomms/MessServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jsoncomms/Order_json.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/order/Order_json.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,7 +102,8 @@
       <workItem from="1685057343286" duration="8448000" />
       <workItem from="1685104515500" duration="11458000" />
       <workItem from="1685116872029" duration="157000" />
-      <workItem from="1685117255978" duration="3421000" />
+      <workItem from="1685117255978" duration="3622000" />
+      <workItem from="1685127697963" duration="14161000" />
     </task>
     <task id="LOCAL-00001" summary="Added subscriptions from other repo">
       <created>1684788420247</created>
@@ -156,7 +161,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685111939969</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Reads new pieces well!">
+      <created>1685120814799</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1685120814799</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -183,6 +195,7 @@
     <MESSAGE value="gson" />
     <MESSAGE value="CommsOPCUA with all variables working. JSON doesn't work and MES not tested not finished" />
     <MESSAGE value="Some more OPCUA variables. Saving now before testing MES" />
-    <option name="LAST_COMMIT_MESSAGE" value="Some more OPCUA variables. Saving now before testing MES" />
+    <MESSAGE value="Reads new pieces well!" />
+    <option name="LAST_COMMIT_MESSAGE" value="Reads new pieces well!" />
   </component>
 </project>

@@ -1,8 +1,10 @@
 package jsoncomms;
 
 
+import static java.lang.Thread.sleep;
+
 public class MainApplication {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
         // Create instances of the classes
         ERPClient class1 = new ERPClient();
@@ -11,12 +13,14 @@ public class MainApplication {
         //class1.getArray(xxx);
 
         // Create Thread objects and pass the instances of the classes
-        Thread thread1 = new Thread(class1);
         Thread thread2 = new Thread(class2);
+        Thread thread1 = new Thread(class1);
 
         // Start the threads
-        thread1.start();
         thread2.start();
+        sleep(10);
+        thread1.start();
+
 
         // Continue with other tasks in the main thread if needed
         System.out.println("Main thread continues to run");

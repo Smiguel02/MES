@@ -53,6 +53,8 @@ public class OpcUa {
     UaVariableNode pospec2_Sinal;
     UaVariableNode Gvl_pedir_peca_Ware;
     UaVariableNode Gvl_sai_peca_Ware;
+
+    UaVariableNode poscaminho1_ocupado, poscaminho2_ocupado;
     private Boolean first_Order = true;
 
     List<ReadValueId> Ids_mandarFazerPeca = new ArrayList<>();
@@ -123,16 +125,16 @@ public class OpcUa {
                 new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.GVL.PT6ISens") //tempo do PLC
         );
         time_maq1 = (UaVariableNode) addressSpace.getNode(
-                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.ficheirotexto.esttempomaq1") //tempo do PLC
+                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.ficheirotexto.tempomaq1") //tempo do PLC
         );
         time_maq2 = (UaVariableNode) addressSpace.getNode(
-                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.ficheirotexto.esttempomaq2") //tempo do PLC
+                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.ficheirotexto.tempomaq2") //tempo do PLC
         );
         time_maq3 = (UaVariableNode) addressSpace.getNode(
-                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.ficheirotexto.esttempomaq3") //tempo do PLC
+                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.ficheirotexto.tempomaq3") //tempo do PLC
         );
         time_maq4 = (UaVariableNode) addressSpace.getNode(
-                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.ficheirotexto.esttempomaq4") //tempo do PLC
+                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.ficheirotexto.tempomaq4") //tempo do PLC
         );
 
         p1_counter = (UaVariableNode) addressSpace.getNode(
@@ -221,6 +223,13 @@ public class OpcUa {
         );
         Gvl_sai_peca_Ware = (UaVariableNode) addressSpace.getNode(
                 new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.GVL.saida")
+        );
+
+        poscaminho1_ocupado = (UaVariableNode) addressSpace.getNode(
+                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.poscaminho1.ocupado")
+        );
+        poscaminho2_ocupado = (UaVariableNode) addressSpace.getNode(
+                new NodeId(4, "|var|CODESYS Control Win V3 x64.Application.poscaminho2.ocupado")
         );
 
         Machs_signal.add(
@@ -490,7 +499,7 @@ public class OpcUa {
         //se At1 está livre, 1
         //verifica a maq1 e depois a maq2
         if(MachineToUse == 1){
-            System.out.println("Está livre posso meter na maq1");
+            System.out.println("Está livre, a meter na maq1");
             List<WriteValue> writeValues = new ArrayList<>();
             writeValues.add(new WriteValue(Gvlprod1.getNodeId(), AttributeId.Value.uid(), null, pec_fab));
             writeValues.add(new WriteValue(Gvl_pedir_peca_Ware.getNodeId(), AttributeId.Value.uid(), null, pec_war));
@@ -498,7 +507,7 @@ public class OpcUa {
             writeValues.clear();
             return 1;
         } else if (MachineToUse == 2) {
-            System.out.println("Está livre posso meter na maq2");
+            System.out.println("Está livre, a meter na maq2");
             List<WriteValue> writeValues = new ArrayList<>();
             writeValues.add(new WriteValue(Gvlprod2.getNodeId(), AttributeId.Value.uid(), null, pec_fab));
             writeValues.add(new WriteValue(Gvl_pedir_peca_Ware.getNodeId(), AttributeId.Value.uid(), null, pec_war));

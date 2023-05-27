@@ -108,7 +108,7 @@ public class Order {
 
         this.start_date = start;
 
-        System.out.println("O PLC disse-me que estava a usar a M "+m.get(0).ID+" e "+ m.get(1).ID);
+        System.out.println("ORDER: O PLC disse-me que estava a usar a M "+m.get(0).ID+" e "+ m.get(1).ID);
 
         //Add existing thing to order
         for(int i=0;i<2;i++){
@@ -118,9 +118,6 @@ public class Order {
             }
 
         }
-
-        //TODO: send info to PLC to start an order
-
     }
 
     /**

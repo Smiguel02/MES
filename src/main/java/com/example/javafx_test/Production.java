@@ -10,6 +10,7 @@ public class Production extends Thread{
     private float plant_time;
 
     private int new_warehouse_piece = 0;
+    boolean stuck = false;
 
     List<Order> Orders = new ArrayList<>();
     private long time = 0;
@@ -111,41 +112,42 @@ public class Production extends Thread{
 
             // verify if new piece inside warehouse
             if(opcua.piece_on_at2 != opcua.previous_piece_on_at2){
-                System.out.println("Values changed!!");
-                System.out.println("PROD: war.occupation - " + war.occupation() + "read values from PLC: " + opcua.number_of_pieces_on_warehouse());
-             if(war.occupation() < opcua.number_of_pieces_on_warehouse()){
-                System.out.println("Bro am I here??");
                 if(opcua.previous_piece_on_at2){
-                    System.out.println("Oh yeah piece entered");
+                    while(opcua.number_of_pieces_on_warehouse() == war.occupation()){
+                        // OPTIMIZE: IS BLOCKING, maybe think of otehr implementation
+                    }
                     for(int i= 0 ; i< 9; i++){
                         if(war.specific_pieces_stored(i + 1) < opcua.war_piece_counter.get(i).intValue()){
+                            System.out.println("Piece of type " + (i+1) + " added to Warehouse!");
                             war.piece_added(i+1);
                             if(Orders.get(o_ID).piece_type == (i +1)){
+                                System.out.println("Piece transformation happened and notified order!");
                                 pieces.transform(Orders.get(o_ID).raw_piece, (i +1));
-                            }else{
-                                System.out.println("\\u001B[31m"+ "ERROR, Piece not updated by the correct order!"+"\\u001B[0m");
                             }
-
-                            System.out.println("PROD: Piece added to Warehouse!");
                             break;
                         }
                     }
                 }
-                System.out.println("PROD: Piece entered the warehouse");
-                }
+                System.out.println("Warehouse size -> " + war.occupation());
                     opcua.previous_piece_on_at2 = opcua.piece_on_at2;
             }
+
             //verify if piece out of warehouse
-//            if(opcua.piece_on_at1 != opcua.previous_piece_on_at1){
-//                if(!opcua.previous_piece_on_at1 ){
-//                    int aux = opcua.which_piece_left();
-//                    if(aux!=0) {
-//                        war.piece_removed(aux);
-//                        System.out.println("Piece that entered: " + aux);
-//                    }
-//                }
-//                opcua.previous_piece_on_at1 = opcua.piece_on_at1;
-//            }
+            if(opcua.piece_on_at1 != opcua.previous_piece_on_at1){
+                if(!opcua.previous_piece_on_at1 ){
+                    while(opcua.number_of_pieces_on_warehouse() == war.occupation()){
+                        // OPTIMIZE: IS BLOCKING, maybe think of otehr implementation
+                    }
+                    for(int i= 0 ; i< 9; i++){
+                        if(war.specific_pieces_stored(i + 1) > opcua.war_piece_counter.get(i).intValue()){
+                            System.out.println("Piece of type " + (i+1) + " removed from Warehouse!");
+                            war.piece_removed(i+1);
+                            break;
+                        }
+                    }
+                }
+                opcua.previous_piece_on_at1 = opcua.piece_on_at1;
+            }
 
 
 
@@ -154,11 +156,11 @@ public class Production extends Thread{
             if(opcua.piece_arrived_on_ct8 != opcua.previous_piece_arrived_on_ct8){
                 if(!opcua.previous_piece_arrived_on_ct8 ){
                     int raw = pieces.expected_piece();
-                    if(raw == 0){
+                    if(raw == 0 || raw == 1){
                         System.out.println("ERROR, Not expecting any piece, please remove");
                         break;
                     }
-                    if(!pieces.arrived(raw, this.day)){
+                    if(!pieces.arrived(2, this.day)){
                         System.out.println("PROD: ERROR, Why Bro?? That piece shouldn't be here!");
                     }
                     System.out.println("PROD: Expected raw: " + raw);
@@ -168,15 +170,15 @@ public class Production extends Thread{
                 }
                 opcua.previous_piece_arrived_on_ct8 = opcua.piece_arrived_on_ct8;
             }
-            // Verify if new piece arrived on ct3 and if inside desired time
+            // Verify if new piece arrived on ct3 and if inside desired time. Only p1 pieces
             if(opcua.piece_arrived_on_ct3 != opcua.previous_piece_arrived_on_ct3){
                 if(!opcua.previous_piece_arrived_on_ct3){
                     int raw = pieces.expected_piece();
-                    if(raw == 0){
+                    if(raw == 0 || raw == 2){
                         System.out.println("ERROR, Not expecting any piece, please remove");
                         break;
                     }
-                    if(!pieces.arrived(raw, this.day)){
+                    if(!pieces.arrived(1, this.day)){
                         System.out.println("PROD: ERROR, Why Bro?? That piece shouldn't be here!");
                     }
                     System.out.println("PROD: Expected raw: " + raw);
@@ -215,18 +217,6 @@ public class Production extends Thread{
 
             // TODO: add JSON verification if new order
 
-//            try {
-//                if(opcua.update_values_verification()){
-//                    // Call update values method that verifies and updates everything
-//                    opcua.i_have_updated_my_values(true);// ends by saying the values have already been updated
-//                    // In case OPC_UA is in lock waiting to udpate the values, this will allow it to continue
-//                    synchronized (lock){
-//                        lock.notify();
-//                    }
-//                }
-//            } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
-//            }
 
 
             /***********************
@@ -260,60 +250,48 @@ public class Production extends Thread{
             // Which raw piece works for a certain order
             // Verify availability
             //FIXME: maybe later put this on MES_SCHEDULE
-//            if(Orders.get(o_ID).start_date == 0){
-//                if (war.specific_pieces_stored(Orders.get(o_ID).raw_piece) < Orders.get(o_ID).number_of_pieces) {
-//                    System.out.println("\\u001B[31m" +"ERROR, not enough pieces to complete order" +"\\u001B[0m");
-//                }else{
-//                    if(opcua.available_machines[0] == 0 || opcua.available_machines[1] == 0){
-//                        ArrayList<Machine> m_aux = new ArrayList<>();
-//                        if(opcua.available_machines[0] == 0){
-//                            m_aux.add(Machines.get(0));
-//                            m_aux.add(Machines.get(1));
-//                        }else{
-//                            m_aux.add(Machines.get(2));
-//                            m_aux.add(Machines.get(3));
-//                        }
-//                        Orders.get(o_ID).start_manufacturing(m_aux, this.day);
-//                    }
-//                }
-//
-//            }else{  // If order already started
-//                //OPTIMIZE: Make it possible to start even though it is still finishing the order and the warehouse doesnt have enough pieces
-//                if((war.specific_pieces_stored(Orders.get(o_ID).piece_type) == Orders.get(o_ID).number_of_pieces) || Orders.get(o_ID).dispatching){
-//                    // Are there enough pieces on the warehouse to finish the order? Then can start dispatching
-//                    Orders.get(o_ID).dispatch_started();
-//                    Orders.get(o_ID).war_to_dispatch += opcua.start_dispatch(Orders.get(o_ID));
-//
-//                    //Piece on dispatch dock and inside allowed timeline. Start dispatch procedure
-//                    if( ((float)(this.day * 60000)/(this.time) < 0.5) && !opcua.piece_arrived_on_pm1 && opcua.previous_piece_arrived_on_pm1 && !opcua.piece_arrived_on_pm2 && opcua.previous_piece_arrived_on_pm2){
-//                        if(!pieces.dispatched(Orders.get(o_ID).raw_piece, Orders.get(o_ID).piece_type, this.day, Orders.get(o_ID))){
-//                            System.out.println("\\u001B[31m" + "ERROR For somethingggg" + "\\u001B[0m");
-//                        }
-//                    }
-//                }else{
-//                    // Keep making pieces for this order
-//                    opcua.do_piece(Orders.get(o_ID).raw_piece, Orders.get(o_ID).piece_type, ((Orders.get(o_ID).Machines.get(0).ID - 1) / 2));
-//                }
-//
-//            }
+            if(Orders.get(o_ID).start_date == 0){
+                if (war.specific_pieces_stored(Orders.get(o_ID).raw_piece) < Orders.get(o_ID).number_of_pieces) {
+                }else if((war.specific_pieces_stored(Orders.get(o_ID).raw_piece) >= (Orders.get(o_ID).number_of_pieces / 2) && (pieces.which_day_arrives(Orders.get(o_ID).raw_piece) == this.day)) || (war.specific_pieces_stored(Orders.get(o_ID).raw_piece) >= Orders.get(o_ID).number_of_pieces)){
+                    if(opcua.available_machines[0] == 0 || opcua.available_machines[1] == 0){
+                        ArrayList<Machine> m_aux = new ArrayList<>();
+                        System.out.print("Starting manufacturing on Machine ");
+                        if(opcua.available_machines[0] == 0){
+                            m_aux.add(Machines.get(0));
+                            m_aux.add(Machines.get(1));
+                            System.out.println("1!");
+                        }else{
+                            m_aux.add(Machines.get(2));
+                            m_aux.add(Machines.get(3));
+                            System.out.println("2!");
+                        }
+                        Orders.get(o_ID).start_manufacturing(m_aux, this.day);
+                        System.out.println("PROD: order updated start manufacturing!");
+                    }
+                }
 
+            }else{  // If order already started
 
-            // Order PLC
-            // Ir processando peças along with Warehouse and machine stuff. One by one in this case
-//            for (int i = 0; i < Orders.get(o_ID).number_of_pieces; i++) {
-//                war.piece_removed(Orders.get(o_ID).raw_piece);
-//                //TODO: Add this part to MES
-//                //FIXME: vou chamar piece transform no fim da cena quando entrar no Warehouse!
-//                Orders.get(o_ID).Machines.get(0).info_piece_placed(plc_raw_type);
-//                Orders.get(o_ID).Machines.get(0).info_transformation_begun();
-//                Orders.get(o_ID).Machines.get(0).info_transformation_over(plc_machine_2);
-//                Orders.get(o_ID).Machines.get(0).piece_out(15.6f);
-//
-//                Orders.get(o_ID).Machines.get(1).info_piece_placed(plc_machine_2);
-//                Orders.get(o_ID).Machines.get(1).info_transformation_begun();
-//                Orders.get(o_ID).Machines.get(1).info_transformation_over(plc_final_piece);
-//                Orders.get(o_ID).Machines.get(1).piece_out(15.6f);
-//            }
+                // Are there enough pieces on the warehouse to finish the order? Then can start dispatching
+                //OPTIMIZE: Make it possible to start even though it is still finishing the order and the warehouse doesnt have enough pieces
+                if((war.specific_pieces_stored(Orders.get(o_ID).piece_type) == Orders.get(o_ID).number_of_pieces) || Orders.get(o_ID).dispatching){
+                    Orders.get(o_ID).dispatch_started();
+                    Orders.get(o_ID).war_to_dispatch += opcua.start_dispatch(Orders.get(o_ID));
+
+                    //Piece on dispatch dock and inside allowed timeline. Start dispatch procedure
+                    if( ((float)(this.day * 60000)/(this.time) < 0.5) && !opcua.piece_arrived_on_pm1 && opcua.previous_piece_arrived_on_pm1 && !opcua.piece_arrived_on_pm2 && opcua.previous_piece_arrived_on_pm2){
+                        if(!pieces.dispatched(Orders.get(o_ID).raw_piece, Orders.get(o_ID).piece_type, this.day, Orders.get(o_ID))){
+                            System.out.println("\\u001B[31m" + "ERROR For somethingggg" + "\\u001B[0m");
+                        }
+                    }
+                }else{
+                    // Keep making pieces for this order
+                    opcua.update_piece_values(Orders.get(o_ID).raw_piece, Orders.get(o_ID).piece_type, ((Orders.get(o_ID).Machines.get(0).ID - 1) / 2) + 1);
+                    while(!opcua.piece_on_at1){
+                        //OPTIMIZE: blocking and there must be a better way!
+                    }
+                }
+            }
 
             try {
                 Thread.sleep(10);     //TODO: change this at is delaying our program

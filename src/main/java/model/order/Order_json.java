@@ -1,9 +1,9 @@
-package jsoncomms;
+package model.order;
 
 public class Order_json {
-    private String firstPiece;
-    private String lastPiece;
-    private String time;
+    public String firstPiece;
+    public String lastPiece;
+    public String time;
 
     public Order_json(String firstPiece, String lastPiece, String time) {
         this.firstPiece = firstPiece;
@@ -14,11 +14,9 @@ public class Order_json {
     public String getFirstPiece() {
         return firstPiece;
     }
-
     public String getLastPiece() {
         return lastPiece;
     }
-
     public String getTime() {
         return time;
     }
