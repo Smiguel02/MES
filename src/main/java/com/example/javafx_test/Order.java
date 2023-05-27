@@ -20,7 +20,7 @@ public class Order {
 
     public int number_of_pieces;                    //Number of pieces inside order. Um unico valor
 
-    private int completed = 0;             // How many pieces have been already unloaded/dispatched. Um unico valor, <= number_of_pieces
+    public int completed = 0;             // How many pieces have been already unloaded/dispatched. Um unico valor, <= number_of_pieces
 
     public int start_date;          //Ana Rita ignore //TODO: how to implement this?       // Day scheduled by ERP to start things
 
