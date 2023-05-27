@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import model.order.Order_json;
+import model.order.rawPieces;
 
 
 import java.io.IOException;
@@ -39,15 +40,16 @@ public class MessServer implements Runnable{
                         String receivedChecksum = jsonObject.get("checksum").getAsString();
 
                         // Convert the JSON object to a JsonObject
-                        Order_json order_received = new Gson().fromJson(request, Order_json.class);
+                        rawPieces order_received = new Gson().fromJson(request, rawPieces.class);
                         //System.out.println("Received message from client: " + receivedMessage +"||"+ receivedChecksum);
                         // Validate the checksum
 
                         if (validateChecksum(request, receivedChecksum)) {
                             System.out.println("Received ArrayList:");
-                            System.out.println(order_received.getTime());
-                            System.out.println(order_received.getFirstPiece());
-                            System.out.println(order_received.getLastPiece());
+                            System.out.println(order_received.getpieceType());
+                            System.out.println(order_received.getnumberOfPieces());
+                            System.out.println(order_received.getdaysToArrive());
+                            System.out.println(order_received.getprice());
                             /*for (Object element : request) {
                                 System.out.println(element);
                             }*/

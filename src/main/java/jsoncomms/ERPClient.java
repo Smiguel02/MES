@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import model.order.Order_json;
+import model.order.order;
+import model.order.pedidos;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -26,7 +28,8 @@ public class ERPClient implements Runnable{
             System.out.println("cliente inicia thread");
             // Create an ArrayList to send
             // Create an instance of the Order request´, aqui vai ser o request
-            Order_json orderRequest = new Order_json("ABC1234", "XYZ789", "10:00 AM");
+
+            pedidos orderRequest = new pedidos(1,0,0);
 
 
             // Convert the order request to a JSON string
@@ -66,6 +69,29 @@ public class ERPClient implements Runnable{
             // Receive response from server
             ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
             String jsonResponse = (String) inputStream.readObject();
+
+            JsonObject jsonObject1 = new JsonObject();
+            jsonObject1= Gson.fromJson(jsonResponse, JsonObject.class);
+
+
+
+
+            if (orderRequest.getFlag_start()==1){
+
+                String request1 = jsonObject1.get("request1").getAsString();
+                String request2 = jsonObject1.get("request2").getAsString();
+                String receivedChecksum = jsonObject1.get("checksum").getAsString();
+                order order1 = Gson.fromJson(request1, order.class);
+                order order2 = Gson.fromJson(request2, order.class);
+            }
+            else {
+
+                String request1 = jsonObject1.get("request1").getAsString();
+                String receivedChecksum = jsonObject1.get("checksum").getAsString();
+                order order1 = Gson.fromJson(request1, order.class);
+            }
+
+
             System.out.println("Received response from server: " + jsonResponse);
 
             // Close connections
