@@ -19,6 +19,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.net.CookieHandler;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -188,7 +189,7 @@ public class HelloController implements Initializable {
     public void initialize() {
         // Initialize the labels or perform any other setup
         // ...
-        System.out.println("yo");
+//        System.out.println("yo");
         // Create and start the data update thread
         dataUpdateThread = new Thread(this::fetchDataAndUpdateLabels);
         dataUpdateThread.setDaemon(true);
@@ -198,19 +199,31 @@ public class HelloController implements Initializable {
         while (running) {
             // Fetch data from the database
             // ...
-            System.out.println("www");
+//            System.out.println("www");
             try {
                 n.connect();
                 //mach.clear();
                 a = n.getInfoMachine(); //vai buscar info à tabela para machine info
-                System.out.println(a);
+//                System.out.println(a);
                 mach = todasmachines();//fica om os valores lidos
+
+                if(n.comms != null) {
+                    long official_time = n.comms.time - n.comms.initial_time;
+                    int official_day = (int) (official_time / 60000) + 1;
+                    if ((int) (official_time % 60000) > 30000) {
+                        n.midDay = true;
+                    } else {
+                        n.midDay = false;
+                    }
+                    n.updateTenpo(official_time);
+                    n.updateDia(official_day);
+                }
 
                 //ord.clear();
                 b = n.getInfoOrder();
-                System.out.println(b);
+//                System.out.println(b);
                 ord = todasorders();
-                System.out.println("Order_Label");
+//                System.out.println("Order_Label");
 
                 c= n.getInfoTempo();
 
@@ -222,9 +235,9 @@ public class HelloController implements Initializable {
             // Update the labels on the JavaFX Application Thread
             Platform.runLater(() -> {
                 if (a < 0) {
-                    System.out.print("Error in query test");
+//                    System.out.print("Error in query test");
                 } else {
-                    System.out.println("Machine_Label_Preencher");
+//                    System.out.println("Machine_Label_Preencher");
                     //Machine
                     //Tool
                     label_tool_1.setText(String.valueOf(mach.get(0).getTool()));

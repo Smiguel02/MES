@@ -114,16 +114,9 @@ public class Production extends Thread{
                 System.out.println("/************************************************\n" +
                                    "***** DAY " + ((int)(time/60000) + 1) + "*************************\n" +
                                     "******************************************************/");
-                mydb.midDay=false;
 
             }
             this.day = (int)(this.time / 60000) + 1;
-
-           if((int)(this.time % 60000)>30000){
-               mydb.midDay=true;
-           }
-            mydb.updateTenpo(this.time);
-            mydb.updateDia(this.day);
 
 
             /***********************
@@ -403,6 +396,10 @@ public class Production extends Thread{
             opcua.previous_piece_arrived_on_ct3 = opcua.piece_arrived_on_ct3;
             opcua.previous_piece_arrived_on_pm1 = opcua.piece_arrived_on_pm1;
             opcua.previous_piece_arrived_on_pm2 = opcua.piece_arrived_on_pm2;
+            opcua.previous_machines_signal.set(0, opcua.machines_signal.get(0));
+            opcua.previous_machines_signal.set(1, opcua.machines_signal.get(1));
+            opcua.previous_machines_signal.set(2, opcua.machines_signal.get(2));
+            opcua.previous_machines_signal.set(3, opcua.machines_signal.get(3));
 
             int iteraction = 0;
             while(opcua.can_I_read_values(0 , iteraction)){

@@ -167,6 +167,7 @@ public class CommsController extends Thread{
 
         return true;
     }
+
     public boolean values(){
         return values_updated;
     }
@@ -198,6 +199,7 @@ public class CommsController extends Thread{
 
         server = Server.getInstance();
 
+        mydb.set_comms(this);
 
         while(true) {
 
@@ -439,6 +441,7 @@ public class CommsController extends Thread{
              * Orders from MES to both the PLC and ERP and sent from the main MES code. It has access to the
              * OPCUA and JSON classes (or will have), and can send the commands whenever. Maybe might need to make some functions synchronized (let Miguel worry with this lol)
              */
+
 
             int iteraction = 0;
             while(can_I_read_values(1, iteraction)){

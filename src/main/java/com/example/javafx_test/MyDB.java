@@ -75,6 +75,14 @@ public class MyDB {
 
     private static MyDB single_instance = null;
 
+    public CommsController comms;
+
+
+
+    public void set_comms(CommsController comm){
+        this.comms = comm;
+    }
+
     public MyDB(){}
 
 
@@ -96,7 +104,7 @@ public class MyDB {
         //System.out.println("Hello1!");
         conn = DriverManager.getConnection(db_url, user, passwd);
         //System.out.println("Hello2!");
-        System.out.println(conn);
+//        System.out.println(conn);
         return conn;
     }
     public void disconnect() throws SQLException {
@@ -289,7 +297,7 @@ public class MyDB {
             }
         }
         catch (SQLException ex){
-            System.out.println(ex.getMessage());
+//            System.out.println(ex.getMessage());
             return -1;
         }
     }
