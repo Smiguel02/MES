@@ -105,16 +105,14 @@ public class MyDB {
     }
 
     public int queryTestMachine() throws SQLException {
-
         if (conn == null)
             throw new SQLException("Call connect before querying...");
-
+        machine_info.clear();
         Statement stmt = conn.createStatement();
         ResultSet rs_machine = stmt.executeQuery(getInfoMachine);
         System.out.println("passou query 1");
         while (rs_machine.next()) {
-            getInfo(rs_machine, "machine");
-
+            getInfoMachine();
         }
         disconnect();
         return id_machine;
@@ -427,7 +425,7 @@ public class MyDB {
 
     ArrayList <Machine> machine_info = new ArrayList<>();
 
-    public int getInfoMachine(int id_machine) throws SQLException {
+    public int getInfoMachine() throws SQLException {
         machine_info.clear();
         getInfoMachine = "SELECT * FROM infi2023.machine";
         try (Connection con = connect()) {
@@ -435,7 +433,6 @@ public class MyDB {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(getInfoMachine);
             while (rs.next()) {
-                if ((rs.getInt("id_machine") == id_machine)) {
                     Machine m = new Machine();
                     m.setId_order(rs.getInt("id_order"));
                     m.setBroken(rs.getBoolean("broken"));
@@ -445,15 +442,11 @@ public class MyDB {
                     m.setWork_time(rs.getFloat("work_time"));
                     m.setId_machine(id_machine);
                     machine_info.add(m);
-
-                }
             }
-            disconnect();
             return 0;
         }
         catch (SQLException ex){
             System.out.println(ex.getMessage());
-            disconnect();
             return -1;
         }
 
@@ -463,7 +456,7 @@ public class MyDB {
     //Escrever order apatir da que fui buscar a base de dados
 
     ArrayList <Order> order_info = new ArrayList<>();
-    public int getInfoOrder(int id_order) throws SQLException{
+    public int getInfoOrder() throws SQLException{
         order_info.clear();
         getInfoOrder = "SELECT * FROM infi2023.order";
         try (Connection con = connect()) {
@@ -471,7 +464,6 @@ public class MyDB {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(getInfoOrder);
             while (rs.next()) {
-                if ((rs.getInt("id_order") == id_order)) {
                     Order o = new Order();
                     o.setPiece_type(rs.getInt("piece_type"));
                     o.setRaw_piece(rs.getInt("raw_piece"));
@@ -486,14 +478,12 @@ public class MyDB {
                     o.setId_order(id_order);
                     order_info.add(o);
                 }
-            }
-            disconnect();
+
             return 0;
 
         }
         catch (SQLException ex){
             System.out.println(ex.getMessage());
-            disconnect();
             return -1;
         }
 
@@ -503,7 +493,7 @@ public class MyDB {
     //Escrever piece apatir da que fui buscar a base de dados
 
     ArrayList <Piece> piece_info = new ArrayList<>();
-    public int getInfoPiece(int id_piece) throws SQLException{
+    public int getInfoPiece() throws SQLException{
         piece_info.clear();
         getInfoPiece = "SELECT * FROM infi2023.piece";
         try (Connection con = connect()) {
@@ -525,12 +515,10 @@ public class MyDB {
                 p.setId_piece(id_piece);
                 piece_info.add(p);
             }
-            disconnect();
             return 0;
         }
         catch (SQLException ex) {
             System.out.println(ex.getMessage());
-            disconnect();
             return -1;
         }
 
@@ -540,7 +528,7 @@ public class MyDB {
     //Escrever orderERP apatir da que fui buscar a base de dados
 
     ArrayList <OrderERP> order_erp_info = new ArrayList<>();
-    public int getInfoOrderERP(int id_order_number) throws SQLException{
+    public int getInfoOrderERP() throws SQLException{
         order_erp_info.clear();
         getInfoOrderERP = "SELECT * FROM infi2023.ordererp";
         try (Connection con = connect()) {
@@ -548,7 +536,7 @@ public class MyDB {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(getInfoOrderERP);
             while (rs.next()) {
-                if ((rs.getInt("id_order_number") == id_order_number)) {
+
                     OrderERP e = new OrderERP();
                     e.setClient_name(rs.getString("client_name"));
                     e.setWork_piece(rs.getInt("work_piece"));
@@ -561,15 +549,13 @@ public class MyDB {
                     e.setId_order_erp(id_order_number);
                     order_erp_info.add(e);
 
-                }
+
             }
-            disconnect();
             return 0;
 
         }
         catch (SQLException ex){
             System.out.println(ex.getMessage());
-            disconnect();
             return -1;
         }
 

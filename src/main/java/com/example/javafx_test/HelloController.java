@@ -1,6 +1,7 @@
 package com.example.javafx_test;
 
 
+import Model.Order;
 import Model.OrderERP;
 import Model.Machine;
 import javafx.animation.KeyFrame;
@@ -175,6 +176,7 @@ public class HelloController implements Initializable {
     //private Timeline timeline;
 
     private List <Machine> mach;
+    private List <Order> ord;
 
     MyDB n = MyDB.getInstance();
 
@@ -185,7 +187,7 @@ public class HelloController implements Initializable {
         try{
             n.connect();
             //mach.clear();
-            a = n.queryTestMachine();
+            a = n.getInfoMachine();
             System.out.println(a);
             mach = todasmachines();
             if(a<0){
@@ -216,47 +218,41 @@ public class HelloController implements Initializable {
                 label_work_time_4.setText(String.valueOf(mach.get(3).getWork_time()));
 
             }
-        }
-        catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
 
-        /*try{
-            n.connect();
-            List <Order> ord =  new ArrayList<>();
-            ord.clear();
-            b = n.queryTestOrder();
+            //ord.clear();
+            b = n.getInfoOrder();
+            System.out.println(b);
+            ord = todasorders();
             System.out.println("Order_Label");
             if(b < 0){
                 System.out.printf("Error in query test");
             }
             else{
-                label_piece_type_1.setText(String.valueOf(ord.get(0).piece_type));
-                label_piece_type_2.setText(String.valueOf(ord.get(1).piece_type));
-                label_raw_piece_1.setText(String.valueOf(ord.get(0).raw_piece));
-                label_raw_piece_2.setText(String.valueOf(ord.get(1).raw_piece));
-                label_raw_cost_1.setText(String.valueOf(ord.get(0).raw_cost));
-                label_raw_cost_2.setText(String.valueOf(ord.get(1).raw_cost));
-                label_pieces_arrival_1.setText(String.valueOf(ord.get(0).pieces_arrival));
-                label_pieces_arrival_2.setText(String.valueOf(ord.get(1).pieces_arrival));
-                label_number_pieces_1.setText(String.valueOf(ord.get(0).number_of_pieces));
-                label_number_pieces_2.setText(String.valueOf(ord.get(1).number_of_pieces));
-                label_order_completed_1.setText(String.valueOf(ord.get(0).completed)); //nao  consigo ir buscar se ja foi completa quantas peças na order
-                label_order_completed_2.setText(String.valueOf(ord.get(1).completed));
-                label_expected_delivery_1.setText(String.valueOf(ord.get(0).expected_delivery));
-                label_expected_delivery_2.setText(String.valueOf(ord.get(1).expected_delivery));
-                label_expected_cost_1.setText(String.valueOf(ord.get(0).expected_cost));
-                label_expected_cost_2.setText(String.valueOf(ord.get(1).expected_cost));
-                label_production_cost_1.setText(String.valueOf(ord.get(0).production_cost));
-                label_production_cost_2.setText(String.valueOf(ord.get(1).production_cost));
-                label_total_cost_1.setText(String.valueOf(ord.get(0).total_cost));
-                label_total_cost_2.setText(String.valueOf(ord.get(1).total_cost));
-
+                label_piece_type_1.setText(String.valueOf(ord.get(0).getPiece_type()));
+                label_piece_type_2.setText(String.valueOf(ord.get(1).getPiece_type()));
+                label_raw_piece_1.setText(String.valueOf(ord.get(0).getRaw_piece()));
+                label_raw_piece_2.setText(String.valueOf(ord.get(1).getRaw_piece()));
+                label_raw_cost_1.setText(String.valueOf(ord.get(0).getRaw_cost()));
+                label_raw_cost_2.setText(String.valueOf(ord.get(1).getRaw_cost()));
+                label_pieces_arrival_1.setText(String.valueOf(ord.get(0).getPieces_arrival()));
+                label_pieces_arrival_2.setText(String.valueOf(ord.get(1).getPieces_arrival()));
+                label_number_pieces_1.setText(String.valueOf(ord.get(0).getNumber_pieces()));
+                label_number_pieces_2.setText(String.valueOf(ord.get(1).getNumber_pieces()));
+                label_order_completed_1.setText(String.valueOf(ord.get(0).getOrder_completed())); //nao  consigo ir buscar se ja foi completa quantas peças na order
+                label_order_completed_2.setText(String.valueOf(ord.get(1).getOrder_completed()));
+                label_expected_delivery_1.setText(String.valueOf(ord.get(0).getExpected_delivery()));
+                label_expected_delivery_2.setText(String.valueOf(ord.get(1).getExpected_delivery()));
+                label_expected_cost_1.setText(String.valueOf(ord.get(0).getExpected_cost()));
+                label_expected_cost_2.setText(String.valueOf(ord.get(1).getExpected_cost()));
+                label_production_cost_1.setText(String.valueOf(ord.get(0).getProduction_cost()));
+                label_production_cost_2.setText(String.valueOf(ord.get(1).getProduction_cost()));
+                label_total_cost_1.setText(String.valueOf(ord.get(0).getTotal_cost()));
+                label_total_cost_2.setText(String.valueOf(ord.get(1).getTotal_cost()));
             }
         }
         catch (SQLException e) {
             throw new RuntimeException(e);
-        }*/
+        }
 
         /*try{
             /*n.connect();
@@ -282,6 +278,13 @@ public class HelloController implements Initializable {
         }));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();*/
+        try {
+            n.disconnect();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        ord.clear();
+        mach.clear();
 
     }
 
@@ -293,7 +296,7 @@ public class HelloController implements Initializable {
     }*/
 
     private List<Machine> todasmachines() throws SQLException{
-        a = n.queryTestMachine();
+        a = n.getInfoMachine();
         List <Machine> as = new ArrayList<>();
         if(a<0){
             Machine machhhhh = new Machine();
@@ -310,6 +313,32 @@ public class HelloController implements Initializable {
             machh.setPiece_detected(n.machine_info.get(i).getPiece_detected());
             machh.setWork_time(n.machine_info.get(i).getWork_time());
             as.add(machh);
+
+        }
+        return as;
+    }
+    private List<Order> todasorders() throws SQLException{
+        b = n.getInfoOrder();
+        List<Order> as = new ArrayList<>();
+        if(b<0){
+            Order orddddd = new Order();
+            as.add(orddddd);
+            return as;
+
+        }
+        for(int i=0; i<n.order_info.size();i++){
+            Order ordd = new Order();
+            ordd.setId_order(n.order_info.get(i).getId_order());
+            ordd.setPiece_type(n.order_info.get(i).getPiece_type());
+            ordd.setRaw_piece(n.order_info.get(i).getRaw_piece());
+            ordd.setRaw_cost(n.order_info.get(i).getRaw_cost());
+            ordd.setPieces_arrival(n.order_info.get(i).getPieces_arrival());
+            ordd.setNumber_pieces(n.order_info.get(i).getNumber_pieces());
+            ordd.setOrder_completed(n.order_info.get(i).getOrder_completed());
+            ordd.setExpected_delivery(n.order_info.get(i).getExpected_delivery());
+            ordd.setProduction_cost(n.order_info.get(i).getProduction_cost());
+            ordd.setTotal_cost(n.order_info.get(i).getTotal_cost());
+            as.add(ordd);
 
         }
         return as;
