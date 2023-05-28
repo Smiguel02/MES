@@ -4,6 +4,7 @@ import Model.Machine;
 import Model.Order;
 import Model.OrderERP;
 import Model.Piece;
+import Model.Warehouse;
 
 import java.sql.*;
 import java.util.*;
@@ -46,6 +47,7 @@ public class MyDB {
     static String newPiece = null;
     static String newOrder = null;
     static String newMachine = null;
+    static String newWarehouse = null;
 
     //Apagar Peça
     static String deletePiece = "DELETE FROM infi2023.piece WHERE id = ?";
@@ -242,7 +244,7 @@ public class MyDB {
 
     }
 
-    //Escrever na base de dados
+    //Escrever na base de dados peça
     //Nota o count conta o numero de peças que estão na warehouse e o total_system conta o numero de peças do sistema
     public int newPiece (Piece new_piece) throws SQLException{
         int affect = 0;
@@ -293,6 +295,7 @@ public class MyDB {
         }
     }
 
+    //Escrever na base de dados machine
     public int newMachine (Machine new_mach) throws SQLException{
         int affect = 0;
         System.out.println("Nova mach");
@@ -335,6 +338,7 @@ public class MyDB {
         }
     }
 
+    //Escrever na base de dados  order
     public int newOrder(Order new_order) throws SQLException{
         int affect = 0;
         System.out.println("Nova order");
@@ -363,6 +367,43 @@ public class MyDB {
             pstmt.setFloat(9, new_order.getExpected_cost());
             pstmt.setFloat(10, new_order.getProduction_cost());
             pstmt.setFloat(11, new_order.getTotal_cost());
+            System.out.println("try 2 t");
+            affect = pstmt.executeUpdate();
+            System.out.println("try 3 t");
+            if(affect < 0){
+                disconnect();
+                return affect;
+            }else{
+                disconnect();
+                return affect;
+            }
+        }
+        catch (SQLException ex){
+            System.out.println(ex.getMessage());
+            return -1;
+        }
+    }
+    //Escrever na base de dados warehouse
+    public int newWarehouse (Warehouse new_war) throws SQLException{
+        int affect = 0;
+        System.out.println("Nova");
+        newWarehouse = "INSERT INTO infi2023.warehouse (id_warehouse, WAR_MAX_CAPACITY, is_full) VALUES (?, 32, , false)";
+        System.out.println("Nova");
+        try(Connection con = connect()) {
+            System.out.println("deu connect");
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(getInfoWarehouse);
+            while (rs.next()) {
+                if (Objects.equals(rs.getString("id_warehouse"), new_war.getId_warehouse())) {
+                    disconnect();
+                    return 0;
+                }
+            }
+            PreparedStatement pstmt = con.prepareStatement(newWarehouse);
+            System.out.println("try 1 t");
+            pstmt.setInt(1, new_war.getId_warehouse());
+            pstmt.setInt(2, new_war.getMax_capacity());
+            pstmt.setBoolean(3, new_war.isIs_full());
             System.out.println("try 2 t");
             affect = pstmt.executeUpdate();
             System.out.println("try 3 t");
