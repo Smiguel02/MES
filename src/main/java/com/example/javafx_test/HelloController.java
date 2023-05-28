@@ -239,7 +239,7 @@ public class HelloController implements Initializable {
                 label_number_pieces_1.setText(String.valueOf(ord.get(0).number_of_pieces));
                 label_number_pieces_2.setText(String.valueOf(ord.get(1).number_of_pieces));
                 label_order_completed_1.setText(String.valueOf(ord.get(0).completed)); //nao  consigo ir buscar se ja foi completa quantas peças na order
-                label_order_completed_1.setText(String.valueOf(ord.get(1).completed));
+                label_order_completed_2.setText(String.valueOf(ord.get(1).completed));
                 label_expected_delivery_1.setText(String.valueOf(ord.get(0).expected_delivery));
                 label_expected_delivery_2.setText(String.valueOf(ord.get(1).expected_delivery));
                 label_expected_cost_1.setText(String.valueOf(ord.get(0).expected_cost));
