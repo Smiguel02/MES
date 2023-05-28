@@ -335,6 +335,51 @@ public class MyDB {
         }
     }
 
+    public int newOrder(Order new_order) throws SQLException{
+        int affect = 0;
+        System.out.println("Nova order");
+        newOrder = "INSERT INTO infi2023.order (id_order, piece_type, raw_piece, raw_cost, pieces_arrival, number_pieces, order_completed, expected_delivery, expected_cost, production_cost, total_cost) VALUES (?, ?, ?, ?, ?, ?, 0, ?, ?, 0, 0)";
+        System.out.println("Nova order");
+        try(Connection con = connect()) {
+            System.out.println("deu connect");
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(getInfoOrder);
+            while (rs.next()) {
+                if (Objects.equals(rs.getString("id_order"), new_order.getId_order())) {
+                    disconnect();
+                    return 0;
+                }
+            }
+            PreparedStatement pstmt = con.prepareStatement(newOrder);
+            System.out.println("try 1 t");
+            pstmt.setInt(1, new_order.getId_order());
+            pstmt.setInt(2, new_order.getPiece_type());
+            pstmt.setInt(3, new_order.getRaw_piece());
+            pstmt.setInt(4, new_order.getRaw_cost());
+            pstmt.setInt(5, new_order.getPieces_arrival());
+            pstmt.setInt(6, new_order.getNumber_pieces());
+            pstmt.setInt(7, new_order.getOrder_completed());
+            pstmt.setInt(8, new_order.getExpected_delivery());
+            pstmt.setFloat(9, new_order.getExpected_cost());
+            pstmt.setFloat(10, new_order.getProduction_cost());
+            pstmt.setFloat(11, new_order.getTotal_cost());
+            System.out.println("try 2 t");
+            affect = pstmt.executeUpdate();
+            System.out.println("try 3 t");
+            if(affect < 0){
+                disconnect();
+                return affect;
+            }else{
+                disconnect();
+                return affect;
+            }
+        }
+        catch (SQLException ex){
+            System.out.println(ex.getMessage());
+            return -1;
+        }
+    }
+
     //Informação get and set
     //Machine ///////////////////////////////////////////////////////////////////////////
     // Escrever máquina apatir da que fui buscar a base de dados
