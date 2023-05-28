@@ -41,6 +41,12 @@ public class MyDB {
 
     static String update_warehouse = null;
 
+    //Nova Peça
+    static String newPiece = null;
+
+    //Apagar Peça
+    static String deletePiece = "DELETE FROM infi2023.piece WHERE id = ?";
+
     //updateEdit = "UPDATE studybud.favs SET tipo= ? , idaluno= ?  WHERE idaluno= ?  AND tipo= ?  ";
 
 
@@ -53,6 +59,7 @@ public class MyDB {
     float expected_cost, production_cost, total_cost;
     //Piece
     int id_piece, raw_1, raw_2, raw_1_arrival, raw_2_arrival, raw_1_dispatch, raw_2_dispatch, raw_1_price, raw_2_price, total_system_pieces;
+    int count_war;
     //Order ERP
     int id_order_number, work_piece, start_piece, quantity, due_date, late_penalties, early_penalties, expected_profits;
     String client_name;
@@ -151,6 +158,21 @@ public class MyDB {
         return id_order_number;
     }
 
+    public int queryTestWarehouse() throws SQLException{
+        if (conn == null)
+            throw new SQLException("Call connect before querying...");
+
+        Statement stmt = conn.createStatement();
+        ResultSet rs_warehouse = stmt.executeQuery(getInfoWarehouse);
+        System.out.println("passou query 4");
+        while(rs_warehouse.next()){
+            getInfo(rs_warehouse, "warehouse");
+        }
+
+        disconnect();
+        return id_warehouse;
+    }
+
     //Get da informação
     public void getInfo(ResultSet rs, String type) throws SQLException {
 
@@ -179,6 +201,7 @@ public class MyDB {
             expected_cost = rs.getFloat("expected_cost");
             production_cost = rs.getFloat("production_cost");
             total_cost = rs.getFloat("total_cost");
+            count_war = rs.getInt("count_war");
         }
         else if(Objects.equals(type, "piece")) {
 
@@ -211,7 +234,6 @@ public class MyDB {
             id_warehouse = rs.getInt("id_warehouse");
             war_max_capacity = rs.getInt("WAR_MAX_CAPACITY");
             is_full = rs.getBoolean("is_full");
-            //warehouse_piece = rs.getArray("piece_list");
 
         }
 
@@ -220,7 +242,7 @@ public class MyDB {
 
     //Informação get and set
     //Machine ///////////////////////////////////////////////////////////////////////////
-    //Obter a informação da máquina
+    // Escrever máquina apatir da que fui buscar a base de dados
 
     ArrayList <Machine> machine_info = new ArrayList<>();
 
@@ -257,7 +279,7 @@ public class MyDB {
     }
 
     //Order ///////////////////////////////////////////////////////////////////////////
-    //Obter a informação da encomenda
+    //Escrever order apatir da que fui buscar a base de dados
 
     ArrayList <Order> order_info = new ArrayList<>();
     public int getInfoOrder(int id_order) throws SQLException{
@@ -298,7 +320,7 @@ public class MyDB {
     }
 
     //Piece ///////////////////////////////////////////////////////////////////////////
-    //Obter a informação da peça
+    //Escrever piece apatir da que fui buscar a base de dados
 
     ArrayList <Piece> piece_info = new ArrayList<>();
     public int getInfoPiece(int id_piece) throws SQLException{
@@ -319,6 +341,7 @@ public class MyDB {
                 p.setRaw_1_price(rs.getInt("raw_1_price"));
                 p.setRaw_2_price(rs.getInt("raw_2_price"));
                 p.setTotal_system_pieces(rs.getInt("total_system_pieces"));
+                p.setCount_war(rs.getInt("count_war"));
                 p.setId_piece(id_piece);
                 piece_info.add(p);
                 disconnect();
@@ -335,7 +358,7 @@ public class MyDB {
     }
 
     //Order ERP
-    //Obter a informação da encomenda ERP
+    //Escrever orderERP apatir da que fui buscar a base de dados
 
     ArrayList <OrderERP> order_erp_info = new ArrayList<>();
     public int getInfoOrderERP(int id_order_number) throws SQLException{
@@ -1578,6 +1601,76 @@ public class MyDB {
         }
         return -1;
     }
+
+    //Adicionar peças  sempre que entra uma peça de um tipo adiciona
+    public int AddPiece(String raw_1, String raw_2, String raw_1_arrival, String raw_2_arrival, String raw_1_dispatch, String raw_2_dispatch, String raw_1_price, String raw_2_price ) throws SQLException {
+        int affect = 0;
+        newPiece = "INSERT INTO infi2023.piece (raw_1, raw_2, raw_1_arrival, raw_2_arrival, raw_1_dispatch, raw_2_dispatch, raw_1_price, raw_2_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        try(Connection con = connect()){
+            System.out.println("deu connect");
+            PreparedStatement pstmt = con.prepareStatement(newPiece);
+            System.out.println("WEEEEEE vamos inserir peça na warehouse");
+            pstmt.setInt(1, Integer.parseInt(raw_1));
+            pstmt.setInt(2, Integer.parseInt(raw_2));
+            pstmt.setInt(3, Integer.parseInt(raw_1_arrival));
+            pstmt.setInt(4, Integer.parseInt(raw_2_arrival));
+            pstmt.setInt(5, Integer.parseInt(raw_1_dispatch));
+            pstmt.setInt(6, Integer.parseInt(raw_2_dispatch));
+            pstmt.setInt(7, Integer.parseInt(raw_1_price));
+            pstmt.setInt(8, Integer.parseInt(raw_2_price));
+            //pstmt.setInt(9, Integer.parseInt(total_system_pieces));
+            //pstmt.setInt(10, Integer.parseInt(count_war));
+            System.out.println("WEEEEEE vamos inserir peça na warehouse phase 2");
+            affect = pstmt.executeUpdate();
+            System.out.println("WEEEEEE vamos inserir peça na warehouse phase 2");
+            if(affect < 0){
+                disconnect();
+                return affect;
+            }
+            else{
+                System.out.println("Nova Peça ui");
+                disconnect();
+                return affect;
+            }
+        }
+        catch (SQLException ex){
+            System.out.println(ex.getMessage());
+            return -1;
+        }
+    }
+
+
+    //Deletar peças  sempre que sai uma peça de um tipo remove
+    public int DeletePiece(int id_piece_war){
+        int affect;
+
+        try(Connection con = connect()){
+            System.out.println("Vamo retirar uma peça do warehouse");
+            PreparedStatement pstmt = con.prepareStatement(deletePiece);
+            System.out.println("Vamo retirar uma peça do warehouse ok");
+            pstmt.setInt(1, id_piece_war);
+            System.out.println("Vamo retirar uma peça do warehouse ok 2");
+            affect = pstmt.executeUpdate();
+            System.out.println("Vamo retirar uma peça do warehouse ok");
+            if(affect < 0){
+                disconnect();
+                return affect;
+            }
+            else{
+                System.out.println("Number of affects: "+affect);
+                disconnect();
+                return affect;
+            }
+        }
+        catch (SQLException ex){
+            System.out.println(ex.getMessage());
+            return -1;
+        }
+    }
+
+    //Contador de peças no warehouse compara o tipo e conta++
+
+    //Update Contador caso adicione ou tire peças de um tipo
 
 }
 

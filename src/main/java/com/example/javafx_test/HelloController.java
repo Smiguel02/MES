@@ -2,6 +2,8 @@ package com.example.javafx_test;
 
 
 import Model.OrderERP;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -10,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
@@ -167,6 +170,9 @@ public class HelloController implements Initializable {
 
     int a, b, c;
 
+    /*private DataModel dataModel = new DataModel();
+    private Timeline timeline;*/
+
     MyDB n = MyDB.getInstance();
 
 
@@ -176,6 +182,7 @@ public class HelloController implements Initializable {
         try{
             n.connect();
             List <Machine> mach = new ArrayList<>();
+            mach.clear();
             a = n.queryTestMachine();
             System.out.println("Machine_Label");
             if(a<0){
@@ -206,7 +213,6 @@ public class HelloController implements Initializable {
                 label_work_time_4.setText(String.valueOf(mach.get(3).work_time()));
 
             }
-            mach.clear();
         }
         catch (SQLException e) {
             throw new RuntimeException(e);
@@ -215,6 +221,7 @@ public class HelloController implements Initializable {
         try{
             n.connect();
             List <Order> ord =  new ArrayList<>();
+            ord.clear();
             b = n.queryTestOrder();
             System.out.println("Order_Label");
             if(b < 0){
@@ -243,10 +250,6 @@ public class HelloController implements Initializable {
                 label_total_cost_2.setText(String.valueOf(ord.get(1).total_cost));
 
             }
-            /*if((ord.get(0).completed) && (ord.get(1).completed)){ //Se a order 1 e 2 for completa então fazer clean ao array list
-                 ord.clear();
-            }*/
-
         }
         catch (SQLException e) {
             throw new RuntimeException(e);
@@ -254,11 +257,31 @@ public class HelloController implements Initializable {
 
         try{
             n.connect();
+            List <Piece_new> pieces_war = new ArrayList<>();
+            pieces_war.clear();
+            c = n.queryTestPiece();
+            if(c < 0){
+                System.out.printf("Error in query test");
+            }
+            else{
+
+            }
+
 
         }
         catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
+        /*timeline = new Timeline(new KeyFrame(Duration.seconds(10), event)){
+            initializeData();
+            timeline.setCycleCount(Timeline.INDEFINITE);
+        }));*/
+
     }
+
+    /*private void  initializeData(){
+        String newData = fetchDataFromDatabase();
+        dataModel.setData(newData);
+    }*/
 }

@@ -22,6 +22,8 @@ public class Piece {
 
     private int total_system_pieces;
 
+    private int count_war;
+
     public int getId_piece() {
         return id_piece;
     }
@@ -100,5 +102,13 @@ public class Piece {
 
     public void setTotal_system_pieces(int total_system_pieces) {
         this.total_system_pieces = total_system_pieces;
+    }
+
+    public int getCount_war() {
+        return count_war;
+    }
+
+    public void setCount_war(int count_war) {
+        this.count_war = count_war;
     }
 }
