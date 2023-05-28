@@ -42,7 +42,10 @@ public class MyDB {
     static String update_warehouse = null;
 
     //Nova Peça
+    static String newPieceWar = null;
     static String newPiece = null;
+    static String newOrder = null;
+    static String newMachine = null;
 
     //Apagar Peça
     static String deletePiece = "DELETE FROM infi2023.piece WHERE id = ?";
@@ -236,6 +239,60 @@ public class MyDB {
             is_full = rs.getBoolean("is_full");
 
         }
+
+    }
+
+    //Escrever na base de dados
+    //Nota o count conta o numero de peças que estão na warehouse e o total_system conta o numero de peças do sistema
+    public int newPiece (Piece new_piece) throws SQLException{
+        int affect = 0;
+        System.out.println("Nova peça");
+
+        newPiece = "INSERT INTO infi2023.piece (raw_1, raw_2, raw_1_arrival, raw_2_arrival, raw_1_dispatch, raw_2_dispatch, raw_1_price, raw_2_price, total_system_pieces, count_war) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        System.out.println("Nova peça");
+        try(Connection con = connect()) {
+            System.out.println("deu connect");
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(getInfoPiece);
+            while (rs.next()) {
+                if (Objects.equals(rs.getString("id_piece"), new_piece.getId_piece())) {
+                    disconnect();
+                    return 0;
+                }
+            }
+
+            PreparedStatement pstmt = con.prepareStatement(newPiece);
+            System.out.println("try 1 t");
+            pstmt.setInt(1, new_piece.getId_piece());
+            pstmt.setInt(2, new_piece.getRaw_1());
+            pstmt.setInt(3, new_piece.getRaw_2());
+            pstmt.setInt(4, new_piece.getRaw_1_arrival());
+            pstmt.setInt(5, new_piece.getRaw_2_arrival());
+            pstmt.setInt(6, new_piece.getRaw_1_dispatch());
+            pstmt.setInt(7, new_piece.getRaw_2_dispatch());
+            pstmt.setInt(8, new_piece.getRaw_1_price());
+            pstmt.setInt(9, new_piece.getRaw_2_price());
+            pstmt.setInt(10, new_piece.getTotal_system_pieces());
+            pstmt.setInt(11, new_piece.getCount_war());
+
+            if(affect < 0){
+                disconnect();
+                return affect;
+            }else{
+                disconnect();
+                return affect;
+            }
+
+
+        }
+        catch (SQLException ex){
+            System.out.println(ex.getMessage());
+            return -1;
+        }
+
+
+
 
     }
 
@@ -1602,13 +1659,13 @@ public class MyDB {
         return -1;
     }
 
-    //Adicionar peças  sempre que entra uma peça de um tipo adiciona
+    //Adicionar peças  sempre que entra uma peça na warehouse
     public int AddPiece(String raw_1, String raw_2, String raw_1_arrival, String raw_2_arrival, String raw_1_dispatch, String raw_2_dispatch, String raw_1_price, String raw_2_price ) throws SQLException {
         int affect = 0;
-        newPiece = "INSERT INTO infi2023.piece (raw_1, raw_2, raw_1_arrival, raw_2_arrival, raw_1_dispatch, raw_2_dispatch, raw_1_price, raw_2_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        newPieceWar = "INSERT INTO infi2023.piece (raw_1, raw_2, raw_1_arrival, raw_2_arrival, raw_1_dispatch, raw_2_dispatch, raw_1_price, raw_2_price, total_system_pieces) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try(Connection con = connect()){
             System.out.println("deu connect");
-            PreparedStatement pstmt = con.prepareStatement(newPiece);
+            PreparedStatement pstmt = con.prepareStatement(newPieceWar);
             System.out.println("WEEEEEE vamos inserir peça na warehouse");
             pstmt.setInt(1, Integer.parseInt(raw_1));
             pstmt.setInt(2, Integer.parseInt(raw_2));
@@ -1618,8 +1675,6 @@ public class MyDB {
             pstmt.setInt(6, Integer.parseInt(raw_2_dispatch));
             pstmt.setInt(7, Integer.parseInt(raw_1_price));
             pstmt.setInt(8, Integer.parseInt(raw_2_price));
-            //pstmt.setInt(9, Integer.parseInt(total_system_pieces));
-            //pstmt.setInt(10, Integer.parseInt(count_war));
             System.out.println("WEEEEEE vamos inserir peça na warehouse phase 2");
             affect = pstmt.executeUpdate();
             System.out.println("WEEEEEE vamos inserir peça na warehouse phase 2");
@@ -1640,7 +1695,7 @@ public class MyDB {
     }
 
 
-    //Deletar peças  sempre que sai uma peça de um tipo remove
+    //Deletar peças sempre que sai uma peça do warehouse
     public int DeletePiece(int id_piece_war){
         int affect;
 

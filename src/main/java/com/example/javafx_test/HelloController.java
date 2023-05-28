@@ -255,8 +255,8 @@ public class HelloController implements Initializable {
             throw new RuntimeException(e);
         }
 
-        try{
-            n.connect();
+        /*try{
+            /*n.connect();
             List <Piece_new> pieces_war = new ArrayList<>();
             pieces_war.clear();
             c = n.queryTestPiece();
@@ -265,13 +265,13 @@ public class HelloController implements Initializable {
             }
             else{
 
-            }
+            }*/
 
 
-        }
+        /*}
         catch (SQLException e) {
             throw new RuntimeException(e);
-        }
+        }*/
 
         /*timeline = new Timeline(new KeyFrame(Duration.seconds(10), event)){
             initializeData();
