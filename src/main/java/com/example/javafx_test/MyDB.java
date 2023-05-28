@@ -1668,7 +1668,7 @@ public class MyDB {
         }
     }
 
-    //Contador de peças no warehouse compara o tipo e conta++
+    //Contador de peças no warehouse compara o tipo e conta++ tenho de dar update tb ao numero total de peças
 
     //Update Contador caso adicione ou tire peças de um tipo
 
