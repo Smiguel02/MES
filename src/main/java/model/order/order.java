@@ -3,51 +3,49 @@ package model.order;
 public class order {
     private String name;
     private int orderNumber ;
-    private String WorkPiece ;
+    private int WorkPiece ;
     private int StartPiece;
     private int Quantity ;
     private int DueDate ;
     private int LatePen ;
     private int EarlyPen ;
-    private double Profit;
+    private float Profit;
     private int arrivedate;
     private int time;
 
-    private order instance;
-    order(){
+    public int getWorkPiecenumber(String piece) {
 
-    }
-
-
-
-    public int getWorkPiece() {
-
-        if (WorkPiece.equals("P3")){
+        if (piece.equals("P3")){
             return 3;
         }
-        if (WorkPiece.equals("P4")){
+        if (piece.equals("P4")){
             return 4;
         }
-        if (WorkPiece.equals("P5")){
+        if (piece.equals("P5")){
             return 5;
         }
-        if (WorkPiece.equals("P6")){
+        if (piece.equals("P6")){
             return 6;
         }
-        if (WorkPiece.equals("P7")){
+        if (piece.equals("P7")){
             return 7;
         }
-        if (WorkPiece.equals("P8")){
+        if (piece.equals("P8")){
             return 8;
         }
-        if (WorkPiece.equals("P9")){
+        if (piece.equals("P9")){
             return 9;
         }
         return 0;
     }
-
+    public int getWorkPiece() {
+        return WorkPiece;
+    }
 
     public void setWorkPiece(String id) {
+        WorkPiece = getWorkPiecenumber(id);
+    }
+    public void setWorkPiece1(int id) {
         WorkPiece = id;
     }
     public int getStartPiece() {
@@ -107,11 +105,11 @@ public class order {
     public void setEarlyPen(int id) {
         this.EarlyPen = id;
     }
-    public double getProfit() {
+    public float getProfit() {
         return Profit;
     }
 
-    public void setProfit(double id) {
+    public void setProfit(float id) {
         this.Profit = id;
     }
     public int getArrivedate() {

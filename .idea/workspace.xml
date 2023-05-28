@@ -7,13 +7,13 @@
     <list default="true" id="863c4c01-492f-494a-87c4-0cfc1053f270" name="Changes" comment="Makes a whole Order and Delivers!!!! No statistacs though">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/CommsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/CommsController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/GUI_MES.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/GUI_MES.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/OpcUa.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/OpcUa.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/Order.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/Production.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/Production.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/jsoncomms/ERPClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/jsoncomms/Client.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jsoncomms/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/jsoncomms/Client.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/jsoncomms/MainApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/jsoncomms/MainApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/jsoncomms/MessServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/jsoncomms/Server.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/model/order/order.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/order/order.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/order/pedidos.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/order/pedidos.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

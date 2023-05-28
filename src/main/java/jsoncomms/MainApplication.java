@@ -10,7 +10,7 @@ public class MainApplication {
     public static void main(String[] args) throws InterruptedException {
 
         // Create instances of the classes
-        pedidos r = new pedidos(1,0,0);
+        pedidos r = new pedidos(1,0,0, 0);
         Client class1 = new Client(r);
         Server class2 = new Server();
 

@@ -324,7 +324,7 @@ public class CommsController extends Thread{
             }
 
             if(first_order){
-                requests = new pedidos(1, 0 , 0);   //FIXME: not sure verify
+                requests = new pedidos(1, 0 , 0, 0);   //FIXME: not sure verify
                 Client client = new Client(this.requests);
                 Thread client_thread = new Thread(client);
                 client_thread.start();
@@ -337,10 +337,17 @@ public class CommsController extends Thread{
                 received_order_2 = client.order2;
                 if(received_order_1 == null){
                     System.out.println("ERROR, couldn't read new order");
-                    while(true){
-
-                    }
                 }
+
+                System.out.println("Received Order 1: ");
+                System.out.println("Raw Piece: " + received_order_1.getStartPiece());
+                System.out.println("Last Piece: " + received_order_1.getWorkPiece());
+                System.out.println("Dispatch: " + received_order_1.getDueDate());
+
+                System.out.println("Received Order 2: ");
+                System.out.println("Raw Piece: " + received_order_2.getStartPiece());
+                System.out.println("Last Piece: " + received_order_2.getWorkPiece());
+                System.out.println("Dispatch: " + received_order_2.getDueDate());
                 requests.setFlag_start(0);
                 first_order = false;
             }else{

@@ -9,12 +9,13 @@ import model.order.pedidos;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
-public class Client implements Runnable{
+public class Client implements Runnable {
     private ArrayList<String> array;
 
     pedidos request;
@@ -33,7 +34,7 @@ public class Client implements Runnable{
             System.out.println("cliente inicia thread");
             // Create an ArrayList to send
             // Create an instance of the Order request´, aqui vai ser o request
-            pedidos orderRequest = new pedidos(request.getFlag_start(), request.getFlag_done(), (int)request.getloss());    //FIXME: what bro?? Should be float
+            pedidos orderRequest = new pedidos(request.getFlag_start(), request.getFlag_done(), (int)request.getloss(), request.getid());    //FIXME: what bro?? Should be float
 
             // Convert the order request to a JSON string
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -50,7 +51,7 @@ public class Client implements Runnable{
             // TCP connection details
             //"localhost"
             String ip = "127.0.0.1";  // IP address of the receiver
-            int port = 12345;  // Port number of the receiver
+            int port = 12346;  // Port number of the receiver
 
 
             // Create a TCP socket connection
@@ -95,7 +96,7 @@ public class Client implements Runnable{
             }
 
 
-            System.out.println("Received response from server: " + jsonResponse);
+            System.out.println("Received response from server!" + jsonResponse);
 
             // Close connections
             outputStream.close();

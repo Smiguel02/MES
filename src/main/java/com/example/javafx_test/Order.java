@@ -53,6 +53,7 @@ public class Order {
         raw_piece = which_raw_piece(type);
         System.out.println("ORDER: Raw piece: " + raw_piece);
         raw_cost = 15;      //FIXME: change this ducking value
+        System.out.println(this.toString());
     }
 
     /**

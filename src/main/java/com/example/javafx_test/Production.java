@@ -247,7 +247,7 @@ public class Production extends Thread{
             // Check ERP Comms
             // Receive Piece from ERP
             //TODO: remove this
-            if(erp.new_pieces || opcua.got_pieces!=null){
+            if(opcua.got_pieces!=null){
 //                for (int i = 0; i < p_amount; i++) {
 //                    pieces.new_piece(p_raw_material, p_initial_price, p_arrive_day);
 //                }
@@ -262,14 +262,6 @@ public class Production extends Thread{
             }
 
 
-            // Receive Order from ERP
-            if(erp.new_order){
-                Order o = new Order(o_ID, o_number_of_pieces, o_delivery, o_final_Piece, pieces);
-                Orders.add(o_ID, o);
-                system_order_ID++;
-                erp.new_order = false;
-            }
-
             //TODO: quando ordem terminar tratar dos valores e fazer pedidos. Find out how
             //TODO: quando ordem terminar tratar dos valores e fazer pedidos. Find out how
             //TODO: quando ordem terminar tratar dos valores e fazer pedidos. Find out how
@@ -278,7 +270,6 @@ public class Production extends Thread{
                 Order o = new Order(opcua.received_order_1.getorderNumber(), opcua.received_order_1.getQuantity(), opcua.received_order_1.getDueDate(), opcua.received_order_1.getWorkPiece(), pieces);
                 Orders.add(0, o);
                 system_order_ID++;      //FIXME: do I keep this?
-
 
                 opcua.received_order_1 = null;
             }
@@ -296,77 +287,78 @@ public class Production extends Thread{
             //! very pretty so not eliminating :)
 //        Pieces.forEach(Piece::info_piece);              // Prints where are all the pieces
 
-            /********Start PLC Order*********/
-            // Which raw piece works for a certain order
-            // Verify availability
-            //FIXME: maybe later put this on MES_SCHEDULE
-            if(Orders.get(o_ID).start_date == 0){
-                if (war.specific_pieces_stored(Orders.get(o_ID).raw_piece) < Orders.get(o_ID).number_of_pieces) {
-                }else if((war.specific_pieces_stored(Orders.get(o_ID).raw_piece) >= (Orders.get(o_ID).number_of_pieces / 2) && (pieces.which_day_arrives(Orders.get(o_ID).raw_piece) == this.day)) || (war.specific_pieces_stored(Orders.get(o_ID).raw_piece) >= Orders.get(o_ID).number_of_pieces)){
+            if(!opcua.first_order) {
+                /********Start PLC Order*********/
+                // Which raw piece works for a certain order
+                // Verify availability
+                //FIXME: maybe later put this on MES_SCHEDULE
+                if (Orders.get(o_ID).start_date == 0) {
+                    if (war.specific_pieces_stored(Orders.get(o_ID).raw_piece) < Orders.get(o_ID).number_of_pieces) {
+                    } else if ((war.specific_pieces_stored(Orders.get(o_ID).raw_piece) >= (Orders.get(o_ID).number_of_pieces / 2) && (pieces.which_day_arrives(Orders.get(o_ID).raw_piece) == this.day)) || (war.specific_pieces_stored(Orders.get(o_ID).raw_piece) >= Orders.get(o_ID).number_of_pieces)) {
 
-                    //FIXME: available machines vai deixar de ser dependente do prod. Reiniciar manualmente
-                    if(opcua.available_machines[0] == 0 || opcua.available_machines[1] == 0){
-                        ArrayList<Machine> m_aux = new ArrayList<>();
-                        Amount_of_pieces.set(Orders.get(o_ID).piece_type -1, Orders.get(o_ID).number_of_pieces);
-                        System.out.print("Starting manufacturing on Machine ");
-                        if(opcua.available_machines[0] == 0){
-                            m_aux.add(Machines.get(0));
-                            m_aux.add(Machines.get(1));
-                            System.out.println("1!");
-                        }else{
-                            m_aux.add(Machines.get(2));
-                            m_aux.add(Machines.get(3));
-                            System.out.println("2!");
+                        //FIXME: available machines vai deixar de ser dependente do prod. Reiniciar manualmente
+                        if (opcua.available_machines[0] == 0 || opcua.available_machines[1] == 0) {
+                            ArrayList<Machine> m_aux = new ArrayList<>();
+                            Amount_of_pieces.set(Orders.get(o_ID).piece_type - 1, Orders.get(o_ID).number_of_pieces);
+                            System.out.print("Starting manufacturing on Machine ");
+                            if (opcua.available_machines[0] == 0) {
+                                m_aux.add(Machines.get(0));
+                                m_aux.add(Machines.get(1));
+                                System.out.println("1!");
+                            } else {
+                                m_aux.add(Machines.get(2));
+                                m_aux.add(Machines.get(3));
+                                System.out.println("2!");
+                            }
+                            Orders.get(o_ID).start_manufacturing(m_aux, this.day);
+                            System.out.println("PROD: order updated start manufacturing!");
                         }
-                        Orders.get(o_ID).start_manufacturing(m_aux, this.day);
-                        System.out.println("PROD: order updated start manufacturing!");
                     }
-                }
-            }else{  // If order already started
+                } else {  // If order already started
 
-                // Are there enough pieces on the warehouse to finish the order? Then can start dispatching
-                //OPTIMIZE: Make it possible to start even though it is still finishing the order and the warehouse doesnt have enough pieces
-                if((war.specific_pieces_stored(Orders.get(o_ID).piece_type) == Orders.get(o_ID).number_of_pieces) || Orders.get(o_ID).dispatching){
-                    Orders.get(o_ID).dispatch_started();
+                    // Are there enough pieces on the warehouse to finish the order? Then can start dispatching
+                    //OPTIMIZE: Make it possible to start even though it is still finishing the order and the warehouse doesnt have enough pieces
+                    if ((war.specific_pieces_stored(Orders.get(o_ID).piece_type) == Orders.get(o_ID).number_of_pieces) || Orders.get(o_ID).dispatching) {
+                        Orders.get(o_ID).dispatch_started();
 //                    && opcua.piece_ask_war.equals(UShort.valueOf(0))
-                    if(!opcua.pos_cam1_ocup && !opcua.pos_cam2_ocup  && !opcua.piece_leave_war && !opcua.dispatched_piece){
-                        System.out.println("MES: Dispatch Started");
-                        System.out.println(" "+ !opcua.pos_cam1_ocup +" " +!opcua.pos_cam2_ocup + " " + !opcua.dispatched_piece);
-                        if(opcua.start_dispatch(Orders.get(o_ID), Orders.get(o_ID).piece_type)){
-                            Orders.get(o_ID).war_to_dispatch++;
-                            System.out.println("EHEEHEH");
-                        }
-                    }
-
-                    //Piece on dispatch dock and inside allowed timeline. Start dispatch procedure
-                    if( ((float)(this.day * 60000)/(this.time) < 0.5) && !opcua.piece_arrived_on_pm1 && opcua.previous_piece_arrived_on_pm1 && !opcua.piece_arrived_on_pm2 && opcua.previous_piece_arrived_on_pm2){
-                        if(pieces.dispatched(Orders.get(o_ID).raw_piece, Orders.get(o_ID).piece_type, this.day, Orders.get(o_ID))){
-                        }
-                    }
-                }else{
-
-                    // Keep making pieces for this order
-                    if(!opcua.piece_on_at1 && !opcua.piece_arrived_on_st1 && !opcua.ordered_piece){
-                        if(((((Orders.get(o_ID).Machines.get(0).ID - 1) / 2) + 1) == 1 ) && !opcua.pos_cam1_ocup){
-                            if(Amount_of_pieces.get(Orders.get(o_ID).piece_type -1) != 0){
-                                Amount_of_pieces.set(Orders.get(o_ID).piece_type -1, Amount_of_pieces.get(Orders.get(o_ID).piece_type -1) -1);
-                                opcua.update_piece_values(Orders.get(o_ID).raw_piece, Orders.get(o_ID).piece_type, ((Orders.get(o_ID).Machines.get(0).ID - 1) / 2) + 1);
-                                System.out.println("MES1: Sent Order (0,1,2): ("+opcua.aux_make_piece[0]+" ,"+opcua.aux_make_piece[1]+ ", "+opcua.aux_make_piece[2]+" )");
-                        }
-                        }else if(((((Orders.get(o_ID).Machines.get(0).ID - 1) / 2) + 1) == 2 ) && !opcua.pos_cam1_ocup && !opcua.pos_cam2_ocup){
-                            if(Amount_of_pieces.get(Orders.get(o_ID).piece_type -1) != 0) {
-                                Amount_of_pieces.set(Orders.get(o_ID).piece_type - 1, Amount_of_pieces.get(Orders.get(o_ID).piece_type - 1) - 1);
-                                opcua.update_piece_values(Orders.get(o_ID).raw_piece, Orders.get(o_ID).piece_type, ((Orders.get(o_ID).Machines.get(0).ID - 1) / 2) + 1);
-                                System.out.println("MES2: Sent Order (0,1,2): (" + opcua.aux_make_piece[0] + " ," + opcua.aux_make_piece[1] + ", " + opcua.aux_make_piece[2] + " )");
+                        if (!opcua.pos_cam1_ocup && !opcua.pos_cam2_ocup && !opcua.piece_leave_war && !opcua.dispatched_piece) {
+                            System.out.println("MES: Dispatch Started");
+                            System.out.println(" " + !opcua.pos_cam1_ocup + " " + !opcua.pos_cam2_ocup + " " + !opcua.dispatched_piece);
+                            if (opcua.start_dispatch(Orders.get(o_ID), Orders.get(o_ID).piece_type)) {
+                                Orders.get(o_ID).war_to_dispatch++;
+                                System.out.println("EHEEHEH");
                             }
+                        }
+
+                        //Piece on dispatch dock and inside allowed timeline. Start dispatch procedure
+                        if (((float) (this.day * 60000) / (this.time) < 0.5) && !opcua.piece_arrived_on_pm1 && opcua.previous_piece_arrived_on_pm1 && !opcua.piece_arrived_on_pm2 && opcua.previous_piece_arrived_on_pm2) {
+                            if (pieces.dispatched(Orders.get(o_ID).raw_piece, Orders.get(o_ID).piece_type, this.day, Orders.get(o_ID))) {
                             }
+                        }
+                    } else {
+
+                        // Keep making pieces for this order
+                        if (!opcua.piece_on_at1 && !opcua.piece_arrived_on_st1 && !opcua.ordered_piece) {
+                            if (((((Orders.get(o_ID).Machines.get(0).ID - 1) / 2) + 1) == 1) && !opcua.pos_cam1_ocup) {
+                                if (Amount_of_pieces.get(Orders.get(o_ID).piece_type - 1) != 0) {
+                                    Amount_of_pieces.set(Orders.get(o_ID).piece_type - 1, Amount_of_pieces.get(Orders.get(o_ID).piece_type - 1) - 1);
+                                    opcua.update_piece_values(Orders.get(o_ID).raw_piece, Orders.get(o_ID).piece_type, ((Orders.get(o_ID).Machines.get(0).ID - 1) / 2) + 1);
+                                    System.out.println("MES1: Sent Order (0,1,2): (" + opcua.aux_make_piece[0] + " ," + opcua.aux_make_piece[1] + ", " + opcua.aux_make_piece[2] + " )");
+                                }
+                            } else if (((((Orders.get(o_ID).Machines.get(0).ID - 1) / 2) + 1) == 2) && !opcua.pos_cam1_ocup && !opcua.pos_cam2_ocup) {
+                                if (Amount_of_pieces.get(Orders.get(o_ID).piece_type - 1) != 0) {
+                                    Amount_of_pieces.set(Orders.get(o_ID).piece_type - 1, Amount_of_pieces.get(Orders.get(o_ID).piece_type - 1) - 1);
+                                    opcua.update_piece_values(Orders.get(o_ID).raw_piece, Orders.get(o_ID).piece_type, ((Orders.get(o_ID).Machines.get(0).ID - 1) / 2) + 1);
+                                    System.out.println("MES2: Sent Order (0,1,2): (" + opcua.aux_make_piece[0] + " ," + opcua.aux_make_piece[1] + ", " + opcua.aux_make_piece[2] + " )");
+                                }
+                            }
+                        }
+
+
                     }
-
-
                 }
+
             }
-
-
             /**************************************************
              *           Update previous piece values         *
              **************************************************/
