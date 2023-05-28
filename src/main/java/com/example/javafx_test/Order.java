@@ -143,7 +143,7 @@ public class Order {
         }
         // Signal to machine order is finished
         for(int i=0; i<this.Machines.size() ; i++) {
-            Machines.get(i).change_order(this);
+            Machines.get(i).change_order(null);
         }
         System.out.println("Order has been finished!");
     }
@@ -160,7 +160,7 @@ public class Order {
 
         for(int i=0; i < Machines.size(); i++){
             System.out.println("Machine " + i + " work time: " + Machines.get(i).work_time());
-           prod_cost += Machines.get(i).work_time();
+           prod_cost += (float)(Machines.get(i).work_time()/1000);
         }
 
         System.out.println("Production cost: " + prod_cost);
@@ -191,6 +191,9 @@ public class Order {
     public void piece_dispatched(int dev_day){
         this.completed ++;  // Sums dispatched pieces
         this.pieces_dispatched_index.add(dev_day);      // Says the day they were delivered
+
+        System.out.println("Piece dispatched on Order " + order_ID + ": Completed-> " + this.completed + " Total number: " + this.number_of_pieces);
+        System.out.println("For above order, total_cost -> " + this.total_cost);
 
         // Is already only allowed in the first half of the day
         if(this.completed == this.number_of_pieces){

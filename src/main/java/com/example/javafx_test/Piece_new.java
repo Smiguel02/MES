@@ -168,18 +168,10 @@ public class Piece_new {
     //TODO: add verification step. If new piece is valid and if current piece in fact exists
     public void transform(int raw_piece, int new_piece) {
 
-        int current_piece = 0;
-        for(int j=raw_piece-1;j<3;j++){
-            for(int i=1;i<5;i++){
-                if(paths[j][i] == new_piece){
-                    current_piece = paths[j][i-1];
-                }
-            }
-        }
-
         for (int i = 0; i < type[raw_piece - 1].size(); i++) {
-            if (type[raw_piece - 1].get(i) == current_piece) {
+            if (type[raw_piece - 1].get(i) == 2) {
                 type[raw_piece - 1].set(i, new_piece);
+                System.out.println("On transformation: raw_piece: " + raw_piece + " | new piece: " + new_piece);
                 return;
             }
         }
@@ -287,6 +279,7 @@ public class Piece_new {
      */
     public int last_dispatched(int raw_type,int piece_type){
 
+        System.out.println("PIECE: raw -> "+raw_type+" and type-> " + piece_type);
         int last_index = type[raw_type-1].lastIndexOf(piece_type);
         if(last_index<0){
             System.out.println("ERROR, last piece doesn't exist");

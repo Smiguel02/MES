@@ -40,7 +40,7 @@ public class CommsController extends Thread{
 
     public boolean pos_cam1_ocup, pos_cam2_ocup;
 
-    public short available_machines[] ={0,0};
+    public int available_machines[] ={0,0};
 
     public boolean piece_leave_war = false;
     public UShort piece_ask_war =  UShort.valueOf(0);
@@ -72,6 +72,7 @@ public class CommsController extends Thread{
     public boolean order_1_finished = false, order_2_finished = false;
     public float cost = 0;
     public int order_identification = 0;
+    public boolean piece_leaving_war = false;
 
 
     // Flag is 1 if is MES, 0 if is OPC_UA
@@ -130,8 +131,12 @@ public class CommsController extends Thread{
             System.out.println("Dispatch already assigned to otehr Order!");
             return false;
         }
-
     }
+    public void finished_dispatch(){
+        Ord_dispatch = null;
+        System.out.println("What am I doing in the order finished??");
+    }
+
     public int number_of_pieces_on_warehouse(){
         int sum = 0;
         for(int i=0; i<war_piece_counter.size();i++){
@@ -210,8 +215,8 @@ public class CommsController extends Thread{
                 piece_arrived_on_ct3 = !(boolean) n.ReadOneVar(n.ct3_Livre);
                 piece_arrived_on_st1 = !(boolean) n.ReadOneVar(n.st1_Livre);
                 piece_arrived_on_pt1 = !(boolean) n.ReadOneVar(n.pt1_Livre);
-                available_machines[0] = (short) n.ReadOneVar(n.Gvlprod1);
-                available_machines[1] = (short) n.ReadOneVar(n.Gvlprod2);
+//                available_machines[0] = (short) n.ReadOneVar(n.Gvlprod1);     //TODO. not used anymore
+//                available_machines[1] = (short) n.ReadOneVar(n.Gvlprod2);     //TODO. not used anymore
                 piece_ask_war = (UShort) n.ReadOneVar(n.Gvl_pedir_peca_Ware);
                 piece_leave_war = (boolean) n.ReadOneVar(n.Gvl_sai_peca_Ware);
                 machs_time.set(0, (long) n.ReadOneVar(n.time_maq1));
@@ -280,13 +285,13 @@ public class CommsController extends Thread{
 
 
             // Ordering new piece
-            if ((aux_make_piece[0] != 0 && aux_make_piece[1] != 0  && !ordered_piece)) {
+            if ((aux_make_piece[0] != 0 && aux_make_piece[1] != 0  && !piece_leaving_war)) {
                     try {
                         System.out.println("Ordered new piece execution");
                         if (n.mandarFazerPeca(aux_make_piece[0], aux_make_piece[1], aux_make_piece[2]) == -1) {
                             System.out.println("\\u001B[31m" + "ERROR, sent peça without machine being available" + "\\u001B[0m");
                         } else {
-                            ordered_piece = true;
+                            piece_leaving_war = true;
                             aux_make_piece[0] = 0;
                             aux_make_piece[1] = 0;
                             aux_make_piece[2] = 0;
@@ -297,13 +302,13 @@ public class CommsController extends Thread{
                     }
 
         }
-            if(aux_leave_piece != 0 && !dispatched_piece){
+            if(aux_leave_piece != 0 && !piece_leaving_war){
                 try {
                     System.out.println("Dispatched a piece " + aux_leave_piece);
                     if(n.mandarSairPeca(aux_leave_piece) == -1){
-                        System.out.println("ERROR, sent peça without machine being available");
+                        System.out.println("ERROR, sent peça without machine being available, try again!");
                     }else{
-                        dispatched_piece = true;
+                        piece_leaving_war = true;
                         aux_leave_piece = 0;
                     }
                 } catch (UaException | ExecutionException | InterruptedException e) {
@@ -348,11 +353,13 @@ public class CommsController extends Thread{
                 System.out.println("Raw Piece: " + received_order_1.getStartPiece());
                 System.out.println("Last Piece: " + received_order_1.getWorkPiece());
                 System.out.println("Dispatch: " + received_order_1.getDueDate());
+                System.out.println("Quantity: " + received_order_1.getQuantity());
 
                 System.out.println("Received Order 2: ");
                 System.out.println("Raw Piece: " + received_order_2.getStartPiece());
                 System.out.println("Last Piece: " + received_order_2.getWorkPiece());
                 System.out.println("Dispatch: " + received_order_2.getDueDate());
+                System.out.println("Quantity: " + received_order_2.getQuantity());
                 requests.setFlag_start(0);
                 first_order = false;
             }else{

@@ -465,11 +465,12 @@ public class OpcUa {
         DataValue ir = new DataValue(new Variant(Boolean.TRUE));
         //0 At1, 1 maq1, 2 maq2
         //vai ler as variáveis
+        List<DataValue> dataValues = ReadMultiVars(Ids_mandarFazerPeca);
         //dataValues.get(qm).getValue().getValue().equals((short)0)
 
         //se At1 está livre, 1
         //verifica a maq1 e depois a maq2
-        if(MachineToUse == 1){
+        if(dataValues.get(0).getValue().getValue().equals(false)  && dataValues.get(2).getValue().getValue().equals(true) && MachineToUse == 1){
             System.out.println("Está livre, a meter na maq1");
             List<WriteValue> writeValues = new ArrayList<>();
             writeValues.add(new WriteValue(Gvlprod1.getNodeId(), AttributeId.Value.uid(), null, pec_fab));
@@ -479,7 +480,7 @@ public class OpcUa {
             writeValues.clear();
             System.out.println("Sent values on OPCUA!");
             return 1;
-        } else if (MachineToUse == 2) {
+        } else if (dataValues.get(0).getValue().getValue().equals(false) && dataValues.get(1).getValue().getValue().equals(false)  && dataValues.get(2).getValue().getValue().equals(true) && MachineToUse ==2) {
             System.out.println("Está livre, a meter na maq2");
             List<WriteValue> writeValues = new ArrayList<>();
             writeValues.add(new WriteValue(Gvlprod2.getNodeId(), AttributeId.Value.uid(), null, pec_fab));
@@ -489,6 +490,8 @@ public class OpcUa {
             writeValues.clear();
             return 2;
         }else{
+
+            System.out.println("NAO FIZ NENHUMA PEÇA BROOOOO!");
             return -1;
             //não pode mandar fazer a peça
         }
@@ -503,16 +506,24 @@ public class OpcUa {
 
         UShort value = UShort.valueOf(pecaWarehouseSair); //USHORT PARA UINT ---- SHORT PARA INT
         DataValue pec_sair = new DataValue(new Variant(value)); //entrada
+        UShort verificacao = UShort.valueOf(0);
         DataValue ok_sair = new DataValue(new Variant(Boolean.TRUE));
 
+        List<DataValue> dataValues = ReadMultiVars(Ids_mandarSairPeca);
             //0 At1, , 1 entrada, 2 gvl.saida
-        System.out.println("A mandar peça sair!");
+
+        if(dataValues.get(0).getValue().getValue().equals(false) && dataValues.get(1).getValue().getValue().equals(false) && dataValues.get(3).getValue().getValue().equals(false) && dataValues.get(2).getValue().getValue().equals(verificacao)) {
+            System.out.println("A mandar peça sair!");
             List<WriteValue> writeValues = new ArrayList<>();
             writeValues.add(new WriteValue(Gvl_sai_peca_Ware.getNodeId(), AttributeId.Value.uid(), null, ok_sair));
             writeValues.add(new WriteValue(Gvl_pedir_peca_Ware.getNodeId(), AttributeId.Value.uid(), null, pec_sair));
             WriteMultiVars(writeValues);
             writeValues.clear();
-        return 0;
+            return 0;
+        }
+
+        System.out.println("PIECE DIDN'T LEAVE");
+        return -1;
     }
 
 

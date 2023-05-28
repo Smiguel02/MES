@@ -34,7 +34,7 @@ public class Client implements Runnable {
             System.out.println("cliente inicia thread");
             // Create an ArrayList to send
             // Create an instance of the Order request´, aqui vai ser o request
-            pedidos orderRequest = new pedidos(request.getFlag_start(), request.getFlag_done(), (int)request.getloss(), request.getid());    //FIXME: what bro?? Should be float
+            pedidos orderRequest = new pedidos(request.getFlag_start(), request.getFlag_done(), request.getloss(), request.getid());    //FIXME: what bro?? Should be float
 
             // Convert the order request to a JSON string
             Gson gson = new GsonBuilder().setPrettyPrinting().create();

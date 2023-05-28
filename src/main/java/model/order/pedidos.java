@@ -30,7 +30,7 @@ public class pedidos {
         return id;
     }
 
-    public pedidos(int start, int done, int money, int order) {
+    public pedidos(int start, int done, float money, int order) {
         this.flag_start= start;
         this.flag_done= done;
         this.loss= money;
