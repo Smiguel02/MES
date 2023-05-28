@@ -2,6 +2,7 @@ package com.example.javafx_test;
 
 import jsoncomms.Client;
 import jsoncomms.Server;
+import model.order.Order_gui;
 import model.order.order;
 import model.order.pedidos;
 import model.order.rawPieces;
@@ -9,6 +10,7 @@ import org.eclipse.milo.opcua.stack.core.UaException;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UShort;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -73,6 +75,8 @@ public class CommsController extends Thread{
     public float cost = 0;
     public int order_identification = 0;
     public boolean piece_leaving_war = false;
+
+    private MyDB mydb = MyDB.getInstance();
 
 
     // Flag is 1 if is MES, 0 if is OPC_UA
@@ -345,6 +349,32 @@ public class CommsController extends Thread{
                 }
                 received_order_1 = client.order1;
                 received_order_2 = client.order2;
+                /*Order_gui ord=new Order_gui();
+                ord.setExpected_delivery(received_order_1.getArrivedate());
+                ord.setId_order(received_order_1.getorderNumber());
+                ord.setNumber_pieces(received_order_1.getQuantity());
+                ord.setPiece_type(received_order_1.getWorkPiece());
+                ord.setRaw_piece(received_order_1.getStartPiece());
+
+                ord.setRaw_cost(0);
+                ord.setExpected_cost(0);
+                ord.setProduction_cost(0);
+                ord.setTotal_cost(0);
+
+                //mydb.updateExpectedDelivery(ord.getExpected_delivery(),0);
+                //mydb.
+
+                //ord.setExpected_delivery(received_order_2.getArrivedate());
+                ord.setId_order(received_order_2.getorderNumber());
+                ord.setNumber_pieces(received_order_2.getQuantity());
+                ord.setPiece_type(received_order_2.getWorkPiece());
+                ord.setRaw_piece(received_order_2.getStartPiece());
+                try {
+                    mydb.newOrder(ord);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }*/
+                //adicionou as orders
                 if(received_order_1 == null){
                     System.out.println("ERROR, couldn't read new order");
                 }
@@ -376,6 +406,8 @@ public class CommsController extends Thread{
                         throw new RuntimeException(e);
                     }
                     received_order_1 = client.order1;
+                    //Recebeu order 1
+
 
                     cost = 0;
                     order_identification = 0;

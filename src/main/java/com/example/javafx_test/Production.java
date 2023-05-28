@@ -22,6 +22,7 @@ public class Production extends Thread{
     public boolean war_update_entering = false, war_update_leaving = false, mach_update_time = false;
 
     CommsController opcua;
+    MyDB mydb = MyDB.getInstance();
 
     public ArrayList<Machine> Machines = new ArrayList<>();
     public ArrayList<Integer> Amount_of_pieces = new ArrayList<>();
@@ -113,9 +114,17 @@ public class Production extends Thread{
                 System.out.println("/************************************************\n" +
                                    "***** DAY " + ((int)(time/60000) + 1) + "*************************\n" +
                                     "******************************************************/");
+                mydb.midDay=false;
 
             }
             this.day = (int)(this.time / 60000) + 1;
+
+           if((int)(this.time % 60000)>30000){
+               mydb.midDay=true;
+           }
+            mydb.updateTenpo(this.time);
+            mydb.updateDia(this.day);
+
 
             /***********************
              ***********************
