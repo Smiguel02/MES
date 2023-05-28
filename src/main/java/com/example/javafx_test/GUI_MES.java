@@ -4,6 +4,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import jsoncomms.Client;
+import jsoncomms.Server;
 
 
 import java.io.IOException;
@@ -18,13 +20,16 @@ public class GUI_MES extends Application {
         // 3 different threads
         CommsController comms= new CommsController(lock);
         Production prod = new Production(lock, comms);
-
+        Server server = Server.getInstance();
+        Thread thread_server = new Thread(server);
 
         prod.setName("Thread - MES");
         comms.setName("Thread - OPC_UA");
+        thread_server.setName("Thread - Server");
         Thread.currentThread().setName("Thread - GUI");
         comms.start();
         prod.start();
+        thread_server.start();
         System.out.println("Is prod alive? " + prod.isAlive());
 
         FXMLLoader fxmlLoader = new FXMLLoader(GUI_MES.class.getResource("hello-view.fxml"));
@@ -34,9 +39,7 @@ public class GUI_MES extends Application {
         stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.show();
-
     }
-
 
     public static void main(String[] args) {
         launch();

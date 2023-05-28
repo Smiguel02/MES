@@ -1,5 +1,10 @@
 package com.example.javafx_test;
 
+import jsoncomms.Client;
+import jsoncomms.Server;
+import model.order.order;
+import model.order.pedidos;
+import model.order.rawPieces;
 import org.eclipse.milo.opcua.stack.core.UaException;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UShort;
@@ -35,7 +40,7 @@ public class CommsController extends Thread{
 
     public boolean pos_cam1_ocup, pos_cam2_ocup;
 
-    public short available_machines[] ={0,0};
+    public int available_machines[] ={0,0};
 
     public boolean piece_leave_war = false;
     public UShort piece_ask_war =  UShort.valueOf(0);
@@ -49,10 +54,25 @@ public class CommsController extends Thread{
     public List<Short> war_piece_counter = new ArrayList<>();
     public List<Boolean> machines_signal = new ArrayList<>();
     public List<Boolean> previous_machines_signal = new ArrayList<>();
-
-
-    private boolean values_updated = true;
     private Order Ord_dispatch;
+
+    /**
+     * JSON variables
+     */
+    public Server server;
+    public rawPieces got_pieces;
+
+    public pedidos requests;    //TODO: alterar isto no Production
+    private boolean values_updated = true;
+    public boolean ordered_piece = false, dispatched_piece = false;
+
+    public order received_order_1, received_order_2;
+
+    public boolean first_order = true;
+    public boolean order_1_finished = false, order_2_finished = false;
+    public float cost = 0;
+    public int order_identification = 0;
+    public boolean piece_leaving_war = false;
 
 
     // Flag is 1 if is MES, 0 if is OPC_UA
@@ -95,17 +115,26 @@ public class CommsController extends Thread{
         return false;
     }
 
-    public int start_dispatch(Order disp){
 
-        //TODO: how will this be implemented?
-        if(Ord_dispatch != null){
-            System.out.println("\u001B[31m" + "Order already being dispatched" + "\\u001B[0m");
+    public boolean start_dispatch(Order disp, int type) {
+
+        if (Ord_dispatch == null) {
+            Ord_dispatch = disp;
+            aux_leave_piece = type;
+            System.out.println("Will dispatch piece " + type);
+            return true;
+        } else if (Ord_dispatch == disp) {
+            aux_leave_piece = type;
+            System.out.println("Will dispatch piece " + type);
+            return true;
+        } else {
+            System.out.println("Dispatch already assigned to otehr Order!");
+            return false;
         }
-
-
-        return 1;
-
-//        return 0;   // if no new piece dispatched
+    }
+    public void finished_dispatch(){
+        Ord_dispatch = null;
+        System.out.println("What am I doing in the order finished??");
     }
 
     public int number_of_pieces_on_warehouse(){
@@ -132,13 +161,6 @@ public class CommsController extends Thread{
         aux_make_piece[1] = pecaFabricar;
         aux_make_piece[2] = MachineToUse;
 
-//        if(pecaWarehouse == 0){
-//            values_updated = false;
-//        }else{
-//            values_updated =  true;
-//        }
-//
-//        return aux;
         return true;
     }
     public boolean values(){
@@ -148,15 +170,6 @@ public class CommsController extends Thread{
     @Override
     public void run() throws RuntimeException {
         System.out.println("Comms controller is running");
-
-        OpcUa n;
-        try {
-            n = OpcUa.getInstance();
-            sleep(100);
-        } catch (Exception e) {
-            System.out.println("WHATTTT");
-            throw new RuntimeException(e);
-        }
 
         for(int i= 0; i<4 ; i++){
             //Initialize machine time
@@ -170,6 +183,16 @@ public class CommsController extends Thread{
             war_piece_counter.add((short) 0);
         }
 
+        OpcUa n;
+        try {
+            n = OpcUa.getInstance();
+            sleep(100);
+        } catch (Exception e) {
+            System.out.println("WHATTTT");
+            throw new RuntimeException(e);
+        }
+
+        server = Server.getInstance();
 
 
         while(true) {
@@ -192,8 +215,8 @@ public class CommsController extends Thread{
                 piece_arrived_on_ct3 = !(boolean) n.ReadOneVar(n.ct3_Livre);
                 piece_arrived_on_st1 = !(boolean) n.ReadOneVar(n.st1_Livre);
                 piece_arrived_on_pt1 = !(boolean) n.ReadOneVar(n.pt1_Livre);
-                available_machines[0] = (short) n.ReadOneVar(n.Gvlprod1);
-                available_machines[1] = (short) n.ReadOneVar(n.Gvlprod2);
+//                available_machines[0] = (short) n.ReadOneVar(n.Gvlprod1);     //TODO. not used anymore
+//                available_machines[1] = (short) n.ReadOneVar(n.Gvlprod2);     //TODO. not used anymore
                 piece_ask_war = (UShort) n.ReadOneVar(n.Gvl_pedir_peca_Ware);
                 piece_leave_war = (boolean) n.ReadOneVar(n.Gvl_sai_peca_Ware);
                 machs_time.set(0, (long) n.ReadOneVar(n.time_maq1));
@@ -261,52 +284,31 @@ public class CommsController extends Thread{
              ****************************************/
 
 
-            //Dispatch Order from Warehouse, with this condition can dispatch
-            if (Ord_dispatch != null && !piece_on_at1 && !piece_arrived_on_st1 && !piece_arrived_on_pt1) {
-                try {
-                    n.mandarSairPeca(Ord_dispatch.piece_type);
-                    Ord_dispatch.war_to_dispatch++;
-                } catch (UaException | ExecutionException | InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
             // Ordering new piece
-            if (aux_make_piece[0] != 0 && aux_make_piece[1] != 0 && !piece_on_at1 && available_machines[aux_make_piece[2]] == 0) {
-                if (((aux_make_piece[2] == 1) &&  !pos_cam1_ocup && !piece_on_at2) || ((aux_make_piece[2] == 2) && !pos_cam2_ocup && !pos_cam1_ocup && !piece_on_at2)){ // piece on at1 already verified above
+            if ((aux_make_piece[0] != 0 && aux_make_piece[1] != 0  && !piece_leaving_war)) {
                     try {
                         System.out.println("Ordered new piece execution");
                         if (n.mandarFazerPeca(aux_make_piece[0], aux_make_piece[1], aux_make_piece[2]) == -1) {
                             System.out.println("\\u001B[31m" + "ERROR, sent peça without machine being available" + "\\u001B[0m");
                         } else {
-                            if (war_leaving != 0) {
-                                System.out.println("OHHHH SHIT");
-                            }
-                            war_leaving = aux_make_piece[1];
+                            piece_leaving_war = true;
                             aux_make_piece[0] = 0;
                             aux_make_piece[1] = 0;
                             aux_make_piece[2] = 0;
-                            update_piece_values(0,0,0);
-                            System.out.println("Values updated! " + values_updated);
-                            System.out.println("AUX(0,1,2) ("+aux_make_piece[0]+" ,"+aux_make_piece[1]+ ", "+aux_make_piece[2]+" )");
-                            System.out.println("piece_on_at1: " + piece_on_at1 + "|| piece_on_at2: " + piece_on_at2);
-                            System.out.println("I did this!");
+                            System.out.println("COMMS: Pieces sent to PLC!");
                         }
                     } catch (UaException | ExecutionException | InterruptedException e) {
                         throw new RuntimeException(e);
                     }
-            }
+
         }
-            if(!piece_on_at1 && piece_leave_war && Objects.equals(piece_ask_war, UShort.valueOf(0)) && aux_leave_piece != 0){
+            if(aux_leave_piece != 0 && !piece_leaving_war){
                 try {
-                    System.out.println("Dispatched a piece");
+                    System.out.println("Dispatched a piece " + aux_leave_piece);
                     if(n.mandarSairPeca(aux_leave_piece) == -1){
-                        System.out.println("ERROR, sent peça without machine being available");
+                        System.out.println("ERROR, sent peça without machine being available, try again!");
                     }else{
-                        if(war_leaving != 0){
-                            System.out.println("OHHHH SHIT");
-                        }
-                        war_leaving = aux_leave_piece;
+                        piece_leaving_war = true;
                         aux_leave_piece = 0;
                     }
                 } catch (UaException | ExecutionException | InterruptedException e) {
@@ -314,13 +316,91 @@ public class CommsController extends Thread{
                 }
             }
 
-
             /**
              * Always updating JSON code:
              * Always running checking if received anything from JSON.
              * if so, update the json_new_order boolean, if not, just keep going
              * Might be needed to create other boolean if we think other stuff is needed
              */
+
+            if(server.client_has_new_pieces() && got_pieces == null){
+                got_pieces = server.getPieces_read();
+                System.out.println("Read some Pieces!");
+                System.out.println("Type: " + got_pieces.getpieceType());
+                System.out.println("Quantity: " + got_pieces.getnumberOfPieces());
+                System.out.println("Arrival: " + got_pieces.getdaysToArrive());
+                System.out.println("Type: " + got_pieces.getprice());
+//                server.set_client_values_read();
+            }
+
+            if(first_order){
+                requests = new pedidos(1, 0 , 0, 0);   //FIXME: not sure verify
+                Client client = new Client(this.requests);
+                Thread client_thread = new Thread(client);
+                client_thread.start();
+                try {
+                    client_thread.join();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                received_order_1 = client.order1;
+                received_order_2 = client.order2;
+                if(received_order_1 == null){
+                    System.out.println("ERROR, couldn't read new order");
+                }
+
+                System.out.println("Received Order 1: ");
+                System.out.println("Raw Piece: " + received_order_1.getStartPiece());
+                System.out.println("Last Piece: " + received_order_1.getWorkPiece());
+                System.out.println("Dispatch: " + received_order_1.getDueDate());
+                System.out.println("Quantity: " + received_order_1.getQuantity());
+
+                System.out.println("Received Order 2: ");
+                System.out.println("Raw Piece: " + received_order_2.getStartPiece());
+                System.out.println("Last Piece: " + received_order_2.getWorkPiece());
+                System.out.println("Dispatch: " + received_order_2.getDueDate());
+                System.out.println("Quantity: " + received_order_2.getQuantity());
+                requests.setFlag_start(0);
+                first_order = false;
+            }else{
+                if(order_1_finished){
+                    requests.setloss(cost);
+                    requests.setFlag_done(order_identification);
+
+                    Client client = new Client(this.requests);
+                    Thread client_thread = new Thread(client);
+                    client_thread.start();
+                    try {
+                        client_thread.join();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    received_order_1 = client.order1;
+
+                    cost = 0;
+                    order_identification = 0;
+                    order_1_finished = false;
+                }
+
+                if(order_2_finished){
+                    requests.setloss(cost);
+                    requests.setFlag_done(order_identification);
+
+                    Client client = new Client(this.requests);
+                    Thread client_thread = new Thread(client);
+                    client_thread.start();
+                    try {
+                        client_thread.join();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    received_order_2 = client.order2;
+
+                    cost = 0;
+                    order_identification = 0;
+                    order_2_finished = false;
+                }
+            }
 
 
             /**
