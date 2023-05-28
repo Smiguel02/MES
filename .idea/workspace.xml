@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="863c4c01-492f-494a-87c4-0cfc1053f270" name="Changes" comment="Synchroization oh yeah. But Orders not yet">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/CommsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/CommsController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/OpcUa.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/OpcUa.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/Production.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/Production.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/Warehouse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/Warehouse.java" afterDir="false" />
-    </list>
+    <list default="true" id="863c4c01-492f-494a-87c4-0cfc1053f270" name="Changes" comment="Makes a whole Order and Delivers!!!! No statistacs though" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -99,7 +93,7 @@
       <workItem from="1685117255978" duration="3622000" />
       <workItem from="1685127697963" duration="14161000" />
       <workItem from="1685193160547" duration="27474000" />
-      <workItem from="1685229274991" duration="3795000" />
+      <workItem from="1685229274991" duration="4248000" />
     </task>
     <task id="LOCAL-00001" summary="Added subscriptions from other repo">
       <created>1684788420247</created>
@@ -178,7 +172,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685203474019</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Makes a whole Order and Delivers!!!! No statistacs though">
+      <created>1685233521781</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1685233521781</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -208,6 +209,7 @@
     <MESSAGE value="Reads new pieces well!" />
     <MESSAGE value="Reading of variables not synchronized" />
     <MESSAGE value="Synchroization oh yeah. But Orders not yet" />
-    <option name="LAST_COMMIT_MESSAGE" value="Synchroization oh yeah. But Orders not yet" />
+    <MESSAGE value="Makes a whole Order and Delivers!!!! No statistacs though" />
+    <option name="LAST_COMMIT_MESSAGE" value="Makes a whole Order and Delivers!!!! No statistacs though" />
   </component>
 </project>
