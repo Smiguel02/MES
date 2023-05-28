@@ -170,8 +170,10 @@ public class HelloController implements Initializable {
 
     int a, b, c;
 
-    /*private DataModel dataModel = new DataModel();
-    private Timeline timeline;*/
+    /*private DataModel dataModel = new DataModel();*/
+    //private Timeline timeline;
+
+    List <Machine> mach = new ArrayList<>();
 
     MyDB n = MyDB.getInstance();
 
@@ -181,10 +183,8 @@ public class HelloController implements Initializable {
 
         try{
             n.connect();
-            List <Machine> mach = new ArrayList<>();
             mach.clear();
             a = n.queryTestMachine();
-            System.out.println("Machine_Label");
             if(a<0){
                 System.out.printf("Error in query test");
             }
@@ -192,8 +192,8 @@ public class HelloController implements Initializable {
                 System.out.println("Machine_Label_Preencher");
                 //Machine
                 //Tool
-                label_tool_1.setText(String.valueOf(mach.get(0).current_tool));
-                label_tool_2.setText(String.valueOf(mach.get(1).current_tool));
+                label_tool_1.setText(String.valueOf(String.valueOf(mach.get(0).current_tool)));
+                /*label_tool_2.setText(String.valueOf(mach.get(1).current_tool));
                 label_tool_3.setText(String.valueOf(mach.get(2).current_tool));
                 label_tool_4.setText(String.valueOf(mach.get(3).current_tool));
                 //In_use
@@ -210,7 +210,7 @@ public class HelloController implements Initializable {
                 label_work_time_1.setText(String.valueOf(mach.get(0).work_time()));
                 label_work_time_2.setText(String.valueOf(mach.get(1).work_time()));
                 label_work_time_3.setText(String.valueOf(mach.get(2).work_time()));
-                label_work_time_4.setText(String.valueOf(mach.get(3).work_time()));
+                label_work_time_4.setText(String.valueOf(mach.get(3).work_time()));*/
 
             }
         }
@@ -218,7 +218,7 @@ public class HelloController implements Initializable {
             throw new RuntimeException(e);
         }
 
-        try{
+        /*try{
             n.connect();
             List <Order> ord =  new ArrayList<>();
             ord.clear();
@@ -253,7 +253,7 @@ public class HelloController implements Initializable {
         }
         catch (SQLException e) {
             throw new RuntimeException(e);
-        }
+        }*/
 
         /*try{
             /*n.connect();
@@ -273,15 +273,24 @@ public class HelloController implements Initializable {
             throw new RuntimeException(e);
         }*/
 
-        /*timeline = new Timeline(new KeyFrame(Duration.seconds(10), event)){
-            initializeData();
-            timeline.setCycleCount(Timeline.INDEFINITE);
-        }));*/
+        // Create a Timeline to run the initialization method periodically
+        /*timeline = new Timeline(new KeyFrame(Duration.seconds(5), event -> {
+            initializeData(); // Call the initialization method
+        }));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();*/
 
     }
 
-    /*private void  initializeData(){
+    /*private void initializeData() {
+        // Perform your initialization code here
+        // Retrieve data from the SQL database and update the data model
         String newData = fetchDataFromDatabase();
         dataModel.setData(newData);
     }*/
+
+    void setDados(int id_machine) throws SQLException {
+
+
+    }
 }
