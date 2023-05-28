@@ -136,6 +136,7 @@ public class Piece_new {
         type_arrival_date[raw_type-1].add(arrive_day);
         have_arrived[raw_type-1].add(false);
         System.out.println("Waiting for " +raw_type+ " piece!");
+        System.out.println("Piece " + raw_type+ " size : "+  type[raw_type -1].size());
     }
 
     //Info from PLC, when piece arrives to Plant
@@ -169,7 +170,7 @@ public class Piece_new {
     public void transform(int raw_piece, int new_piece) {
 
         for (int i = 0; i < type[raw_piece - 1].size(); i++) {
-            if (type[raw_piece - 1].get(i) == 2) {
+            if (type[raw_piece - 1].get(i) == raw_piece) {
                 type[raw_piece - 1].set(i, new_piece);
                 System.out.println("On transformation: raw_piece: " + raw_piece + " | new piece: " + new_piece);
                 return;

@@ -135,7 +135,7 @@ public class Production extends Thread{
                                 if (war.specific_pieces_stored(i + 1) < opcua.war_piece_counter.get(i).intValue()) {
                                     System.out.println("Piece of type " + (i + 1) + " added to Warehouse!");
                                     war.piece_added(i + 1);
-                                    for(int j = 0; j < Orders.size();j++) {
+                                    for(int j = 0; j < 2;j++) {
                                         if (Orders.get(j).piece_type == (i + 1)) {
                                             System.out.println("Piece transformation happened and notified order!");
                                             pieces.transform(Orders.get(j).raw_piece, (i + 1));
@@ -214,9 +214,9 @@ public class Production extends Thread{
                         mach_update_time = false;
                         System.out.println("Updating machine time!");
                         // Machine has been used and time has been updated
-                        System.out.println("Machine "+ i + 1+" wait_time: "+ ((opcua.machs_time.get(i)- opcua.initial_machs_time.get(i)) - Machines.get(i).work_time()));
+                        System.out.println("Machine "+ (i + 1)+" wait_time: "+ ((opcua.machs_time.get(i)- opcua.initial_machs_time.get(i)) - Machines.get(i).work_time()));
                         Machines.get(i).info_transformation_over((opcua.machs_time.get(i)- opcua.initial_machs_time.get(i)));
-                        System.out.println("Machine "+ i + 1+" total_time: " + Machines.get(i).work_time());
+                        System.out.println("Machine "+ (i + 1 )+" total_time: " + Machines.get(i).work_time());
                         if(Machines.get(i).work_time()!= (opcua.machs_time.get(i)- opcua.initial_machs_time.get(i))){
                             System.out.println("\\u001B[31m" +"ERROR, Machine Prod time not updated correctly"+ "\\u001B[0m");
                         }
@@ -294,6 +294,9 @@ public class Production extends Thread{
                         }
                     }
                     count ++;
+                    if(Orders.get(j).is_over){
+                        continue;
+                    }
                     if (Orders.get(j).start_date == 0) {
                      if (((war.specific_pieces_stored(Orders.get(j).raw_piece) > (Orders.get(j).number_of_pieces / 2)) && (pieces.which_day_arrives(Orders.get(j).raw_piece) == this.day)) || (war.specific_pieces_stored(Orders.get(j).raw_piece) >= Orders.get(j).number_of_pieces)) {
                          System.out.println("War stored of type " + Orders.get(j).raw_piece+ " -> " + war.specific_pieces_stored(Orders.get(j).raw_piece));
@@ -337,10 +340,10 @@ public class Production extends Thread{
                                     prod_order_sent = true;
                                 }
                             }
-
                             //Piece on dispatch dock and inside allowed timeline. Start dispatch procedure
                             //OPTIMIZE: removed wait for delivery day logic
-                            if ((!opcua.piece_arrived_on_pm1 && opcua.previous_piece_arrived_on_pm1) || (!opcua.piece_arrived_on_pm2 && opcua.previous_piece_arrived_on_pm2)) {
+                            if (((!opcua.piece_arrived_on_pm1 && opcua.previous_piece_arrived_on_pm1) || (!opcua.piece_arrived_on_pm2 && opcua.previous_piece_arrived_on_pm2)) && !Orders.get(j).is_over) {
+                                System.out.println("Order " +j);
                                 if (pieces.dispatched(Orders.get(j).raw_piece, Orders.get(j).piece_type, this.day, Orders.get(j))) {
                                     System.out.println("Dispatched a Piece!");
                                     //Piece has been dispatched!
@@ -349,7 +352,8 @@ public class Production extends Thread{
                                         System.out.println("\nGRANDEEEEE, ORDER IS OVERR\n");
                                         opcua.requests = new pedidos(0 , 1, Orders.get(j).total_cost , Orders.get(j).order_ID);
                                         opcua.finished_dispatch();
-                                        Orders.set(j, null);    //FIXME: this will likely kill the program
+                                        Orders.get(j).is_over = true;
+                                        opcua.initial_machs_time = opcua.machs_time;
                                     }
                                 }
                             }
@@ -363,6 +367,7 @@ public class Production extends Thread{
                                         Amount_of_pieces.set(Orders.get(j).piece_type - 1, Amount_of_pieces.get(Orders.get(j).piece_type - 1) - 1);
                                         opcua.update_piece_values(Orders.get(j).raw_piece, Orders.get(j).piece_type, ((Orders.get(j).Machines.get(0).ID - 1) / 2) + 1);
                                         System.out.println("MES1: Sent Order (0,1,2): (" + opcua.aux_make_piece[0] + " ," + opcua.aux_make_piece[1] + ", " + opcua.aux_make_piece[2] + " )");
+                                        prod_order_sent = true;
                                     }
                                     // Se na Machine 1
                                 } else if (((((Orders.get(j).Machines.get(0).ID - 1) / 2) + 1) == 2) && !opcua.pos_cam1_ocup && !opcua.pos_cam2_ocup) {
@@ -370,9 +375,9 @@ public class Production extends Thread{
                                         Amount_of_pieces.set(Orders.get(j).piece_type - 1, Amount_of_pieces.get(Orders.get(j).piece_type - 1) - 1);
                                         opcua.update_piece_values(Orders.get(j).raw_piece, Orders.get(j).piece_type, ((Orders.get(j).Machines.get(0).ID - 1) / 2) + 1);
                                         System.out.println("MES2: Sent Order (0,1,2): (" + opcua.aux_make_piece[0] + " ," + opcua.aux_make_piece[1] + ", " + opcua.aux_make_piece[2] + " )");
+                                        prod_order_sent = true;
                                     }
                                 }
-                                prod_order_sent = true;
                             }
                         }
                     }

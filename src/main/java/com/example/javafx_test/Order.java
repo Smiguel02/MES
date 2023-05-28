@@ -24,6 +24,8 @@ public class Order {
     public boolean dispatching = false;
     public int war_to_dispatch = 0;
 
+    public boolean is_over = false;
+
     private ArrayList<Integer> pieces_dispatched_index = new ArrayList<>();           // To calculate cost later  //TODO: not yet used
 
     // Ana Rita: daqui para baixo doesn't matter
@@ -173,8 +175,10 @@ public class Order {
         int raw_total = 0;
         //FIXME: probably change this one later as all this variables might be different between pieces
         for(int i=0; i<this.number_of_pieces; i++){
-            raw_total += piece.raw_cost(raw_piece, piece_type, delivery_day, i);
-            deprecation_cost += piece.raw_cost(raw_piece, piece_type, delivery_day, i) * (delivery_day - piece.arrive_date(raw_piece, piece_type, delivery_day, i));
+            System.out.println("ORDER RAW COST: " +raw_piece+ " "+piece_type + " "+delivery_day + " "+ i+ " ");
+            int aux = piece.raw_cost(raw_piece, piece_type, delivery_day, i);
+            raw_total += aux;
+            deprecation_cost += aux * (delivery_day - piece.arrive_date(raw_piece, piece_type, delivery_day, i));
         }
         deprecation_cost = deprecation_cost * 0.01f;
 
