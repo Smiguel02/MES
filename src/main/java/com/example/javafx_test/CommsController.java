@@ -318,9 +318,14 @@ public class CommsController extends Thread{
              * Might be needed to create other boolean if we think other stuff is needed
              */
 
-            if(server.client_has_new_pieces()){
+            if(server.client_has_new_pieces() && got_pieces == null){
                 got_pieces = server.getPieces_read();
-                server.set_client_values_read();
+                System.out.println("Read some Pieces!");
+                System.out.println("Type: " + got_pieces.getpieceType());
+                System.out.println("Quantity: " + got_pieces.getnumberOfPieces());
+                System.out.println("Arrival: " + got_pieces.getdaysToArrive());
+                System.out.println("Type: " + got_pieces.getprice());
+//                server.set_client_values_read();
             }
 
             if(first_order){

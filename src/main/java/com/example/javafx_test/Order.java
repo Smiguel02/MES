@@ -44,13 +44,13 @@ public class Order {
      *  We will have it both ways. The first to be implemented will be the second option. The ERP will probably order the piece first and only later give us the order,
      *  so is better for the MES to add already existing pieces to a new order
      */
-    public Order(int order, int quantity,int delivery, int type, Piece_new p){
+    public Order(int order, int quantity,int delivery,int raw, int type, Piece_new p){
         order_ID=order;
         piece_type = type;      //FIXME: Sera que isto me vai eventualmente partir tudo?
         number_of_pieces=quantity;
         expected_delivery=delivery;
         piece = p;
-        raw_piece = which_raw_piece(type);
+        raw_piece = raw;
         System.out.println("ORDER: Raw piece: " + raw_piece);
         raw_cost = 15;      //FIXME: change this ducking value
         System.out.println(this.toString());

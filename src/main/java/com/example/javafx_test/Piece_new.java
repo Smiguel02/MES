@@ -337,5 +337,15 @@ public class Piece_new {
         System.out.println("Type 1: " + type[0].size()+ " Type 2: " + type[1].size());
     }
 
+    public int how_many_of_certain_piece(int raw, int piece){
+        int count = 0;
+        for(int i=0; i<type[raw - 1].size(); i++){
+            if(type[raw-1].get(i) == piece){
+                count ++;
+            }
+        }
+        return count;
+    }
+
 
 }

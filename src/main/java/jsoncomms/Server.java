@@ -16,6 +16,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
+import static java.lang.Thread.sleep;
+
 public class Server implements Runnable{
 
     private static Server instance = null;
@@ -32,6 +34,7 @@ public class Server implements Runnable{
     }
 
     public rawPieces getPieces_read() {
+        client_values_updated = false;
         return pieces_read;
     }
 
@@ -53,57 +56,64 @@ public class Server implements Runnable{
                 System.out.println("Client connected: " + clientSocket);
                 Thread thread = new Thread(() -> {
                     try {
-                        // Receive message from client
-                        ObjectInputStream inputStream = new ObjectInputStream(clientSocket.getInputStream());
-                        String jsonRequest = (String) inputStream.readObject();
+//                        if (!client_has_new_pieces()) {
+                            // Receive message from client
+                            while(client_has_new_pieces()){
+                            }
 
-                        // Convert the JSON object to a JsonObject
-                        JsonObject jsonObject = new Gson().fromJson(jsonRequest, JsonObject.class);
+                            ObjectInputStream inputStream = new ObjectInputStream(clientSocket.getInputStream());
+                            String jsonRequest = (String) inputStream.readObject();
 
-                        // Extract the request and checksum from the JSON object
-                        String request = jsonObject.get("request").getAsString();
-                        String receivedChecksum = jsonObject.get("checksum").getAsString();
+                            // Convert the JSON object to a JsonObject
+                            JsonObject jsonObject = new Gson().fromJson(jsonRequest, JsonObject.class);
 
-                        // Convert the JSON object to a JsonObject
-                        rawPieces order_received = new Gson().fromJson(request, rawPieces.class);
-                        //System.out.println("Received message from client: " + receivedMessage +"||"+ receivedChecksum);
-                        // Validate the checksum
-                        //todo: processar o recebimento de novas peças
-                        if (validateChecksum(request, receivedChecksum)) {
-                            System.out.println("Received ArrayList:");
-                            System.out.println(order_received.getpieceType());
-                            System.out.println(order_received.getnumberOfPieces());
-                            System.out.println(order_received.getdaysToArrive());
-                            System.out.println(order_received.getprice());
-                            pieces_read = order_received;
-                            set_client_values_read();
+                            // Extract the request and checksum from the JSON object
+                            String request = jsonObject.get("request").getAsString();
+                            String receivedChecksum = jsonObject.get("checksum").getAsString();
+
+                            // Convert the JSON object to a JsonObject
+                            rawPieces order_received = new Gson().fromJson(request, rawPieces.class);
+                            //System.out.println("Received message from client: " + receivedMessage +"||"+ receivedChecksum);
+                            // Validate the checksum
+                            //todo: processar o recebimento de novas peças
+                            if (validateChecksum(request, receivedChecksum)) {
+                                System.out.println("Received ArrayList:");
+                                System.out.println(order_received.getpieceType());
+                                System.out.println(order_received.getnumberOfPieces());
+                                System.out.println(order_received.getdaysToArrive());
+                                System.out.println(order_received.getprice());
+                                pieces_read = order_received;
+                                set_client_values_read();
                             /*for (Object element : request) {
                                 System.out.println(element);
                             }*/
-                        } else {
-                            System.out.println("Checksum validation failed. Data may be corrupted or lost.");
-                        }
+                            } else {
+                                System.out.println("Checksum validation failed. Data may be corrupted or lost.");
+                            }
 
-                        // Process the message (do some operations)
+                            // Process the message (do some operations)
 
-                        // Prepare the response message, resposta a receber pelo cliente
-                        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                        String jsonRespt = gson.toJson("orderRequest complete");
+                            // Prepare the response message, resposta a receber pelo cliente
+                            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                            String jsonRespt = gson.toJson("orderRequest complete");
 
-                        // Send response to client
-                        ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
-                        outputStream.writeObject(jsonRespt);
-                        outputStream.flush();
+                            // Send response to client
+                            ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+                            outputStream.writeObject(jsonRespt);
+                            outputStream.flush();
 
-                        // Close connections
-                        inputStream.close();
-                        outputStream.close();
-                        clientSocket.close();
-                        System.out.println("FIM SERVER");
-                    } catch (IOException | ClassNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (NoSuchAlgorithmException e) {
-                        throw new RuntimeException(e);
+                            // Close connections
+                            inputStream.close();
+                            outputStream.close();
+                            clientSocket.close();
+                            System.out.println("FIM SERVER");
+//                        }else{
+//                            sleep(7);
+//                        }
+                        } catch(IOException | ClassNotFoundException e){
+                            e.printStackTrace();
+                        } catch(NoSuchAlgorithmException e){
+                            throw new RuntimeException(e);
                     }
                 });
                 thread.start();
