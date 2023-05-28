@@ -248,7 +248,7 @@ public class MyDB {
         int affect = 0;
         System.out.println("Nova peça");
 
-        newPiece = "INSERT INTO infi2023.piece (raw_1, raw_2, raw_1_arrival, raw_2_arrival, raw_1_dispatch, raw_2_dispatch, raw_1_price, raw_2_price, total_system_pieces, count_war) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        newPiece = "INSERT INTO infi2023.piece (id_piece, raw_1, raw_2, raw_1_arrival, raw_2_arrival, raw_1_dispatch, raw_2_dispatch, raw_1_price, raw_2_price, total_system_pieces, count_war) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         System.out.println("Nova peça");
         try(Connection con = connect()) {
@@ -275,6 +275,9 @@ public class MyDB {
             pstmt.setInt(9, new_piece.getRaw_2_price());
             pstmt.setInt(10, new_piece.getTotal_system_pieces());
             pstmt.setInt(11, new_piece.getCount_war());
+            System.out.println("try 2 t");
+            affect = pstmt.executeUpdate();
+            System.out.println("try 3 t");
 
             if(affect < 0){
                 disconnect();
@@ -283,19 +286,54 @@ public class MyDB {
                 disconnect();
                 return affect;
             }
-
-
         }
         catch (SQLException ex){
             System.out.println(ex.getMessage());
             return -1;
         }
-
-
-
-
     }
 
+    public int newMachine (Machine new_mach) throws SQLException{
+        int affect = 0;
+        System.out.println("Nova mach");
+
+        newMachine = "INSERT INTO infi2023.machine (id_machine, id_order, tool, in_use, broken, piece_detected, work_time) VALUES (?, ?, ?, ?, false, false, 0, 0)";
+        System.out.println("Nova mach");
+        try(Connection con = connect()) {
+            System.out.println("deu connect");
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(getInfoMachine);
+            while (rs.next()) {
+                if (Objects.equals(rs.getString("id_machine"), new_mach.getId_machine())) {
+                    disconnect();
+                    return 0;
+                }
+            }
+            PreparedStatement pstmt = con.prepareStatement(newMachine);
+            System.out.println("try 1 t");
+            pstmt.setInt(1, new_mach.getId_machine());
+            pstmt.setInt(2, new_mach.getId_order());
+            pstmt.setInt(3, new_mach.getTool());
+            pstmt.setBoolean(4, new_mach.isIn_use());
+            pstmt.setBoolean(5, new_mach.isBroken());
+            pstmt.setInt(6, new_mach.getPiece_detected());
+            pstmt.setFloat(7, new_mach.getWork_time());
+            System.out.println("try 2 t");
+            affect = pstmt.executeUpdate();
+            System.out.println("try 3 t");
+            if(affect < 0){
+                disconnect();
+                return affect;
+            }else{
+                disconnect();
+                return affect;
+            }
+        }
+        catch (SQLException ex){
+            System.out.println(ex.getMessage());
+            return -1;
+        }
+    }
 
     //Informação get and set
     //Machine ///////////////////////////////////////////////////////////////////////////
