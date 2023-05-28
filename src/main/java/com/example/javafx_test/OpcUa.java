@@ -68,7 +68,7 @@ public class OpcUa {
     }
 
     // Static method to create instance of Singleton class
-    public static OpcUa getInstance() throws Exception {
+    public synchronized static OpcUa getInstance() throws Exception {
         if (instance == null) {
             instance = new OpcUa();
             instance.connectToServer();

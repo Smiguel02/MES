@@ -13,6 +13,13 @@ public class order {
     private int arrivedate;
     private int time;
 
+    private order instance;
+    order(){
+
+    }
+
+
+
     public int getWorkPiece() {
 
         if (WorkPiece.equals("P3")){

@@ -3,7 +3,7 @@ package jsoncomms;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import model.order.Order_json;
+import model.order.order;
 import model.order.rawPieces;
 
 
@@ -14,8 +14,33 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 
-public class MessServer implements Runnable{
+public class Server implements Runnable{
+
+    private static Server instance = null;
+
+    private rawPieces pieces_read;
+
+    private boolean client_values_updated = false;
+
+    public synchronized static Server getInstance(){
+        if(instance == null){
+            instance = new Server();
+        }
+        return instance;
+    }
+
+    public rawPieces getPieces_read() {
+        return pieces_read;
+    }
+
+    public synchronized void set_client_values_read(){
+        client_values_updated = !client_values_updated;
+    }
+    public synchronized boolean client_has_new_pieces(){
+        return client_values_updated;
+    }
 
     @Override
     public void run() {
@@ -50,13 +75,14 @@ public class MessServer implements Runnable{
                             System.out.println(order_received.getnumberOfPieces());
                             System.out.println(order_received.getdaysToArrive());
                             System.out.println(order_received.getprice());
+                            pieces_read = order_received;
+                            set_client_values_read();
                             /*for (Object element : request) {
                                 System.out.println(element);
                             }*/
                         } else {
                             System.out.println("Checksum validation failed. Data may be corrupted or lost.");
                         }
-
 
                         // Process the message (do some operations)
 

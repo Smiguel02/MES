@@ -1,5 +1,10 @@
 package com.example.javafx_test;
 
+import jsoncomms.Client;
+import jsoncomms.Server;
+import model.order.order;
+import model.order.pedidos;
+import model.order.rawPieces;
 import org.eclipse.milo.opcua.stack.core.UaException;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UShort;
@@ -49,11 +54,24 @@ public class CommsController extends Thread{
     public List<Short> war_piece_counter = new ArrayList<>();
     public List<Boolean> machines_signal = new ArrayList<>();
     public List<Boolean> previous_machines_signal = new ArrayList<>();
+    private Order Ord_dispatch;
 
+    /**
+     * JSON variables
+     */
+    public Server server;
+    public rawPieces got_pieces;
 
+    public pedidos requests;    //TODO: alterar isto no Production
     private boolean values_updated = true;
     public boolean ordered_piece = false, dispatched_piece = false;
-    private Order Ord_dispatch;
+
+    public order received_order_1, received_order_2;
+
+    public boolean first_order = true;
+    public boolean order_1_finished = false, order_2_finished = false;
+    public float cost = 0;
+    public int order_identification = 0;
 
 
     // Flag is 1 if is MES, 0 if is OPC_UA
@@ -169,8 +187,7 @@ public class CommsController extends Thread{
             throw new RuntimeException(e);
         }
 
-
-
+        server = Server.getInstance();
 
 
         while(true) {
@@ -300,6 +317,71 @@ public class CommsController extends Thread{
              * if so, update the json_new_order boolean, if not, just keep going
              * Might be needed to create other boolean if we think other stuff is needed
              */
+
+            if(server.client_has_new_pieces()){
+                got_pieces = server.getPieces_read();
+                server.set_client_values_read();
+            }
+
+            if(first_order){
+                requests = new pedidos(1, 0 , 0);   //FIXME: not sure verify
+                Client client = new Client(this.requests);
+                Thread client_thread = new Thread(client);
+                client_thread.start();
+                try {
+                    client_thread.join();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                received_order_1 = client.order1;
+                received_order_2 = client.order2;
+                if(received_order_1 == null){
+                    System.out.println("ERROR, couldn't read new order");
+                    while(true){
+
+                    }
+                }
+                requests.setFlag_start(0);
+                first_order = false;
+            }else{
+                if(order_1_finished){
+                    requests.setloss(cost);
+                    requests.setFlag_done(order_identification);
+
+                    Client client = new Client(this.requests);
+                    Thread client_thread = new Thread(client);
+                    client_thread.start();
+                    try {
+                        client_thread.join();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    received_order_1 = client.order1;
+
+                    cost = 0;
+                    order_identification = 0;
+                    order_1_finished = false;
+                }
+
+                if(order_2_finished){
+                    requests.setloss(cost);
+                    requests.setFlag_done(order_identification);
+
+                    Client client = new Client(this.requests);
+                    Thread client_thread = new Thread(client);
+                    client_thread.start();
+                    try {
+                        client_thread.join();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    received_order_2 = client.order2;
+
+                    cost = 0;
+                    order_identification = 0;
+                    order_2_finished = false;
+                }
+            }
 
 
             /**

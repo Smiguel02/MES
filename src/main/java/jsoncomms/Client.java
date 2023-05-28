@@ -3,7 +3,6 @@ package jsoncomms;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import model.order.Order_json;
 import model.order.order;
 import model.order.pedidos;
 
@@ -15,22 +14,26 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
-public class ERPClient implements Runnable{
+public class Client implements Runnable{
     private ArrayList<String> array;
 
+    pedidos request;
+    public order order1;   /** This is the Standard Order */
+    public order order2;
     public void getArray(ArrayList array){
         this.array = array;
     }
 
+    public Client(pedidos r){
+        request = r;
+    }
     @Override
     public void run() {
         try {
             System.out.println("cliente inicia thread");
             // Create an ArrayList to send
             // Create an instance of the Order request´, aqui vai ser o request
-            //todo: ver como vais colocar os valores na linha de baixo
-            pedidos orderRequest = new pedidos(1,0,0);
-
+            pedidos orderRequest = new pedidos(request.getFlag_start(), request.getFlag_done(), (int)request.getloss());    //FIXME: what bro?? Should be float
 
             // Convert the order request to a JSON string
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -55,40 +58,40 @@ public class ERPClient implements Runnable{
             System.out.println("New socket created!");
 
 
-
             // Create an ObjectOutputStream to write objects to the socket
             ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
 
             // Send the ArrayList
             outputStream.writeObject(jsonObject.toString());
-            outputStream.flush();
+            outputStream.flush();   //Enviar as coisas
             // Send the checksum
             outputStream.writeObject(checksum);
             outputStream.flush();
 
+            /**
+             * INFO ALREADY SENT
+             */
+
             // Receive response from server
             ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
-            String jsonResponse = (String) inputStream.readObject();
+            String jsonResponse = (String)inputStream.readObject();
 
-            JsonObject jsonObject1 = new JsonObject();
-            jsonObject1= Gson.fromJson(jsonResponse, JsonObject.class);
 
+            JsonObject jsonObject1 = new Gson().fromJson(jsonResponse, JsonObject.class);
 
 
             //todo: no if e no else ver onde guardas as ordens
             if (orderRequest.getFlag_start()==1){
-
                 String request1 = jsonObject1.get("request1").getAsString();
                 String request2 = jsonObject1.get("request2").getAsString();
                 String receivedChecksum = jsonObject1.get("checksum").getAsString();
-                order order1 = Gson.fromJson(request1, order.class);
-                order order2 = Gson.fromJson(request2, order.class);
+                order1 = new Gson().fromJson(request1, order.class);
+                order2 = new Gson().fromJson(request2, order.class);
             }
             else {
-
                 String request1 = jsonObject1.get("request1").getAsString();
                 String receivedChecksum = jsonObject1.get("checksum").getAsString();
-                order order1 = Gson.fromJson(request1, order.class);
+                order1 = new Gson().fromJson(request1, order.class);
             }
 
 
@@ -99,9 +102,7 @@ public class ERPClient implements Runnable{
             inputStream.close();
             socket.close();
             System.out.println("FIM CLIENT");
-        } catch (NoSuchAlgorithmException | IOException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
+        } catch (NoSuchAlgorithmException | IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
 

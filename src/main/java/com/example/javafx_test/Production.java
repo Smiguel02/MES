@@ -110,7 +110,6 @@ public class Production extends Thread{
             this.time = opcua.time - opcua.initial_time;    //Updates time
             this.day = (int)(this.time / 60000) + 1;
 
-
             /***********************
              ***********************
              ******CHECK COMMS******
@@ -247,13 +246,21 @@ public class Production extends Thread{
 
             // Check ERP Comms
             // Receive Piece from ERP
-            if(erp.new_pieces){
-                for (int i = 0; i < p_amount; i++) {
-                    pieces.new_piece(p_raw_material, p_initial_price, p_arrive_day);
+            //TODO: remove this
+            if(erp.new_pieces || opcua.got_pieces!=null){
+//                for (int i = 0; i < p_amount; i++) {
+//                    pieces.new_piece(p_raw_material, p_initial_price, p_arrive_day);
+//                }
+//                erp.new_pieces = false;
+//                system_total_pieces += p_amount;
+
+                for (int i = 0; i < opcua.got_pieces.getnumberOfPieces(); i++) {
+                    pieces.new_piece(opcua.got_pieces.getpieceType(), opcua.got_pieces.getprice(), opcua.got_pieces.getdaysToArrive());
                 }
-                erp.new_pieces = false;
-                system_total_pieces += p_amount;
+                opcua.got_pieces = null;
+                system_total_pieces += opcua.got_pieces.getnumberOfPieces();
             }
+
 
             // Receive Order from ERP
             if(erp.new_order){
@@ -262,6 +269,29 @@ public class Production extends Thread{
                 system_order_ID++;
                 erp.new_order = false;
             }
+
+            //TODO: quando ordem terminar tratar dos valores e fazer pedidos. Find out how
+            //TODO: quando ordem terminar tratar dos valores e fazer pedidos. Find out how
+            //TODO: quando ordem terminar tratar dos valores e fazer pedidos. Find out how
+
+            if(opcua.received_order_1!=null){
+                Order o = new Order(opcua.received_order_1.getorderNumber(), opcua.received_order_1.getQuantity(), opcua.received_order_1.getDueDate(), opcua.received_order_1.getWorkPiece(), pieces);
+                Orders.add(0, o);
+                system_order_ID++;      //FIXME: do I keep this?
+
+
+                opcua.received_order_1 = null;
+            }
+
+              //FIXME: try implementation with 2 orders
+
+            if(opcua.received_order_2!=null){
+                Order o = new Order(opcua.received_order_2.getorderNumber(), opcua.received_order_2.getQuantity(), opcua.received_order_2.getDueDate(), opcua.received_order_2.getWorkPiece(), pieces);
+                Orders.add(1, o);
+                system_order_ID++;      //FIXME: do I keep this?
+                opcua.received_order_2 = null;
+            }
+
 
             //! very pretty so not eliminating :)
 //        Pieces.forEach(Piece::info_piece);              // Prints where are all the pieces
