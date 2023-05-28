@@ -184,16 +184,15 @@ public class HelloController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        try{
+        try {
             n.connect();
             //mach.clear();
             a = n.getInfoMachine();
             System.out.println(a);
             mach = todasmachines();
-            if(a<0){
+            if (a < 0) {
                 System.out.printf("Error in query test");
-            }
-            else{
+            } else {
                 System.out.println("Machine_Label_Preencher");
                 //Machine
                 //Tool
@@ -224,10 +223,9 @@ public class HelloController implements Initializable {
             System.out.println(b);
             ord = todasorders();
             System.out.println("Order_Label");
-            if(b < 0){
+            if (b < 0) {
                 System.out.printf("Error in query test");
-            }
-            else{
+            } else {
                 label_piece_type_1.setText(String.valueOf(ord.get(0).getPiece_type()));
                 label_piece_type_2.setText(String.valueOf(ord.get(1).getPiece_type()));
                 label_raw_piece_1.setText(String.valueOf(ord.get(0).getRaw_piece()));
@@ -249,8 +247,7 @@ public class HelloController implements Initializable {
                 label_total_cost_1.setText(String.valueOf(ord.get(0).getTotal_cost()));
                 label_total_cost_2.setText(String.valueOf(ord.get(1).getTotal_cost()));
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
@@ -272,12 +269,15 @@ public class HelloController implements Initializable {
             throw new RuntimeException(e);
         }*/
 
-        // Create a Timeline to run the initialization method periodically
-        /*timeline = new Timeline(new KeyFrame(Duration.seconds(5), event -> {
-            initializeData(); // Call the initialization method
-        }));
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();*/
+        /*if(tempo atual> tempo total/2){ //ver variaveis do miguel
+            label_cor.setBackground(#FF0000);
+        }
+        else{
+            label_cor.setBackground(#00a000);
+        }
+         */
+
+
         try {
             n.disconnect();
         } catch (SQLException e) {
