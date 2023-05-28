@@ -1,10 +1,11 @@
 package com.example.javafx_test;
 
-import Model.Machine;
-import Model.Order;
-import Model.OrderERP;
-import Model.Piece;
-import Model.Warehouse;
+import model.order.Machine;
+import model.order.Order_gui;
+import model.order.OrderERP;
+import model.order.Piece;
+import model.order.Warehouse;
+import model.order.Order_gui;
 
 import java.sql.*;
 import java.util.*;
@@ -337,7 +338,7 @@ public class MyDB {
     }
 
     //Escrever na base de dados  order
-    public int newOrder(Order new_order) throws SQLException{
+    public int newOrder(Order_gui new_order) throws SQLException{
         int affect = 0;
         System.out.println("Nova order");
         newOrder = "INSERT INTO infi2023.order (id_order, piece_type, raw_piece, raw_cost, pieces_arrival, number_pieces, order_completed, expected_delivery, expected_cost, production_cost, total_cost) VALUES (?, ?, ?, ?, ?, ?, 0, ?, ?, 0, 0)";
@@ -455,7 +456,7 @@ public class MyDB {
     //Order ///////////////////////////////////////////////////////////////////////////
     //Escrever order apatir da que fui buscar a base de dados
 
-    ArrayList <Order> order_info = new ArrayList<>();
+    ArrayList <Order_gui> order_info = new ArrayList<>();
     public int getInfoOrder() throws SQLException{
         order_info.clear();
         getInfoOrder = "SELECT * FROM infi2023.order";
@@ -464,7 +465,7 @@ public class MyDB {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(getInfoOrder);
             while (rs.next()) {
-                Order o = new Order();
+                Order_gui o = new Order_gui();
                 o.setPiece_type(rs.getInt("piece_type"));
                 o.setRaw_piece(rs.getInt("raw_piece"));
                 o.setRaw_cost(rs.getInt("raw_cost"));

@@ -1,6 +1,6 @@
-package Model;
+package model.order;
 
-public class Order {
+public class Order_gui {
 
     private int id_order;
 

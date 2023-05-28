@@ -1,4 +1,4 @@
-package Model;
+package model.order;
 
 public class Warehouse {
     private int id_warehouse;

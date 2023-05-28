@@ -1,8 +1,10 @@
 package com.example.javafx_test;
 
-import Model.Order;
-import Model.OrderERP;
-import Model.Machine;
+import model.order.Machine;
+import model.order.Order_gui;
+import model.order.OrderERP;
+import model.order.Piece;
+import model.order.Warehouse;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -176,7 +178,7 @@ public class HelloController implements Initializable {
     //private Timeline timeline;
 
     private List <Machine> mach;
-    private List <Order> ord;
+    private List <Order_gui> ord;
 
     MyDB n = MyDB.getInstance();
 
@@ -347,17 +349,17 @@ public class HelloController implements Initializable {
         }
         return as;
     }
-    private List<Order> todasorders() throws SQLException{
+    private List<Order_gui> todasorders() throws SQLException{
         b = n.getInfoOrder();
-        List<Order> as = new ArrayList<>();
+        List<Order_gui> as = new ArrayList<>();
         if(b<0){
-            Order orddddd = new Order();
+            Order_gui orddddd = new Order_gui();
             as.add(orddddd);
             return as;
 
         }
         for(int i=0; i<n.order_info.size();i++){
-            Order ordd = new Order();
+            Order_gui ordd = new Order_gui();
             ordd.setId_order(n.order_info.get(i).getId_order());
             ordd.setPiece_type(n.order_info.get(i).getPiece_type());
             ordd.setRaw_piece(n.order_info.get(i).getRaw_piece());
