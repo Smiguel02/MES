@@ -4,10 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="863c4c01-492f-494a-87c4-0cfc1053f270" name="Changes" comment="Reading of variables not synchronized">
+    <list default="true" id="863c4c01-492f-494a-87c4-0cfc1053f270" name="Changes" comment="Synchroization oh yeah. But Orders not yet">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/CommsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/CommsController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/OpcUa.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/OpcUa.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/Production.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/Production.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/Warehouse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/javafx_test/Warehouse.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,7 +98,8 @@
       <workItem from="1685116872029" duration="157000" />
       <workItem from="1685117255978" duration="3622000" />
       <workItem from="1685127697963" duration="14161000" />
-      <workItem from="1685193160547" duration="9534000" />
+      <workItem from="1685193160547" duration="27474000" />
+      <workItem from="1685229274991" duration="3795000" />
     </task>
     <task id="LOCAL-00001" summary="Added subscriptions from other repo">
       <created>1684788420247</created>
@@ -168,7 +171,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685199016227</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Synchroization oh yeah. But Orders not yet">
+      <created>1685203474019</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1685203474019</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -197,6 +207,7 @@
     <MESSAGE value="Some more OPCUA variables. Saving now before testing MES" />
     <MESSAGE value="Reads new pieces well!" />
     <MESSAGE value="Reading of variables not synchronized" />
-    <option name="LAST_COMMIT_MESSAGE" value="Reading of variables not synchronized" />
+    <MESSAGE value="Synchroization oh yeah. But Orders not yet" />
+    <option name="LAST_COMMIT_MESSAGE" value="Synchroization oh yeah. But Orders not yet" />
   </component>
 </project>

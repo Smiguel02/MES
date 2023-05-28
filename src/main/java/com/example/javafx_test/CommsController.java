@@ -52,6 +52,7 @@ public class CommsController extends Thread{
 
 
     private boolean values_updated = true;
+    public boolean ordered_piece = false, dispatched_piece = false;
     private Order Ord_dispatch;
 
 
@@ -95,19 +96,24 @@ public class CommsController extends Thread{
         return false;
     }
 
-    public int start_dispatch(Order disp){
 
-        //TODO: how will this be implemented?
-        if(Ord_dispatch != null){
-            System.out.println("\u001B[31m" + "Order already being dispatched" + "\\u001B[0m");
+    public boolean start_dispatch(Order disp, int type) {
+
+        if (Ord_dispatch == null) {
+            Ord_dispatch = disp;
+            aux_leave_piece = type;
+            System.out.println("Will dispatch piece " + type);
+            return true;
+        } else if (Ord_dispatch == disp) {
+            aux_leave_piece = type;
+            System.out.println("Will dispatch piece " + type);
+            return true;
+        } else {
+            System.out.println("Dispatch already assigned to otehr Order!");
+            return false;
         }
 
-
-        return 1;
-
-//        return 0;   // if no new piece dispatched
     }
-
     public int number_of_pieces_on_warehouse(){
         int sum = 0;
         for(int i=0; i<war_piece_counter.size();i++){
@@ -132,13 +138,6 @@ public class CommsController extends Thread{
         aux_make_piece[1] = pecaFabricar;
         aux_make_piece[2] = MachineToUse;
 
-//        if(pecaWarehouse == 0){
-//            values_updated = false;
-//        }else{
-//            values_updated =  true;
-//        }
-//
-//        return aux;
         return true;
     }
     public boolean values(){
@@ -148,15 +147,6 @@ public class CommsController extends Thread{
     @Override
     public void run() throws RuntimeException {
         System.out.println("Comms controller is running");
-
-        OpcUa n;
-        try {
-            n = OpcUa.getInstance();
-            sleep(100);
-        } catch (Exception e) {
-            System.out.println("WHATTTT");
-            throw new RuntimeException(e);
-        }
 
         for(int i= 0; i<4 ; i++){
             //Initialize machine time
@@ -169,6 +159,17 @@ public class CommsController extends Thread{
             //Pieces on warehouse told by PLC
             war_piece_counter.add((short) 0);
         }
+
+        OpcUa n;
+        try {
+            n = OpcUa.getInstance();
+            sleep(100);
+        } catch (Exception e) {
+            System.out.println("WHATTTT");
+            throw new RuntimeException(e);
+        }
+
+
 
 
 
@@ -261,59 +262,37 @@ public class CommsController extends Thread{
              ****************************************/
 
 
-            //Dispatch Order from Warehouse, with this condition can dispatch
-            if (Ord_dispatch != null && !piece_on_at1 && !piece_arrived_on_st1 && !piece_arrived_on_pt1) {
-                try {
-                    n.mandarSairPeca(Ord_dispatch.piece_type);
-                    Ord_dispatch.war_to_dispatch++;
-                } catch (UaException | ExecutionException | InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
             // Ordering new piece
-            if (aux_make_piece[0] != 0 && aux_make_piece[1] != 0 && !piece_on_at1 && available_machines[aux_make_piece[2]] == 0) {
-                if (((aux_make_piece[2] == 1) &&  !pos_cam1_ocup && !piece_on_at2) || ((aux_make_piece[2] == 2) && !pos_cam2_ocup && !pos_cam1_ocup && !piece_on_at2)){ // piece on at1 already verified above
+            if ((aux_make_piece[0] != 0 && aux_make_piece[1] != 0  && !ordered_piece)) {
                     try {
                         System.out.println("Ordered new piece execution");
                         if (n.mandarFazerPeca(aux_make_piece[0], aux_make_piece[1], aux_make_piece[2]) == -1) {
                             System.out.println("\\u001B[31m" + "ERROR, sent peça without machine being available" + "\\u001B[0m");
                         } else {
-                            if (war_leaving != 0) {
-                                System.out.println("OHHHH SHIT");
-                            }
-                            war_leaving = aux_make_piece[1];
+                            ordered_piece = true;
                             aux_make_piece[0] = 0;
                             aux_make_piece[1] = 0;
                             aux_make_piece[2] = 0;
-                            update_piece_values(0,0,0);
-                            System.out.println("Values updated! " + values_updated);
-                            System.out.println("AUX(0,1,2) ("+aux_make_piece[0]+" ,"+aux_make_piece[1]+ ", "+aux_make_piece[2]+" )");
-                            System.out.println("piece_on_at1: " + piece_on_at1 + "|| piece_on_at2: " + piece_on_at2);
-                            System.out.println("I did this!");
+                            System.out.println("COMMS: Pieces sent to PLC!");
                         }
                     } catch (UaException | ExecutionException | InterruptedException e) {
                         throw new RuntimeException(e);
                     }
-            }
+
         }
-            if(!piece_on_at1 && piece_leave_war && Objects.equals(piece_ask_war, UShort.valueOf(0)) && aux_leave_piece != 0){
+            if(aux_leave_piece != 0 && !dispatched_piece){
                 try {
-                    System.out.println("Dispatched a piece");
+                    System.out.println("Dispatched a piece " + aux_leave_piece);
                     if(n.mandarSairPeca(aux_leave_piece) == -1){
                         System.out.println("ERROR, sent peça without machine being available");
                     }else{
-                        if(war_leaving != 0){
-                            System.out.println("OHHHH SHIT");
-                        }
-                        war_leaving = aux_leave_piece;
+                        dispatched_piece = true;
                         aux_leave_piece = 0;
                     }
                 } catch (UaException | ExecutionException | InterruptedException e) {
                     throw new RuntimeException(e);
                 }
             }
-
 
             /**
              * Always updating JSON code:

@@ -11,8 +11,6 @@ public class Warehouse {
     private ArrayList<Integer> pieces_list = new ArrayList<>();
 
 
-
-
     /**
      * Constructor
      * Program Initiates with 20 P1 pieces
@@ -38,6 +36,10 @@ public class Warehouse {
      */
     //FIXME: sould return some error message or something
     public void piece_removed(int type){
+
+               if(!pieces_list.remove((Integer)type)){
+            System.out.println("ERRORRRRR, didnt remove the piece :(");
+        }
         is_full = false;
     }
 
