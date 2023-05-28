@@ -2,6 +2,7 @@ package com.example.javafx_test;
 
 
 import Model.OrderERP;
+import Model.Machine;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
@@ -173,7 +174,7 @@ public class HelloController implements Initializable {
     /*private DataModel dataModel = new DataModel();*/
     //private Timeline timeline;
 
-    List <Machine> mach = new ArrayList<>();
+    private List <Machine> mach;
 
     MyDB n = MyDB.getInstance();
 
@@ -183,8 +184,10 @@ public class HelloController implements Initializable {
 
         try{
             n.connect();
-            mach.clear();
+            //mach.clear();
             a = n.queryTestMachine();
+            System.out.println(a);
+            mach = todasmachines();
             if(a<0){
                 System.out.printf("Error in query test");
             }
@@ -192,25 +195,25 @@ public class HelloController implements Initializable {
                 System.out.println("Machine_Label_Preencher");
                 //Machine
                 //Tool
-                label_tool_1.setText(String.valueOf(String.valueOf(mach.get(0).current_tool)));
-                /*label_tool_2.setText(String.valueOf(mach.get(1).current_tool));
-                label_tool_3.setText(String.valueOf(mach.get(2).current_tool));
-                label_tool_4.setText(String.valueOf(mach.get(3).current_tool));
+                label_tool_1.setText(String.valueOf(mach.get(0).getTool()));
+                label_tool_2.setText(String.valueOf(mach.get(1).getTool()));
+                label_tool_3.setText(String.valueOf(mach.get(2).getTool()));
+                label_tool_4.setText(String.valueOf(mach.get(3).getTool()));
                 //In_use
-                label_machine_in_use_1.setText(String.valueOf(mach.get(0).in_use));
-                label_machine_in_use_2.setText(String.valueOf(mach.get(1).in_use));
-                label_machine_in_use_3.setText(String.valueOf(mach.get(2).in_use));
-                label_machine_in_use_4.setText(String.valueOf(mach.get(3).in_use));
+                label_machine_in_use_1.setText(String.valueOf(mach.get(0).isIn_use()));
+                label_machine_in_use_2.setText(String.valueOf(mach.get(1).isIn_use()));
+                label_machine_in_use_3.setText(String.valueOf(mach.get(2).isIn_use()));
+                label_machine_in_use_4.setText(String.valueOf(mach.get(3).isIn_use()));
                 //Piece_detected
-                label_piece_detected_1.setText(String.valueOf(mach.get(0).piece_detected));
-                label_piece_detected_2.setText(String.valueOf(mach.get(1).piece_detected));
-                label_piece_detected_3.setText(String.valueOf(mach.get(2).piece_detected));
-                label_piece_detected_4.setText(String.valueOf(mach.get(3).piece_detected));
+                label_piece_detected_1.setText(String.valueOf(mach.get(0).getPiece_detected()));
+                label_piece_detected_2.setText(String.valueOf(mach.get(1).getPiece_detected()));
+                label_piece_detected_3.setText(String.valueOf(mach.get(2).getPiece_detected()));
+                label_piece_detected_4.setText(String.valueOf(mach.get(3).getPiece_detected()));
                 //Work_time
-                label_work_time_1.setText(String.valueOf(mach.get(0).work_time()));
-                label_work_time_2.setText(String.valueOf(mach.get(1).work_time()));
-                label_work_time_3.setText(String.valueOf(mach.get(2).work_time()));
-                label_work_time_4.setText(String.valueOf(mach.get(3).work_time()));*/
+                label_work_time_1.setText(String.valueOf(mach.get(0).getWork_time()));
+                label_work_time_2.setText(String.valueOf(mach.get(1).getWork_time()));
+                label_work_time_3.setText(String.valueOf(mach.get(2).getWork_time()));
+                label_work_time_4.setText(String.valueOf(mach.get(3).getWork_time()));
 
             }
         }
@@ -289,8 +292,26 @@ public class HelloController implements Initializable {
         dataModel.setData(newData);
     }*/
 
-    void setDados(int id_machine) throws SQLException {
+    private List<Machine> todasmachines() throws SQLException{
+        a = n.queryTestMachine();
+        List <Machine> as = new ArrayList<>();
+        if(a<0){
+            Machine machhhhh = new Machine();
+            as.add(machhhhh);
+            return as;
+        }
+        for(int i= 0; i< n.machine_info.size(); i++){
+            Machine machh = new Machine();
+            machh.setId_machine(n.machine_info.get(i).getId_machine());
+            machh.setId_order(n.machine_info.get(i).getId_order());
+            machh.setTool(n.machine_info.get(i).getTool());
+            machh.setIn_use(n.machine_info.get(i).isIn_use());
+            machh.setBroken(n.machine_info.get(i).isBroken());
+            machh.setPiece_detected(n.machine_info.get(i).getPiece_detected());
+            machh.setWork_time(n.machine_info.get(i).getWork_time());
+            as.add(machh);
 
-
+        }
+        return as;
     }
 }

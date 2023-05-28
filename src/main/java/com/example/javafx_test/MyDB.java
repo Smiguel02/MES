@@ -445,17 +445,17 @@ public class MyDB {
                     m.setWork_time(rs.getFloat("work_time"));
                     m.setId_machine(id_machine);
                     machine_info.add(m);
-                    disconnect();
-                    return 0;
+
                 }
             }
+            disconnect();
+            return 0;
         }
         catch (SQLException ex){
             System.out.println(ex.getMessage());
             disconnect();
             return -1;
         }
-        return -1;
 
     }
 
@@ -485,10 +485,10 @@ public class MyDB {
                     o.setTotal_cost(rs.getFloat("total_cost"));
                     o.setId_order(id_order);
                     order_info.add(o);
-                    disconnect();
-                    return 0;
                 }
             }
+            disconnect();
+            return 0;
 
         }
         catch (SQLException ex){
@@ -496,7 +496,6 @@ public class MyDB {
             disconnect();
             return -1;
         }
-        return -1;
 
     }
 
@@ -525,16 +524,15 @@ public class MyDB {
                 p.setCount_war(rs.getInt("count_war"));
                 p.setId_piece(id_piece);
                 piece_info.add(p);
-                disconnect();
-                return 0;
             }
+            disconnect();
+            return 0;
         }
         catch (SQLException ex) {
             System.out.println(ex.getMessage());
             disconnect();
             return -1;
         }
-        return -1;
 
     }
 
@@ -562,10 +560,11 @@ public class MyDB {
                     e.setExpected_profits(rs.getInt("expected_profits"));
                     e.setId_order_erp(id_order_number);
                     order_erp_info.add(e);
-                    disconnect();
-                    return 0;
+
                 }
             }
+            disconnect();
+            return 0;
 
         }
         catch (SQLException ex){
@@ -573,7 +572,6 @@ public class MyDB {
             disconnect();
             return -1;
         }
-        return -1;
 
     }
 
