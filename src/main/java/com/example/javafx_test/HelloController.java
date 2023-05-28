@@ -6,6 +6,7 @@ import Model.OrderERP;
 import Model.Machine;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -180,76 +181,112 @@ public class HelloController implements Initializable {
 
     MyDB n = MyDB.getInstance();
 
+    private Thread dataUpdateThread;
+    private volatile boolean running = true;
+
+    public void initialize() {
+        // Initialize the labels or perform any other setup
+        // ...
+        System.out.println("yo");
+        // Create and start the data update thread
+        dataUpdateThread = new Thread(this::fetchDataAndUpdateLabels);
+        dataUpdateThread.setDaemon(true);
+        dataUpdateThread.start();
+    }
+    private void fetchDataAndUpdateLabels() {
+        while (running) {
+            // Fetch data from the database
+            // ...
+            System.out.println("www");
+            try {
+                n.connect();
+                //mach.clear();
+                a = n.getInfoMachine(); //vai buscar info à tabela para machine info
+                System.out.println(a);
+                mach = todasmachines();//fica om os valores lidos
+
+                //ord.clear();
+                b = n.getInfoOrder();
+                System.out.println(b);
+                ord = todasorders();
+                System.out.println("Order_Label");
+
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+
+
+            // Update the labels on the JavaFX Application Thread
+            Platform.runLater(() -> {
+                if (a < 0) {
+                    System.out.print("Error in query test");
+                } else {
+                    System.out.println("Machine_Label_Preencher");
+                    //Machine
+                    //Tool
+                    label_tool_1.setText(String.valueOf(mach.get(0).getTool()));
+                    label_tool_2.setText(String.valueOf(mach.get(1).getTool()));
+                    label_tool_3.setText(String.valueOf(mach.get(2).getTool()));
+                    label_tool_4.setText(String.valueOf(mach.get(3).getTool()));
+                    //In_use
+                    label_machine_in_use_1.setText(String.valueOf(mach.get(0).isIn_use()));
+                    label_machine_in_use_2.setText(String.valueOf(mach.get(1).isIn_use()));
+                    label_machine_in_use_3.setText(String.valueOf(mach.get(2).isIn_use()));
+                    label_machine_in_use_4.setText(String.valueOf(mach.get(3).isIn_use()));
+                    //Piece_detected
+                    label_piece_detected_1.setText(String.valueOf(mach.get(0).getPiece_detected()));
+                    label_piece_detected_2.setText(String.valueOf(mach.get(1).getPiece_detected()));
+                    label_piece_detected_3.setText(String.valueOf(mach.get(2).getPiece_detected()));
+                    label_piece_detected_4.setText(String.valueOf(mach.get(3).getPiece_detected()));
+                    //Work_time
+                    label_work_time_1.setText(String.valueOf(mach.get(0).getWork_time()));
+                    label_work_time_2.setText(String.valueOf(mach.get(1).getWork_time()));
+                    label_work_time_3.setText(String.valueOf(mach.get(2).getWork_time()));
+                    label_work_time_4.setText(String.valueOf(mach.get(3).getWork_time()));
+
+                }
+                if (b < 0) {
+                    System.out.print("Error in query test");
+                } else {
+
+                    label_piece_type_1.setText(String.valueOf(ord.get(0).getPiece_type()));
+                    label_piece_type_2.setText(String.valueOf(ord.get(1).getPiece_type()));
+                    label_raw_piece_1.setText(String.valueOf(ord.get(0).getRaw_piece()));
+                    label_raw_piece_2.setText(String.valueOf(ord.get(1).getRaw_piece()));
+                    label_raw_cost_1.setText(String.valueOf(ord.get(0).getRaw_cost()));
+                    label_raw_cost_2.setText(String.valueOf(ord.get(1).getRaw_cost()));
+                    label_pieces_arrival_1.setText(String.valueOf(ord.get(0).getPieces_arrival()));
+                    label_pieces_arrival_2.setText(String.valueOf(ord.get(1).getPieces_arrival()));
+                    label_number_pieces_1.setText(String.valueOf(ord.get(0).getNumber_pieces()));
+                    label_number_pieces_2.setText(String.valueOf(ord.get(1).getNumber_pieces()));
+                    label_order_completed_1.setText(String.valueOf(ord.get(0).getOrder_completed())); //nao  consigo ir buscar se ja foi completa quantas peças na order
+                    label_order_completed_2.setText(String.valueOf(ord.get(1).getOrder_completed()));
+                    label_expected_delivery_1.setText(String.valueOf(ord.get(0).getExpected_delivery()));
+                    label_expected_delivery_2.setText(String.valueOf(ord.get(1).getExpected_delivery()));
+                    label_expected_cost_1.setText(String.valueOf(ord.get(0).getExpected_cost()));
+                    label_expected_cost_2.setText(String.valueOf(ord.get(1).getExpected_cost()));
+                    label_production_cost_1.setText(String.valueOf(ord.get(0).getProduction_cost()));
+                    label_production_cost_2.setText(String.valueOf(ord.get(1).getProduction_cost()));
+                    label_total_cost_1.setText(String.valueOf(ord.get(0).getTotal_cost()));
+                    label_total_cost_2.setText(String.valueOf(ord.get(1).getTotal_cost()));
+                }
+                ord.clear();
+                mach.clear();
+            });
+
+            // Wait for a certain period before the next update
+            try {
+                Thread.sleep(1); // 2 seconds
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        try {
-            n.connect();
-            //mach.clear();
-            a = n.getInfoMachine();
-            System.out.println(a);
-            mach = todasmachines();
-            if (a < 0) {
-                System.out.printf("Error in query test");
-            } else {
-                System.out.println("Machine_Label_Preencher");
-                //Machine
-                //Tool
-                label_tool_1.setText(String.valueOf(mach.get(0).getTool()));
-                label_tool_2.setText(String.valueOf(mach.get(1).getTool()));
-                label_tool_3.setText(String.valueOf(mach.get(2).getTool()));
-                label_tool_4.setText(String.valueOf(mach.get(3).getTool()));
-                //In_use
-                label_machine_in_use_1.setText(String.valueOf(mach.get(0).isIn_use()));
-                label_machine_in_use_2.setText(String.valueOf(mach.get(1).isIn_use()));
-                label_machine_in_use_3.setText(String.valueOf(mach.get(2).isIn_use()));
-                label_machine_in_use_4.setText(String.valueOf(mach.get(3).isIn_use()));
-                //Piece_detected
-                label_piece_detected_1.setText(String.valueOf(mach.get(0).getPiece_detected()));
-                label_piece_detected_2.setText(String.valueOf(mach.get(1).getPiece_detected()));
-                label_piece_detected_3.setText(String.valueOf(mach.get(2).getPiece_detected()));
-                label_piece_detected_4.setText(String.valueOf(mach.get(3).getPiece_detected()));
-                //Work_time
-                label_work_time_1.setText(String.valueOf(mach.get(0).getWork_time()));
-                label_work_time_2.setText(String.valueOf(mach.get(1).getWork_time()));
-                label_work_time_3.setText(String.valueOf(mach.get(2).getWork_time()));
-                label_work_time_4.setText(String.valueOf(mach.get(3).getWork_time()));
 
-            }
-
-            //ord.clear();
-            b = n.getInfoOrder();
-            System.out.println(b);
-            ord = todasorders();
-            System.out.println("Order_Label");
-            if (b < 0) {
-                System.out.printf("Error in query test");
-            } else {
-                label_piece_type_1.setText(String.valueOf(ord.get(0).getPiece_type()));
-                label_piece_type_2.setText(String.valueOf(ord.get(1).getPiece_type()));
-                label_raw_piece_1.setText(String.valueOf(ord.get(0).getRaw_piece()));
-                label_raw_piece_2.setText(String.valueOf(ord.get(1).getRaw_piece()));
-                label_raw_cost_1.setText(String.valueOf(ord.get(0).getRaw_cost()));
-                label_raw_cost_2.setText(String.valueOf(ord.get(1).getRaw_cost()));
-                label_pieces_arrival_1.setText(String.valueOf(ord.get(0).getPieces_arrival()));
-                label_pieces_arrival_2.setText(String.valueOf(ord.get(1).getPieces_arrival()));
-                label_number_pieces_1.setText(String.valueOf(ord.get(0).getNumber_pieces()));
-                label_number_pieces_2.setText(String.valueOf(ord.get(1).getNumber_pieces()));
-                label_order_completed_1.setText(String.valueOf(ord.get(0).getOrder_completed())); //nao  consigo ir buscar se ja foi completa quantas peças na order
-                label_order_completed_2.setText(String.valueOf(ord.get(1).getOrder_completed()));
-                label_expected_delivery_1.setText(String.valueOf(ord.get(0).getExpected_delivery()));
-                label_expected_delivery_2.setText(String.valueOf(ord.get(1).getExpected_delivery()));
-                label_expected_cost_1.setText(String.valueOf(ord.get(0).getExpected_cost()));
-                label_expected_cost_2.setText(String.valueOf(ord.get(1).getExpected_cost()));
-                label_production_cost_1.setText(String.valueOf(ord.get(0).getProduction_cost()));
-                label_production_cost_2.setText(String.valueOf(ord.get(1).getProduction_cost()));
-                label_total_cost_1.setText(String.valueOf(ord.get(0).getTotal_cost()));
-                label_total_cost_2.setText(String.valueOf(ord.get(1).getTotal_cost()));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
 
         /*try{
             /*n.connect();
@@ -278,13 +315,7 @@ public class HelloController implements Initializable {
          */
 
 
-        try {
-            n.disconnect();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        ord.clear();
-        mach.clear();
+
 
     }
 
@@ -342,5 +373,20 @@ public class HelloController implements Initializable {
 
         }
         return as;
+    }
+
+    /**
+     * method is called to stop the data update thread and wait for it to finish gracefully.
+     */
+    public void stopDataUpdate() {
+        running = false;
+        try {
+            n.disconnect();
+            dataUpdateThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

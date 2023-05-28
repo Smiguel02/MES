@@ -13,9 +13,10 @@ import java.sql.SQLException;
 
 public class GUI_MES extends Application  {
 
+    MyDB n = MyDB.getInstance();
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage primaryStage) throws Exception {
 
 
         /*FXMLLoader fxmlLoader = new FXMLLoader(GUI_MES.class.getResource("hello-view.fxml"));
@@ -25,11 +26,25 @@ public class GUI_MES extends Application  {
         stage.setScene(scene);
         stage.show();*/
 
-        Parent root = FXMLLoader.load(getClass().getResource("gui_example.fxml"));
-        stage.setTitle("");
-        stage.setScene(new Scene(root, 1214, 716));
-        stage.show();
 
+        try {
+            primaryStage.setResizable(false);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("gui_example.fxml"));
+            Parent root = loader.load();
+            HelloController controller = loader.getController();
+            // Start the label update in the controller
+            //controller.startLabelUpdate();
+            primaryStage.setTitle("");
+            primaryStage.setScene(new Scene(root, 1214, 716));
+            n.connect();
+            controller.initialize();
+            primaryStage.setOnCloseRequest(event -> controller.stopDataUpdate());
+            primaryStage.show();
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         /*FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("hello-view.fxml"));
