@@ -212,6 +212,8 @@ public class HelloController implements Initializable {
                 ord = todasorders();
                 System.out.println("Order_Label");
 
+                c= n.getInfoTempo();
+
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -271,6 +273,20 @@ public class HelloController implements Initializable {
                     label_total_cost_1.setText(String.valueOf(ord.get(0).getTotal_cost()));
                     label_total_cost_2.setText(String.valueOf(ord.get(1).getTotal_cost()));
                 }
+                if (c < 0) {
+                    System.out.print("Error in query test");
+                } else {
+                    label_day.setText(String.valueOf(n.dia));
+                    label_total_time.setText(String.valueOf(n.tempo));
+
+                }
+                if(n.midDay==false){
+                    label_cor.setStyle("-fx-background-color: green;");
+                }else if(n.midDay==true){
+                    label_cor.setStyle("-fx-background-color: red;");
+                }
+
+
                 ord.clear();
                 mach.clear();
             });

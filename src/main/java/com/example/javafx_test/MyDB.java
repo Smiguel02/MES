@@ -93,14 +93,14 @@ public class MyDB {
     // restricted to this class itself
 
     public Connection connect() throws SQLException {
-        System.out.println("Hello1!");
+        //System.out.println("Hello1!");
         conn = DriverManager.getConnection(db_url, user, passwd);
-        System.out.println("Hello2!");
+        //System.out.println("Hello2!");
         System.out.println(conn);
         return conn;
     }
     public void disconnect() throws SQLException {
-        System.out.println("Hello3!");
+        //System.out.println("Hello3!");
         if (conn != null)
             conn.close();
     }
@@ -430,7 +430,7 @@ public class MyDB {
         machine_info.clear();
         getInfoMachine = "SELECT * FROM infi2023.machine";
         try (Connection con = connect()) {
-            System.out.println("Deu connect");
+            //System.out.println("Deu connect");
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(getInfoMachine);
             while (rs.next()) {
@@ -461,7 +461,7 @@ public class MyDB {
         order_info.clear();
         getInfoOrder = "SELECT * FROM infi2023.order";
         try (Connection con = connect()) {
-            System.out.println("Deu connect");
+            //System.out.println("Deu connect");
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(getInfoOrder);
             while (rs.next()) {
@@ -997,11 +997,11 @@ public class MyDB {
         return -1;
     }
 
-    public int updateExpectedDelivery(String tipo){
+    public int updateExpectedDelivery(int expected_delivery, int id_order){
         int affect;
 
         updateExpected_delivery = "UPDATE infi2023.order SET expected_delivery = ? WHERE id_order = ?";
-
+        String tipo = "order";
         if(Objects.equals(tipo, "order")){
             System.out.println("AQUIII");
             try(Connection con = connect()){
@@ -1835,6 +1835,99 @@ public class MyDB {
     //Contador de peças no warehouse compara o tipo e conta++ tenho de dar update tb ao numero total de peças
 
     //Update Contador caso adicione ou tire peças de um tipo
+
+    public boolean midDay=false;
+    public int updateTenpo(long time){
+        int affect;
+
+        updateExpected_delivery = "UPDATE infi2023.tempo SET tempo = ? WHERE id = ?";
+        String tipo = "order";
+        if(Objects.equals(tipo, "order")){
+            //System.out.println("AQUIII");
+            try(Connection con = connect()){
+               //System.out.println("deu connect update tempo");
+                PreparedStatement pstmt = con.prepareStatement(updateExpected_delivery);
+                //System.out.println("try 114 n");
+                pstmt.setLong(1, time);
+                pstmt.setInt(2, 1);
+                //System.out.println("try 214 n");
+                affect = pstmt.executeUpdate();
+                //System.out.println("try 314 n");
+
+                if(affect < 0){
+                    disconnect();
+                    return affect;
+                }else{
+                    disconnect();
+                    return affect;
+                }
+                // Analyse the resulting data
+
+            }catch (SQLException ex){
+                System.out.println(ex.getMessage());
+                return -1;
+            }
+        }
+        return -1;
+    }
+    public int updateDia(int dia){
+        int affect;
+
+        updateExpected_delivery = "UPDATE infi2023.tempo SET dia = ? WHERE id = ?";
+        String tipo = "order";
+        if(Objects.equals(tipo, "order")){
+            //System.out.println("AQUIII");
+            try(Connection con = connect()){
+                //System.out.println("deu connect update dia");
+                PreparedStatement pstmt = con.prepareStatement(updateExpected_delivery);
+                //System.out.println("try 114 n");
+                pstmt.setInt(1, dia);
+                pstmt.setInt(2, 1);
+                //System.out.println("try 214 n");
+                affect = pstmt.executeUpdate();
+                //System.out.println("try 314 n");
+
+                if(affect < 0){
+                    disconnect();
+                    return affect;
+                }else{
+                    disconnect();
+                    return affect;
+                }
+                // Analyse the resulting data
+
+            }catch (SQLException ex){
+                System.out.println(ex.getMessage());
+                return -1;
+            }
+        }
+        return -1;
+    }
+    public long tempo;
+    public int dia;
+    public int getInfoTempo() throws SQLException{
+
+        getInfoOrder = "SELECT * FROM infi2023.tempo";
+        try (Connection con = connect()) {
+            //System.out.println("Deu connect get info tempo");
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(getInfoOrder);
+            while (rs.next()) {
+
+                tempo=rs.getLong("tempo");
+                dia = rs.getInt("dia");
+
+            }
+
+            return 0;
+
+        }
+        catch (SQLException ex){
+            System.out.println(ex.getMessage());
+            return -1;
+        }
+
+    }
 
 }
 
